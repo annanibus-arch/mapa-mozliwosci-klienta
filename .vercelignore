@@ -1,0 +1,4 @@
+# Pliki, których Vercel NIE ma zaciągać na deploy (zasada least privilege).
+# .md to dokumentacja robocza: zostaje w repo (GitHub), ale nie trafia na żywą stronę.
+
+*.md

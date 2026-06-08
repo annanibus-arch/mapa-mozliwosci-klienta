@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Twoja ścieżka z MentalWay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0d0c09;
+      --gold:    #c9a820;
+      --gold-lo: rgba(201,168,32,0.12);
+      --gold-mid: rgba(201,168,32,0.3);
+      --white:   #f0ece4;
+      --muted:   #635a4a;
+      --muted2:  #8a7e6a;
+      --border:  #1e1c17;
+      --border2: #272318;
+      --surface: #111009;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', -apple-system, sans-serif;
+      line-height: 1.5;
+    }
+
+    /* ── HEADER ── */
+    header {
+      padding: 22px 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border2);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .logo-sq { width: 7px; height: 7px; background: var(--gold); flex-shrink: 0; }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 80px 52px 64px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: end;
+      max-width: 1000px;
+    }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .eyebrow::before { content: '■'; font-size: 7px; }
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(64px, 10vw, 108px);
+      letter-spacing: 2px;
+      line-height: 0.92;
+      color: var(--white);
+    }
+    h1 em { font-style: normal; color: var(--gold); }
+
+    .hero-right {
+      padding-bottom: 8px;
+    }
+    .hero-note {
+      font-size: 14px;
+      color: var(--muted2);
+      line-height: 1.7;
+      margin-bottom: 24px;
+      max-width: 340px;
+    }
+    .level-index {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .li-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border2);
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .li-row:hover { color: var(--gold); }
+    .li-row:last-child { border-bottom: none; }
+    .li-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      color: var(--gold);
+      line-height: 1;
+      width: 24px;
+      flex-shrink: 0;
+    }
+
+    /* ── DIAGRAM WRAPPER ── */
+    .diagram {
+      padding: 0 52px 80px;
+      max-width: 1000px;
+    }
+
+    /* ── LEVEL ROW ── */
+    .level {
+      display: grid;
+      grid-template-columns: 68px 1fr;
+      position: relative;
+    }
+
+    /* spine */
+    .lv-spine {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .lv-spine::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 72px;
+      bottom: 0;
+      width: 1px;
+      transform: translateX(-50%);
+      background: linear-gradient(to bottom, var(--gold-mid), var(--border2));
+    }
+    .level:last-child .lv-spine::after { display: none; }
+
+    .lv-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 56px;
+      letter-spacing: 1px;
+      color: var(--gold);
+      line-height: 1;
+      padding-top: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* content */
+    .lv-content {
+      padding: 28px 0 32px 28px;
+      border-left: 1px solid var(--border2);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .level:last-child .lv-content { border-bottom: none; }
+
+    .lv-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 5px;
+    }
+    .lv-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .lv-desc {
+      font-size: 13px;
+      color: var(--muted2);
+      margin-bottom: 18px;
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    /* ── CHIPS ── */
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 12px;
+      border: 1px solid var(--border2);
+      color: var(--muted2);
+      font-size: 12px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      border-radius: 1px;
+      text-decoration: none;
+      transition: border-color .15s, color .15s, background .15s;
+      white-space: nowrap;
+    }
+    a.chip:hover { border-color: var(--gold); color: var(--gold); }
+    .chip-lit  { border-color: rgba(201,168,32,.35); color: var(--gold); }
+    .chip-cta  { background: var(--gold); border-color: var(--gold); color: #0d0c09; font-weight: 700; }
+    a.chip-cta:hover { opacity: .85; }
+
+    /* ── MMC BLOCK ── */
+    .mmc-block {
+      margin-top: 16px;
+      border: 1px solid var(--border2);
+    }
+    .mmc-row {
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+    .mmc-row + .mmc-row { border-top: 1px solid var(--border); }
+    .mmc-row-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      flex-shrink: 0;
+      min-width: 130px;
+    }
+    .mmc-divider {
+      font-size: 14px;
+      color: var(--border2);
+    }
+
+    /* ── DIRECT ENTRY BADGE ── */
+    .direct-entry {
+      position: absolute;
+      right: 0;
+      top: 28px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border2);
+      padding: 4px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .direct-entry::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ── GADGETS ANCHOR ── */
+    .gadgets {
+      margin-top: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 18px 24px;
+      border: 1px solid var(--border2);
+      border-left: 2px solid rgba(201,168,32,.25);
+      background: var(--surface);
+    }
+    .gadgets-left {}
+    .gadgets-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+    .gadgets-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+    }
+    .gadgets-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border2);
+      padding: 24px 52px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    footer nav { display: flex; gap: 28px; }
+    footer nav a { font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: .3px; }
+    footer nav a:hover { color: var(--gold); }
+
+    @media (max-width: 720px) {
+      header, .hero, .diagram, footer { padding-left: 20px; padding-right: 20px; }
+      .hero { grid-template-columns: 1fr; gap: 32px; padding-top: 52px; padding-bottom: 40px; }
+      h1 { font-size: 72px; }
+      .lv-num { font-size: 42px; }
+      .level { grid-template-columns: 52px 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo"><span class="logo-sq"></span>MentalWay</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="eyebrow">Mapa ścieżki</div>
+    <h1>TWOJA<br>ŚCIEŻKA<br>Z <em>MENTAL</em><em>WAY</em></h1>
+  </div>
+  <div class="hero-right">
+    <p class="hero-note">Siedem poziomów — od darmowej wiedzy po indywidualną pracę z Michałem. Możesz wejść od dowolnego miejsca.</p>
+    <div class="level-index">
+      <div class="li-row" onclick="document.getElementById('l1').scrollIntoView({behavior:'smooth'})">
+        <span class="li-num">01</span> Darmowa wiedza
+      </div>
+      <div class="li-row" onclick="document.getElementById('l2').scrollIntoView({behavior:'smooth'})">
+        <span class="li-num">02</span> Materiały szkoleniowe
+      </div>
+      <div class="li-row" onclick="document.getElementById('l3').scrollIntoView({behavior:'smooth'})">
+        <span class="li-num">03</span> Społeczność — Karta MMC
+      </div>
+      <div class="li-row" onclick="document.getElementById('l4').scrollIntoView({behavior:'smooth'})">
+        <span class="li-num">04</span> Wyjazdy stacjonarne — Mental Shelter
+      </div>
+      <div class="li-row" onclick="document.getElementById('l5').scrollIntoView({behavior:'smooth'})">
+        <span class="li-num">05</span> Programy grupowe online — PB &amp; GLSM
+      </div>
+      <div class="li-row" onclick="document.getElementById('l6').scrollIntoView({behavior:'smooth'})">
+        <span class="li-num">06</span> Konsultacje 1:1 z Michałem
+      </div>
+      <div class="li-row" onclick="document.getElementById('l7').scrollIntoView({behavior:'smooth'})">
+        <span class="li-num">07</span> Life Spectrum Mentoring — indywidualnie
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DIAGRAM -->
+<div class="diagram">
+<div class="levels">
+
+  <!-- L1 -->
+  <div class="level" id="l1">
+    <div class="lv-spine"><div class="lv-num">01</div></div>
+    <div class="lv-content">
+      <div class="lv-tag">Darmowo · Samodzielnie</div>
+      <div class="lv-title">Darmowa wiedza</div>
+      <p class="lv-desc">Bez logowania, bez zakupu. Trzy niezależne źródła darmowej wiedzy od Michała.</p>
+
+      <div class="mmc-block">
+        <div class="mmc-row">
+          <span class="mmc-row-label">Social media</span>
+          <a class="chip chip-lit" href="https://www.facebook.com/KolczMajk/" target="_blank">Facebook</a>
+          <a class="chip chip-lit" href="https://www.youtube.com/Ko%C5%82czMajk" target="_blank">YouTube</a>
+          <a class="chip chip-lit" href="https://www.instagram.com/kolcz_majk/" target="_blank">Instagram</a>
+          <a class="chip chip-lit" href="https://x.com/KolczMajk" target="_blank">X</a>
+          <a class="chip chip-lit" href="https://www.tiktok.com/@kolczmajk" target="_blank">TikTok</a>
+          <a class="chip chip-lit" href="https://www.linkedin.com/in/micha%C5%82-wawrzyniak/" target="_blank">LinkedIn</a>
+        </div>
+        <div class="mmc-row">
+          <span class="mmc-row-label">Newsletter</span>
+          <a class="chip chip-lit" href="https://mwway.pl/zapisz-sie" target="_blank">Regularne maile od Michała →</a>
+        </div>
+        <div class="mmc-row">
+          <span class="mmc-row-label">WayUp</span>
+          <a class="chip chip-lit" href="https://www.wayup.pl/" target="_blank">Wybrane szkolenia bezpłatnie przez 30 dni →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- L2 -->
+  <div class="level" id="l2">
+    <div class="lv-spine"><div class="lv-num">02</div></div>
+    <div class="lv-content">
+      <div class="lv-tag">Płatne · Samodzielnie · Bez karty MMC</div>
+      <div class="lv-title">Materiały szkoleniowe</div>
+      <p class="lv-desc">Nauka samodzielna we własnym tempie. Każdy produkt niezależnie — kupujesz co Cię interesuje, w dowolnej kolejności.</p>
+      <div class="chips">
+        <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Książki</a>
+        <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Dziennik Behawioralny</a>
+        <a class="chip" href="https://www.wayup.pl/" target="_blank">Szkolenia VOD</a>
+        <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Szkolenia audio</a>
+        <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Audiobooki</a>
+        <span class="chip">Eventy online — uczestnictwo zdalne</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- L3 -->
+  <div class="level" id="l3">
+    <div class="lv-spine"><div class="lv-num">03</div></div>
+    <div class="lv-content">
+      <div class="lv-tag">Karta MMC</div>
+      <div class="lv-title">Społeczność — Mentalwayandia</div>
+      <p class="lv-desc">Karta MMC jest przepustką do społeczności i warunkiem wejścia do programów PB i GLSM. Trzy formy: miesięczna (69 PLN), roczna, lifetime.</p>
+      <div class="chips" style="margin-bottom: 16px;">
+        <a class="chip chip-cta" href="https://www.mwway.pl/mmc-2026" target="_blank">Kup kartę MMC →</a>
+      </div>
+
+      <div class="mmc-block">
+        <div class="mmc-row">
+          <span class="mmc-row-label">Z kartą od razu</span>
+          <span class="chip chip-lit">Discord Mentalwayandia</span>
+          <span class="chip chip-lit">Dashboard spolecznosc.mentalway.pl</span>
+        </div>
+        <div class="mmc-row">
+          <span class="mmc-row-label">Karta otwiera drzwi do</span>
+          <a class="chip" href="#l5" style="font-size:12px;">Personal Branding → L5</a>
+          <a class="chip" href="#l5" style="font-size:12px;">GLSM → L5</a>
+          <a class="chip" href="#l7" style="font-size:12px;">Impact Call → L7</a>
+          <span class="mmc-divider" style="font-size:11px; margin-left:4px;">kupowane oddzielnie</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- L4 -->
+  <div class="level" id="l4">
+    <div class="lv-spine"><div class="lv-num">04</div></div>
+    <div class="lv-content">
+      <div class="lv-tag">Grupowo · Stacjonarnie</div>
+      <div class="lv-title">Praca z mentorem w grupie — stacjonarnie</div>
+      <p class="lv-desc">Fizyczne wyjazdy do posiadłości <strong style="color:var(--white); font-weight:600;">Mental Shelter w Puszczy Noteckiej</strong>.</p>
+      <div class="chips">
+        <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Warsztaty weekendowe</a>
+        <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Majówki</a>
+        <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Wakacje tematyczne</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- L5 -->
+  <div class="level" id="l5">
+    <div class="lv-spine"><div class="lv-num">05</div></div>
+    <div class="lv-content">
+      <div class="lv-tag">Grupowo · Online · Z mentorem · Wymaga karty MMC</div>
+      <div class="lv-title">Praca w grupie z mentorem — online</div>
+      <p class="lv-desc">Programy grupowe online prowadzone bezpośrednio przez Michała. Oba wymagają aktywnej karty MMC.</p>
+      <div class="chips" style="flex-direction:column; align-items:flex-start; gap:8px;">
+        <span class="chip chip-lit">Personal Branding</span>
+        <span class="chip chip-lit">GLSM — Grupowy Life Spectrum Mentoring</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- L6 -->
+  <div class="level" id="l6">
+    <div class="lv-spine"><div class="lv-num">06</div></div>
+    <div class="lv-content">
+      <div class="direct-entry">wejście bezpośrednie — nie wymaga poprzednich poziomów</div>
+      <div class="lv-tag">Indywidualnie · Z Michałem</div>
+      <div class="lv-title">Konsultacje 1:1 z Michałem</div>
+      <p class="lv-desc">Bezpośrednia rozmowa z Michałem. Niezależna od karty MMC.</p>
+      <div class="chips">
+        <a class="chip chip-cta" href="https://www.sklep.mentalway.pl/" target="_blank">Kup konsultację →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- L7 -->
+  <div class="level" id="l7">
+    <div class="lv-spine"><div class="lv-num">07</div></div>
+    <div class="lv-content">
+      <div class="direct-entry">wejście bezpośrednie — nie wymaga poprzednich poziomów</div>
+      <div class="lv-tag">Indywidualnie · Długoterminowo</div>
+      <div class="lv-title">Life Spectrum Mentoring</div>
+      <p class="lv-desc">Autorski program Michała — indywidualna praca rozwojowa, długoterminowy mentoring najwyższego poziomu.</p>
+      <div class="chips">
+        <span class="chip chip-lit">Life Spectrum Mentoring</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /levels -->
+
+<!-- GADGETS ANCHOR -->
+<div class="gadgets">
+  <div class="gadgets-left">
+    <div class="gadgets-eyebrow">Poza ścieżką nauki</div>
+    <div class="gadgets-title">Gadżety MentalWay</div>
+    <div class="gadgets-sub">Ubrania, opaski, akcesoria — pamiątka drogi, nie cel</div>
+  </div>
+  <a class="chip chip-cta" href="https://www.sklep.mentalway.pl/" target="_blank">Sklep →</a>
+</div>
+
+</div><!-- /diagram -->
+
+<footer>
+  <div class="logo" style="font-size:11px;"><span class="logo-sq" style="width:6px;height:6px;"></span>MentalWay</div>
+  <nav>
+    <a href="https://www.sklep.mentalway.pl/">Sklep</a>
+    <a href="https://www.wayup.pl/">WayUp</a>
+    <a href="https://spolecznosc.mentalway.pl">Społeczność</a>
+    <a href="https://mentalway.pl/">mentalway.pl</a>
+  </nav>
+</footer>
+
+</body>
+</html>

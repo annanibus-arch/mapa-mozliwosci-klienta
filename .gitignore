@@ -1,0 +1,5 @@
+# Claude Code — lokalne ustawienia + memory
+.claude/
+
+# macOS
+.DS_Store

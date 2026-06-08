@@ -298,90 +298,6 @@
       margin-top: 2px;
     }
 
-    /* ── SYSTEM REFS (link do FAQ systemu) ── */
-    .sys-refs {
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      font-size: 11px;
-    }
-    .sys-refs-label {
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      font-weight: 700;
-      color: var(--muted);
-      margin-right: 2px;
-    }
-    .sys-ref {
-      color: var(--muted2);
-      text-decoration: none;
-      border-bottom: 1px dotted var(--border2);
-      transition: color .15s, border-color .15s;
-    }
-    .sys-ref:hover { color: var(--gold); border-color: var(--gold); }
-    .sys-dot { color: var(--border2); }
-
-    /* ── EVENTS BLOCK ── */
-    .events-block {
-      margin-top: 16px;
-      border: 1px solid var(--border2);
-      border-left: 2px solid rgba(201,168,32,.25);
-      background: var(--surface);
-      padding: 16px 18px;
-    }
-    .events-head { margin-bottom: 12px; }
-    .events-title { font-size: 14px; font-weight: 600; color: var(--white); }
-    .events-list { display: flex; flex-direction: column; gap: 7px; }
-    .event-row { display: flex; align-items: baseline; gap: 12px; font-size: 12px; }
-    .event-date {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 16px;
-      letter-spacing: .5px;
-      color: var(--gold);
-      min-width: 110px;
-      flex-shrink: 0;
-    }
-    .event-name { color: var(--muted2); }
-    .events-foot { margin-top: 12px; font-size: 11px; color: var(--muted); font-style: italic; }
-
-    /* ── SYSTEMY / FAQ SECTION ── */
-    .faq-section { padding: 0 52px 80px; max-width: 1000px; }
-    .faq-head { max-width: 560px; margin-bottom: 32px; }
-    .faq-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 36px;
-      letter-spacing: 1px;
-      color: var(--white);
-      margin-bottom: 10px;
-    }
-    .faq-note { font-size: 13px; color: var(--muted2); line-height: 1.7; }
-    .faq-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1px;
-      background: var(--border2);
-      border: 1px solid var(--border2);
-    }
-    .faq-block { background: var(--bg); padding: 22px 24px; }
-    .faq-block-tag {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 12px;
-    }
-    .faq-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
-    .faq-list li { font-size: 13px; color: var(--muted2); line-height: 1.5; padding-left: 14px; position: relative; }
-    .faq-list li::before { content: '—'; position: absolute; left: 0; color: var(--muted); }
-    .faq-list a { color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold-mid); }
-    .faq-list a:hover { border-color: var(--gold); }
-    .faq-fill-note { margin-top: 18px; font-size: 11px; color: var(--muted); font-style: italic; }
-
     /* ── FOOTER ── */
     footer {
       border-top: 1px solid var(--border2);
@@ -397,13 +313,11 @@
     footer nav a:hover { color: var(--gold); }
 
     @media (max-width: 720px) {
-      header, .hero, .diagram, .faq-section, footer { padding-left: 20px; padding-right: 20px; }
+      header, .hero, .diagram, footer { padding-left: 20px; padding-right: 20px; }
       .hero { grid-template-columns: 1fr; gap: 32px; padding-top: 52px; padding-bottom: 40px; }
       h1 { font-size: 72px; }
       .lv-num { font-size: 42px; }
       .level { grid-template-columns: 52px 1fr; }
-      .faq-grid { grid-template-columns: 1fr; }
-      .event-row { flex-direction: column; gap: 2px; }
     }
   </style>
 </head>
@@ -479,11 +393,6 @@
           <a class="chip chip-lit" href="https://www.wayup.pl/" target="_blank">Wybrane szkolenia bezpłatnie przez 30 dni →</a>
         </div>
       </div>
-
-      <div class="sys-refs">
-        <span class="sys-refs-label">Pytania techniczne</span>
-        <a href="#sys-wayup" class="sys-ref">WayUp — konto, logowanie, dostęp</a>
-      </div>
     </div>
   </div>
 
@@ -496,20 +405,11 @@
       <p class="lv-desc">Nauka samodzielna we własnym tempie. Każdy produkt niezależnie — kupujesz co Cię interesuje, w dowolnej kolejności.</p>
       <div class="chips">
         <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Książki</a>
-        <a class="chip" href="https://mwway.pl/dziennik-q3-2026" target="_blank">Dziennik Behawioralny — edycja Q3 2026</a>
+        <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Dziennik Behawioralny</a>
         <a class="chip" href="https://www.wayup.pl/" target="_blank">Szkolenia VOD</a>
         <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Szkolenia audio</a>
         <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Audiobooki</a>
-        <a class="chip" href="#wydarzenia">Eventy online — uczestnictwo zdalne ↓</a>
-      </div>
-
-      <div class="sys-refs">
-        <span class="sys-refs-label">Pytania techniczne</span>
-        <a href="#sys-wayup" class="sys-ref">WayUp</a>
-        <span class="sys-dot">·</span>
-        <a href="#sys-sklep" class="sys-ref">Sklep</a>
-        <span class="sys-dot">·</span>
-        <a href="#sys-dziennik" class="sys-ref">Dziennik Behawioralny</a>
+        <span class="chip">Eventy online — uczestnictwo zdalne</span>
       </div>
     </div>
   </div>
@@ -539,11 +439,6 @@
           <span class="mmc-divider" style="font-size:11px; margin-left:4px;">kupowane oddzielnie</span>
         </div>
       </div>
-
-      <div class="sys-refs">
-        <span class="sys-refs-label">Pytania techniczne</span>
-        <a href="#sys-discord" class="sys-ref">Discord — Mentalwayandia: autoryzacja, zasady, kanały</a>
-      </div>
     </div>
   </div>
 
@@ -559,24 +454,6 @@
         <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Majówki</a>
         <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Wakacje tematyczne</a>
       </div>
-
-      <div class="events-block" id="wydarzenia">
-        <div class="events-head">
-          <div class="gadgets-eyebrow">Najbliższe wydarzenia</div>
-          <div class="events-title">Kalendarz spotkań i wyjazdów 2026</div>
-        </div>
-        <div class="events-list">
-          <div class="event-row"><span class="event-date">4–12 lipca</span><span class="event-name">Wakacje z Brandingiem — wyjazd tematyczny</span></div>
-          <div class="event-row"><span class="event-date">18–20 września</span><span class="event-name">GLSM 3/4 — zjazd + warsztat stacjonarny</span></div>
-          <div class="event-row"><span class="event-date">20–22 listopada</span><span class="event-name">GLSM 4/4 — zjazd + warsztat stacjonarny</span></div>
-        </div>
-        <p class="events-foot">Terminy aktualizowane na bieżąco — kolejne edycje ogłaszane z miesięcznym–dwumiesięcznym wyprzedzeniem.</p>
-      </div>
-
-      <div class="sys-refs">
-        <span class="sys-refs-label">Pytania techniczne</span>
-        <a href="#sys-sklep" class="sys-ref">Sklep — zakup, bilety, kody rabatowe</a>
-      </div>
     </div>
   </div>
 
@@ -591,13 +468,6 @@
         <span class="chip chip-lit">Personal Branding</span>
         <span class="chip chip-lit">GLSM — Grupowy Life Spectrum Mentoring</span>
       </div>
-
-      <div class="sys-refs">
-        <span class="sys-refs-label">Pytania techniczne</span>
-        <a href="#sys-sklep" class="sys-ref">Sklep — zakup programu</a>
-        <span class="sys-dot">·</span>
-        <a href="#sys-discord" class="sys-ref">Discord — dostęp przez kartę MMC</a>
-      </div>
     </div>
   </div>
 
@@ -611,11 +481,6 @@
       <p class="lv-desc">Bezpośrednia rozmowa z Michałem. Niezależna od karty MMC.</p>
       <div class="chips">
         <a class="chip chip-cta" href="https://www.sklep.mentalway.pl/" target="_blank">Kup konsultację →</a>
-      </div>
-
-      <div class="sys-refs">
-        <span class="sys-refs-label">Pytania techniczne</span>
-        <a href="#sys-sklep" class="sys-ref">Sklep — zakup, dostęp do zakupionych produktów</a>
       </div>
     </div>
   </div>
@@ -636,54 +501,6 @@
 
 </div><!-- /levels -->
 
-<!-- SYSTEMY / FAQ -->
-<div class="faq-section" id="systemy">
-  <div class="faq-head">
-    <div class="eyebrow">Systemy i FAQ</div>
-    <div class="faq-title">Praktyczne pytania o platformy</div>
-    <p class="faq-note">Każdy poziom ścieżki realizuje się przez jeden z systemów MentalWay — tu znajdziesz odpowiedzi na pytania o konto, logowanie, zakupy i dostęp. Wracaj tu z dowolnego poziomu przez link „Pytania techniczne”.</p>
-  </div>
-
-  <div class="faq-grid">
-    <div class="faq-block" id="sys-wayup">
-      <div class="faq-block-tag">WayUp · platforma szkoleniowa</div>
-      <ul class="faq-list">
-        <li>Rejestracja i logowanie</li>
-        <li>Gdzie znajdę darmowe / zakupione szkolenia</li>
-        <li>Aktywacja i czas dostępu do VOD</li>
-        <li>Reset hasła</li>
-      </ul>
-    </div>
-    <div class="faq-block" id="sys-sklep">
-      <div class="faq-block-tag">Sklep MentalWay · zakupy</div>
-      <ul class="faq-list">
-        <li>Jak założyć konto</li>
-        <li>Gdzie znajdę zakupione produkty</li>
-        <li>Reset hasła, kody rabatowe</li>
-        <li>Jak uruchomić prywatny podcast (audiobooki)</li>
-      </ul>
-    </div>
-    <div class="faq-block" id="sys-discord">
-      <div class="faq-block-tag">Discord · Mentalwayandia</div>
-      <ul class="faq-list">
-        <li>Zakup i autoryzacja Karty MMC</li>
-        <li>Link z zaproszeniem, widoczność kanałów</li>
-        <li>Zasady i cele społeczności</li>
-        <li>Zmiana numeru karty pod abonamentem</li>
-      </ul>
-    </div>
-    <div class="faq-block" id="sys-dziennik">
-      <div class="faq-block-tag">Dziennik Behawioralny · edycja Q3 2026</div>
-      <ul class="faq-list">
-        <li>Gdzie i kiedy zamówić → <a href="https://mwway.pl/dziennik-q3-2026" target="_blank">mwway.pl/dziennik-q3-2026</a></li>
-        <li>Pierwsze kroki, aktywacja dołączonych VOD</li>
-        <li>Wersja PDF, autoryzacja roli na Discordzie</li>
-      </ul>
-    </div>
-  </div>
-  <p class="faq-fill-note">⚠ Szkielet do uzupełnienia: pozycje w listach to spis tematów z przewodnika MW, nie gotowe odpowiedzi — treść do przeniesienia w kolejnym kroku.</p>
-</div>
-
 <!-- GADGETS ANCHOR -->
 <div class="gadgets">
   <div class="gadgets-left">
@@ -699,7 +516,6 @@
 <footer>
   <div class="logo" style="font-size:11px;"><span class="logo-sq" style="width:6px;height:6px;"></span>MentalWay</div>
   <nav>
-    <a href="#systemy">Systemy i FAQ</a>
     <a href="https://www.sklep.mentalway.pl/">Sklep</a>
     <a href="https://www.wayup.pl/">WayUp</a>
     <a href="https://spolecznosc.mentalway.pl">Społeczność</a>

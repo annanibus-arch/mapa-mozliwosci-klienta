@@ -512,7 +512,8 @@
       transition: opacity .16s;
     }
     .station.dim { opacity: .18; }
-    .station.sel .ring2, .station.hot .ring2 { opacity: 1; }
+    .station.sel .ring2, .station.hot .ring2, .station.tier-target .ring2 { opacity: 1; }
+    .station.tier-target .ring2 { stroke: var(--gold); stroke-width: 2.5px; }
     .station.sel .label { fill: var(--white); font-weight: 600; }
     .station.hub .base { stroke: var(--gold); stroke-width: 4; }
 
@@ -1170,6 +1171,87 @@
       max-width: 640px;
       margin-bottom: 14px;
     }
+    .pf-tier-block {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border2);
+    }
+    .pf-tier-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 8px 14px;
+      margin-bottom: 10px;
+    }
+    .pf-tier-scale-hint {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .tier-scale-wrap { margin-bottom: 8px; }
+    .tier-track {
+      height: 3px;
+      background: var(--border2);
+      border-radius: 2px;
+      margin: 0 4px 12px;
+      overflow: hidden;
+    }
+    .tier-track-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--muted2), var(--gold));
+      border-radius: 2px;
+      transition: width .2s ease;
+    }
+    .tier-scale {
+      display: flex;
+      gap: 6px;
+    }
+    .tier-btn {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 8px 4px;
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      border-radius: 1px;
+      cursor: pointer;
+      font-family: inherit;
+      color: inherit;
+      transition: border-color .12s, background .12s;
+    }
+    .tier-btn:hover { border-color: var(--gold-mid); }
+    .tier-btn.on {
+      border-color: var(--gold-mid);
+      background: var(--gold-lo);
+    }
+    .tier-grade {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      line-height: 1;
+      letter-spacing: 1px;
+      color: var(--muted2);
+    }
+    .tier-btn.on .tier-grade { color: var(--gold); }
+    .tier-lab {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.25;
+    }
+    .tier-detail {
+      font-size: 12px;
+      color: var(--muted2);
+      line-height: 1.55;
+      min-height: 1.55em;
+      margin: 0;
+    }
+    .tier-detail strong { color: var(--white); font-weight: 600; }
     .interest-grid {
       display: flex;
       flex-wrap: wrap;
@@ -1553,6 +1635,9 @@
       .main-tabbar button { max-width: none; font-size: 10px; padding: 10px 6px; }
       .sub-toolbar { padding-left: 20px; padding-right: 20px; }
       .path-finder { padding-left: 20px; padding-right: 20px; }
+      .tier-scale { flex-wrap: wrap; }
+      .tier-btn { min-width: calc(20% - 6px); }
+      .tier-lab { font-size: 7px; }
       .product-strip { grid-template-columns: 1fr; }
       .branch-grid { grid-template-columns: 1fr; }
       .path-expand { padding-left: 20px; padding-right: 20px; }
@@ -1642,8 +1727,22 @@
 <section class="path-finder" id="dobierz-sciezke">
   <div class="path-finder-box">
     <div class="eyebrow">Dobierz ścieżkę</div>
-    <h2>CO CIĘ INTERESUJE?</h2>
-    <p class="pf-intro">Zaznacz, co jest dla Ciebie ważne — podpowiemy linię na mapie i opiszemy trasę. Możesz zaznaczyć kilka opcji naraz.</p>
+    <h2>DOBIERZ SWOJĄ TRASĘ</h2>
+    <p class="pf-intro">Zaznacz, co jest dla Ciebie ważne — podpowiemy linię na mapie i opiszemy trasę. Możesz zaznaczyć kilka opcji naraz albo wybrać tylko poziom na skali.</p>
+
+    <div class="pf-tier-block">
+      <div class="pf-tier-head">
+        <span class="pf-results-label">Poziom inwestycji</span>
+        <span class="pf-tier-scale-hint">F = freemium · S = mentoring premium</span>
+      </div>
+      <div class="tier-scale-wrap">
+        <div class="tier-track" aria-hidden="true"><div class="tier-track-fill" id="tierTrackFill"></div></div>
+        <div class="tier-scale" id="tierScale" role="radiogroup" aria-label="Skala od freemium do premium"></div>
+      </div>
+      <p class="tier-detail" id="tierDetail">Wybierz klasę — pokażemy stacje i ścieżki na tym poziomie.</p>
+    </div>
+
+    <div class="pf-results-label">Co Cię interesuje?</div>
     <div class="interest-grid" id="interestGrid"></div>
     <div class="pf-actions">
       <button type="button" class="tbtn" id="pfApply">Pokaż na mapie</button>
@@ -1651,7 +1750,7 @@
     </div>
     <div class="pf-results-label">Propozycje ścieżek</div>
     <div class="pf-results" id="pathFinderResults">
-      <p class="pf-empty">Zaznacz przynajmniej jedną opcję powyżej.</p>
+      <p class="pf-empty">Wybierz poziom F–S, zaznacz zainteresowania — albo oba naraz.</p>
     </div>
   </div>
 </section>
@@ -1956,6 +2055,40 @@ const INTERESTS = [
   { id: 'szybko', label: 'Wysoki poziom bez długiej drogi', hint: 'bez przechodzenia przez wszystkie etapy', scores: { premium: 5, konsultacje: 2 } },
 ];
 
+/* Skala F→S: freemium do premium (powiązana ze stacjami metra) */
+const TIERS = [
+  {
+    id: 'f', grade: 'F', label: 'Freemium',
+    hint: 'Stacja 01 — darmowa wiedza, social, newsletter, trial WayUp.',
+    stations: [1],
+    lineBonus: { samodzielna: 2, wyjazdy: 1, spolecznosc: 1, pelna: 1 },
+  },
+  {
+    id: 'c', grade: 'C', label: 'Start płatny',
+    hint: 'Stacja 02 — książki, VOD, audio, Dziennik. Bez karty MMC.',
+    stations: [2],
+    lineBonus: { samodzielna: 4, wyjazdy: 2, pelna: 1 },
+  },
+  {
+    id: 'b', grade: 'B', label: 'Społeczność',
+    hint: 'Stacja 03 — karta MMC, Discord Mentalwayandia.',
+    stations: [3],
+    lineBonus: { spolecznosc: 4, mmc_wyjazdy: 3, pelna: 3 },
+  },
+  {
+    id: 'a', grade: 'A', label: 'Programy',
+    hint: 'Stacje 04–05 — wyjazdy do Mental Shelter lub programy online z mentorem.',
+    stations: [4, 5],
+    lineBonus: { wyjazdy: 3, mmc_wyjazdy: 3, pelna: 4, spolecznosc: 3 },
+  },
+  {
+    id: 's', grade: 'S', label: 'Premium',
+    hint: 'Stacje 06–07 — konsultacja 1:1 z Michałem lub Life Spectrum Mentoring.',
+    stations: [6, 7],
+    lineBonus: { konsultacje: 5, premium: 5, pelna: 2 },
+  },
+];
+
 /* ── Rozpiska: ścieżka darmowa ── */
 const FREE_BRANCHES = [
   {
@@ -2213,6 +2346,7 @@ let selected = null;
 let transferMode = false;
 let pathFinderActive = false;
 let pathFinderMatches = new Set();
+let selectedTier = null;
 
 const stationLines = {};
 STATIONS.forEach(s => stationLines[s.id] = []);
@@ -2589,7 +2723,15 @@ function getCheckedInterestIds() {
   return [...document.querySelectorAll('#interestGrid input:checked')].map(cb => cb.value);
 }
 
-function scoreLines(checkedIds) {
+function getTierById(id) {
+  return TIERS.find(t => t.id === id) || null;
+}
+
+function getTierStations(tierId) {
+  return getTierById(tierId)?.stations || [];
+}
+
+function scoreLines(checkedIds, tierId = selectedTier) {
   const totals = Object.fromEntries(LINES.map(l => [l.id, 0]));
   checkedIds.forEach(id => {
     const item = INTERESTS.find(x => x.id === id);
@@ -2598,10 +2740,60 @@ function scoreLines(checkedIds) {
       if (totals[lineId] != null) totals[lineId] += pts;
     });
   });
+  const tier = tierId ? getTierById(tierId) : null;
+  if (tier) {
+    LINES.forEach(line => {
+      if (line.seq.some(st => tier.stations.includes(st))) totals[line.id] += 4;
+    });
+    Object.entries(tier.lineBonus || {}).forEach(([lineId, pts]) => {
+      if (totals[lineId] != null) totals[lineId] += pts;
+    });
+  }
   return LINES
     .map(line => ({ line, score: totals[line.id] }))
     .filter(x => x.score > 0)
     .sort((a, b) => b.score - a.score || a.line.name.localeCompare(b.line.name, 'pl'));
+}
+
+function renderTierScale() {
+  const wrap = document.getElementById('tierScale');
+  const fill = document.getElementById('tierTrackFill');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  TIERS.forEach(t => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'tier-btn' + (selectedTier === t.id ? ' on' : '');
+    btn.setAttribute('role', 'radio');
+    btn.setAttribute('aria-checked', selectedTier === t.id ? 'true' : 'false');
+    btn.setAttribute('aria-label', `${t.grade} — ${t.label}`);
+    btn.innerHTML = `
+      <span class="tier-grade">${t.grade}</span>
+      <span class="tier-lab">${t.label}</span>`;
+    btn.addEventListener('click', () => selectTier(t.id));
+    wrap.appendChild(btn);
+  });
+  const idx = selectedTier ? TIERS.findIndex(t => t.id === selectedTier) : -1;
+  if (fill) fill.style.width = idx >= 0 ? `${((idx + 1) / TIERS.length) * 100}%` : '0%';
+  updateTierDetail();
+}
+
+function updateTierDetail() {
+  const el = document.getElementById('tierDetail');
+  if (!el) return;
+  const tier = selectedTier ? getTierById(selectedTier) : null;
+  if (!tier) {
+    el.textContent = 'Wybierz klasę — pokażemy stacje i ścieżki na tym poziomie.';
+    return;
+  }
+  const stLabels = tier.stations.map(id => `${pad(id)} ${S(id).short}`).join(' · ');
+  el.innerHTML = `<strong>${tier.grade}-klasa · ${tier.label}</strong> — ${tier.hint} <span style="color:var(--muted)">(${stLabels})</span>`;
+}
+
+function selectTier(id) {
+  selectedTier = selectedTier === id ? null : id;
+  renderTierScale();
+  renderPathFinderResults();
 }
 
 function renderInterestGrid() {
@@ -2629,29 +2821,34 @@ function renderInterestGrid() {
 function renderPathFinderResults() {
   const box = document.getElementById('pathFinderResults');
   const checked = getCheckedInterestIds();
-  if (!checked.length) {
-    box.innerHTML = '<p class="pf-empty">Zaznacz przynajmniej jedną opcję powyżej.</p>';
+  const tier = selectedTier ? getTierById(selectedTier) : null;
+  if (!checked.length && !tier) {
+    box.innerHTML = '<p class="pf-empty">Wybierz poziom F–S, zaznacz zainteresowania — albo oba naraz.</p>';
     return;
   }
-  const ranked = scoreLines(checked);
+  const ranked = scoreLines(checked, selectedTier);
   if (!ranked.length) {
     box.innerHTML = '<p class="pf-empty">Brak dopasowania — spróbuj innej kombinacji.</p>';
     return;
   }
   box.innerHTML = '';
   ranked.forEach((entry, i) => {
-    const { line, score } = entry;
+    const { line } = entry;
     const seq = line.seq.map((n, j) =>
       `${j ? '<span class="arrowmini">→</span>' : ''}<span class="lstep"><b>${pad(n)}</b> ${S(n).short}</span>`
     ).join('');
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'pf-result' + (i === 0 ? ' top' : '');
+    const reachesTier = tier && line.seq.some(st => tier.stations.includes(st));
+    const tierBadge = i === 0
+      ? '<span class="pfr-badge">Najlepsze dopasowanie</span>'
+      : (reachesTier ? `<span class="pfr-badge">${tier.grade}-klasa</span>` : '');
     btn.innerHTML = `
       <div class="pfr-head">
         <span class="pfr-bar" style="background:${line.color}"></span>
         <span class="pfr-name">${line.name}</span>
-        ${i === 0 ? '<span class="pfr-badge">Najlepsze dopasowanie</span>' : ''}
+        ${tierBadge}
       </div>
       <div class="pfr-when">${line.when}</div>
       ${line.desc ? `<div class="pfr-desc">${line.desc}</div>` : ''}
@@ -2665,6 +2862,8 @@ function clearPathFinderState(resetChecks = true) {
   pathFinderActive = false;
   pathFinderMatches = new Set();
   if (resetChecks) {
+    selectedTier = null;
+    renderTierScale();
     document.querySelectorAll('#interestGrid input').forEach(cb => {
       cb.checked = false;
       cb.closest('label')?.classList.remove('on');
@@ -2675,14 +2874,14 @@ function clearPathFinderState(resetChecks = true) {
 
 function applyPathFinder(preferredLineId = null) {
   const checked = getCheckedInterestIds();
-  if (!checked.length) {
+  if (!checked.length && !selectedTier) {
     clearPathFinderState(true);
     drawMap();
     renderSideLines();
     redrawPathViews();
     return;
   }
-  const ranked = scoreLines(checked);
+  const ranked = scoreLines(checked, selectedTier);
   if (!ranked.length) return;
   pathFinderActive = true;
   pathFinderMatches = new Set(ranked.map(x => x.line.id));
@@ -2818,6 +3017,7 @@ function drawMap() {
   sl.innerHTML = '';
 
   const selLines = selected ? new Set(stationLines[selected]) : null;
+  const tierSts = pathFinderActive && selectedTier ? getTierStations(selectedTier) : [];
 
   LINES.forEach(line => {
     const path = document.createElementNS(NS, 'path');
@@ -2847,7 +3047,8 @@ function drawMap() {
     else if (selLines && selLines.size) {
       dim = dim || (st.id !== selected && !stationLines[st.id].some(id => selLines.has(id)));
     }
-    g.setAttribute('class', 'station' + (dim ? ' dim' : '') + (st.id === selected ? ' sel' : '') + (isHub ? ' hub' : ''));
+    const isTierTarget = tierSts.includes(st.id);
+    g.setAttribute('class', 'station' + (dim ? ' dim' : '') + (st.id === selected ? ' sel' : '') + (isHub ? ' hub' : '') + (isTierTarget ? ' tier-target' : ''));
     g.setAttribute('tabindex', dim ? '-1' : '0');
     g.setAttribute('role', 'button');
     g.setAttribute('aria-label', `Stacja ${pad(st.id)}: ${st.name}`);
@@ -3001,6 +3202,7 @@ if (window.matchMedia('(max-width: 900px)').matches) {
   document.body.classList.add('has-bottom-nav');
 }
 
+renderTierScale();
 renderInterestGrid();
 drawMap();
 renderSideLines();

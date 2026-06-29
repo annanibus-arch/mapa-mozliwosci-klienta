@@ -29,6 +29,17 @@
       font-family: 'Inter', -apple-system, sans-serif;
       line-height: 1.5;
     }
+    body.has-bottom-nav { padding-bottom: 62px; }
+
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    .sl-item:focus-visible,
+    .station:focus-visible,
+    .circ-node:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
 
     header {
       padding: 22px 52px;
@@ -59,8 +70,9 @@
     }
 
     .hero {
-      padding: 48px 52px 28px;
+      padding: 20px 52px 10px;
       max-width: 1200px;
+      margin: 0 auto;
     }
     .eyebrow {
       display: flex;
@@ -76,11 +88,11 @@
     .eyebrow::before { content: '■'; font-size: 7px; }
     h1 {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(48px, 7vw, 80px);
+      font-size: clamp(32px, 5vw, 52px);
       letter-spacing: 2px;
-      line-height: 0.92;
+      line-height: 0.95;
       color: var(--white);
-      margin-bottom: 12px;
+      margin-bottom: 6px;
     }
     h1 em { font-style: normal; color: var(--gold); }
     .hero-note {
@@ -90,14 +102,51 @@
       max-width: 620px;
     }
 
+    /* ── Sticky nawigacja ── */
+    .nav-sticky {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(13,12,9,.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border2);
+    }
+  .path-subnav {
+      display: none;
+      gap: 6px;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 52px 12px;
+      border-top: 1px solid var(--border);
+    }
+    .path-subnav.on { display: flex; }
+    .path-subnav a {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--muted2);
+      text-decoration: none;
+      border: 1px solid var(--border2);
+      border-radius: 999px;
+      padding: 5px 12px;
+      transition: border-color .12s, color .12s, background .12s;
+    }
+    .path-subnav a:hover,
+    .path-subnav a.on {
+      border-color: var(--gold-mid);
+      color: var(--gold);
+      background: var(--gold-lo);
+    }
+
     /* ── Główne zakładki ── */
     .main-tabbar {
       display: flex;
       gap: 0;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 52px 20px;
-      border-bottom: 1px solid var(--border2);
+      padding: 0 52px 0;
+      border-bottom: 0;
     }
     .main-tabbar button {
       flex: 1;
@@ -138,12 +187,118 @@
     .sub-toolbar {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 16px 52px 0;
+      padding: 12px 52px;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       align-items: center;
+      border-top: 1px solid var(--border);
     }
+
+    .side-scrim {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+    .side-scrim.open { opacity: 1; pointer-events: auto; }
+
+    .board-search {
+      flex: 1;
+      min-width: 180px;
+      max-width: 320px;
+      position: relative;
+    }
+    .board-search input {
+      width: 100%;
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      color: var(--white);
+      border-radius: 4px;
+      padding: 9px 12px 9px 34px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+    .board-search input::placeholder { color: var(--muted); }
+    .board-search::before {
+      content: '⌕';
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .product-focus {
+      border: 1px solid var(--gold-mid);
+      background: var(--gold-lo);
+      border-radius: 4px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+    }
+    .product-focus .pf-tag {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .product-focus .pf-name {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .product-focus .pf-desc {
+      font-size: 12px;
+      color: var(--muted2);
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+    .product-focus .pf-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 35;
+      border-top: 1px solid var(--border2);
+      background: rgba(13,12,9,.96);
+      backdrop-filter: blur(10px);
+      padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+    }
+    .bottom-nav button {
+      flex: 1;
+      border: 0;
+      background: transparent;
+      color: var(--muted2);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      padding: 8px 4px;
+      cursor: pointer;
+      font-family: inherit;
+      border-radius: 4px;
+      transition: color .12s, background .12s;
+    }
+    .bottom-nav button.on {
+      color: var(--gold);
+      background: var(--gold-lo);
+    }
+    .bottom-nav button .bn-label { display: block; margin-top: 2px; }
 
     /* ── LAYOUT: sidebar + mapa ── */
     .app-layout {
@@ -1026,6 +1181,7 @@
       border-radius: 4px 0 0 4px;
     }
     .pcard:hover { border-color: var(--gold-mid); transform: translateY(-1px); }
+    .pcard.hide { display: none; }
     .pcard .pc-row1 {
       display: flex;
       align-items: center;
@@ -1104,6 +1260,33 @@
     .circ-chord.dim { opacity: .08; }
     .circ-chord.on { opacity: .9; stroke-width: 4 !important; }
     #circLegend .mleg { border: 0; background: transparent; font: inherit; cursor: pointer; }
+
+    .circ-mobile-list {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 14px;
+    }
+    .circ-mobile-list button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: left;
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      color: var(--white);
+      border-radius: 4px;
+      padding: 10px 12px;
+      font-size: 12px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .circ-mobile-list button .cm-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
 
     .lines-list {
       padding: 0 52px 48px;
@@ -1214,8 +1397,9 @@
 
     @media (max-width: 900px) {
       .main-tabbar { padding-left: 20px; padding-right: 20px; }
-      .main-tabbar button { max-width: none; font-size: 11px; padding: 10px 8px; }
+      .main-tabbar button { max-width: none; font-size: 10px; padding: 10px 6px; }
       .sub-toolbar { padding-left: 20px; padding-right: 20px; }
+      .path-subnav { padding-left: 20px; padding-right: 20px; }
       .product-strip { grid-template-columns: 1fr; }
       .branch-grid { grid-template-columns: 1fr; }
       .path-expand { padding-left: 20px; padding-right: 20px; }
@@ -1226,23 +1410,35 @@
         padding-right: 20px;
       }
       .sidebar {
-        position: static;
-        display: none;
+        position: fixed;
+        left: -280px;
+        top: 0;
+        bottom: 0;
+        width: 260px;
+        z-index: 26;
+        display: flex;
+        transition: left .22s;
+        overflow-y: auto;
+        border-radius: 0;
       }
-      .sidebar.open { display: flex; }
+      .sidebar.open { left: 0; }
       .menu-toggle { display: flex; }
       .metro-tools { align-items: stretch; }
+      .bottom-nav { display: flex; }
+      body.has-bottom-nav { padding-bottom: 62px; }
     }
 
     @media (max-width: 720px) {
       header, .hero, .lines-list, .faq-section, footer { padding-left: 20px; padding-right: 20px; }
-      h1 { font-size: 52px; }
+      h1 { font-size: 40px; }
       .faq-grid { grid-template-columns: 1fr; }
       .event-row { flex-direction: column; gap: 2px; }
       svg.metro { min-height: 280px; }
       .station .label { font-size: 8.5px; }
       .sheet { max-height: 92vh; border-radius: 14px 14px 0 0; }
       .nrow .nl { min-width: 0; }
+      .circ-node .cn-label { display: none; }
+      .circ-mobile-list { display: flex; }
     }
   </style>
 </head>
@@ -1255,14 +1451,16 @@
 
 <div class="hero">
   <div class="eyebrow">Mapa ścieżki klienta</div>
-  <h1>TWOJA<br>ŚCIEŻKA<br>Z <em>MENTAL</em><em>WAY</em></h1>
-  <p class="hero-note">Siedem stacji — siedem poziomów rozwoju. Możesz wsiąść na dowolnej i jechać inną linią. Przełącz zakładkę, żeby zobaczyć ścieżki, tablicę produktów albo diagram.</p>
+  <h1>TWOJA ŚCIEŻKA Z <em>MENTAL</em><em>WAY</em></h1>
+  <p class="hero-note">Siedem stacji — wsiądź gdzie chcesz, jedź swoją linią.</p>
 </div>
 
-<nav class="main-tabbar" id="mainTabbar" aria-label="Widoki mapy">
-  <button type="button" data-tab="sciezki" class="on">Ścieżki</button>
-  <button type="button" data-tab="tablica">Tablica</button>
-  <button type="button" data-tab="diagram">Diagram</button>
+<div class="nav-sticky">
+<nav class="main-tabbar" id="mainTabbar" role="tablist" aria-label="Widoki mapy">
+  <button type="button" role="tab" id="tabbtn-sciezki" aria-selected="true" aria-controls="tab-sciezki" data-tab="sciezki" class="on">Ścieżki</button>
+  <button type="button" role="tab" id="tabbtn-tablica" aria-selected="false" aria-controls="tab-tablica" data-tab="tablica">Tablica</button>
+  <button type="button" role="tab" id="tabbtn-diagram" aria-selected="false" aria-controls="tab-diagram" data-tab="diagram">Diagram</button>
+  <button type="button" role="tab" id="tabbtn-linie" aria-selected="false" aria-controls="tab-linie" data-tab="linie">Linie</button>
 </nav>
 
 <div class="sub-toolbar" id="formatSubToolbar" style="display:none">
@@ -1273,7 +1471,16 @@
   <div class="format-legend" id="formatLegend"></div>
 </div>
 
-<div id="tab-sciezki" class="tab-panel on">
+<nav class="path-subnav on" id="pathSubnav" aria-label="Sekcje ścieżki">
+  <a href="#sekcja-mapa">Mapa</a>
+  <a href="#sekcja-produkty">01 / 02</a>
+  <a href="#sciezka-darmowa">Darmowa</a>
+</nav>
+</div>
+
+<div class="side-scrim" id="sideScrim" aria-hidden="true"></div>
+
+<div id="tab-sciezki" class="tab-panel on" role="tabpanel" aria-labelledby="tabbtn-sciezki">
 <div class="app-layout">
   <aside class="sidebar" id="sidebar">
     <div class="hub-box">
@@ -1284,25 +1491,17 @@
     </div>
     <div class="side-label">Linie ścieżki <span id="linesCount" style="color:var(--muted2)">7</span></div>
     <div id="sideLines"></div>
-    <a class="sl-item" href="#" data-gotab="sciezki" data-scroll="sciezka-darmowa" style="text-decoration:none;margin-top:4px">
+    <button type="button" class="sl-item sl-scroll" data-scroll="sciezka-darmowa" style="margin-top:4px">
       <span class="sd" style="background:var(--gold)"></span>
       <span><div class="sn">Ścieżka darmowa</div><div class="sw">Rozpiska 3 wejść na stacji 01</div></span>
-    </a>
-    <a class="sl-item" href="#" data-gotab="tablica" style="text-decoration:none">
-      <span class="sd" style="background:#6b8f71"></span>
-      <span><div class="sn">Tablica formatów</div><div class="sw">Pisana · Video · Audio</div></span>
-    </a>
-    <a class="sl-item" href="#" data-gotab="diagram" style="text-decoration:none">
-      <span class="sd" style="background:#a89030"></span>
-      <span><div class="sn">Diagram produktów</div><div class="sw">Okrąg wg formatu</div></span>
-    </a>
+    </button>
     <div class="side-foot">
       <button class="tbtn" id="btnTransfersSide">Tylko przesiadki</button>
       <button class="tbtn" id="btnResetSide">Reset widoku</button>
     </div>
   </aside>
 
-  <div class="map-area">
+  <div class="map-area" id="sekcja-mapa">
     <div class="metro-panel">
       <div class="metro-tools">
         <div>
@@ -1321,7 +1520,7 @@
       </svg>
       <div class="maplegend" id="maplegend"></div>
 
-      <div class="product-strip">
+      <div class="product-strip" id="sekcja-produkty">
         <div class="product-col free">
           <div class="preview-head">
             <span class="preview-num">01</span>
@@ -1401,24 +1600,23 @@
     <div class="fork-grid" id="forkGrid"></div>
   </div>
 </section>
-
-<div class="lines-list">
-  <h2>LINIE ŚCIEŻKI</h2>
-  <p>Każda linia to inny sposób wejścia w ekosystem MentalWay. Nie musisz przejechać wszystkich stacji po kolei.</p>
-  <div class="lineGrid" id="lineGrid"></div>
-</div>
 </div><!-- /tab-sciezki -->
 
-<div id="tab-tablica" class="tab-panel">
+<div id="tab-tablica" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-tablica">
   <section class="format-section">
     <div class="eyebrow">Produkty wg formatu</div>
     <h2>TABLICA</h2>
     <p class="format-intro">Kolumny wg <strong style="color:var(--white)">obszaru formatu</strong> (pisana, video, audio) albo wg <strong style="color:var(--white)">stacji metra</strong> (01–07). Kliknij kartę, żeby przejść do stacji.</p>
+    <div class="format-toolbar">
+      <div class="board-search">
+        <input type="search" id="boardSearch" placeholder="Szukaj produktu…" autocomplete="off" aria-label="Szukaj produktu">
+      </div>
+    </div>
     <div class="format-board" id="formatBoard"></div>
   </section>
 </div>
 
-<div id="tab-diagram" class="tab-panel">
+<div id="tab-diagram" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-diagram">
   <section class="format-section">
     <div class="eyebrow">Produkty wg formatu</div>
     <h2>DIAGRAM</h2>
@@ -1426,8 +1624,18 @@
     <div class="format-circle-wrap">
       <svg id="formatCircleSvg" viewBox="0 0 700 520" aria-label="Diagram produktów na okręgu"></svg>
       <div class="circ-legend" id="circLegend"></div>
+      <div class="circ-mobile-list" id="circMobileList" aria-label="Lista produktów na diagramie"></div>
     </div>
   </section>
+</div>
+
+<div id="tab-linie" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-linie">
+  <div class="lines-list">
+    <div class="eyebrow">Ścieżki klienta</div>
+    <h2>LINIE ŚCIEŻKI</h2>
+    <p>Każda linia to inny sposób wejścia w ekosystem MentalWay. Nie musisz przejechać wszystkich stacji po kolei. Kliknij stację, żeby otworzyć szczegóły.</p>
+    <div class="lineGrid" id="lineGrid"></div>
+  </div>
 </div>
 
 <div class="faq-section" id="systemy">
@@ -1479,6 +1687,13 @@
     <a href="https://mentalway.pl/">mentalway.pl</a>
   </nav>
 </footer>
+
+<nav class="bottom-nav" id="bottomNav" aria-label="Nawigacja mobilna">
+  <button type="button" data-tab="sciezki" class="on"><span class="bn-label">Ścieżki</span></button>
+  <button type="button" data-tab="tablica"><span class="bn-label">Tablica</span></button>
+  <button type="button" data-tab="diagram"><span class="bn-label">Diagram</span></button>
+  <button type="button" data-tab="linie"><span class="bn-label">Linie</span></button>
+</nav>
 
 <div class="scrim" id="scrim"></div>
 <aside class="sheet" id="drawer" aria-label="Szczegóły stacji">
@@ -1667,6 +1882,7 @@ const PRODUCTS = [
 let formatGroup = 'format';
 let formatSelected = null;
 let formatActiveGroup = null;
+let selectedProduct = null;
 let mainTab = 'sciezki';
 
 const CONTENT = {
@@ -1810,13 +2026,42 @@ function productCard(p) {
   </div>`;
 }
 
+function productFocusHtml(p) {
+  if (!p) return '';
+  const fmt = FORMATS[p.format];
+  const link = p.href && p.href.startsWith('http')
+    ? `<a class="chip chip-cta" href="${p.href}" target="_blank" rel="noopener">Otwórz produkt →</a>`
+    : '';
+  return `<div class="product-focus">
+    <div class="pf-tag">Wybrany produkt</div>
+    <div class="pf-name">${p.name}</div>
+    <div class="pf-desc">${p.desc}</div>
+    <div class="pf-meta">
+      <span class="fmt">${fmt.name}</span>
+      <span class="fmt">Stacja ${pad(p.station)}</span>
+      <span class="fmt">${p.platform}</span>
+      ${p.free ? '<span class="pc-free">Darmowe</span>' : ''}
+    </div>
+    ${link}
+  </div>`;
+}
+
+function passesBoardFilter(p) {
+  const q = (document.getElementById('boardSearch')?.value || '').trim().toLowerCase();
+  if (!q) return true;
+  const fmt = FORMATS[p.format];
+  const st = S(p.station);
+  const hay = [p.name, p.desc, p.platform, fmt.name, fmt.code, pad(p.station), st?.short, st?.name].join(' ').toLowerCase();
+  return hay.includes(q);
+}
+
 function renderFormatBoard() {
   const board = document.getElementById('formatBoard');
   board.innerHTML = '';
 
   if (formatGroup === 'format') {
     Object.values(FORMATS).forEach(f => {
-      const items = PRODUCTS.filter(p => p.format === f.id);
+      const items = PRODUCTS.filter(p => p.format === f.id && passesBoardFilter(p));
       const col = document.createElement('div');
       col.className = 'format-col';
       col.innerHTML = `
@@ -1828,11 +2073,11 @@ function renderFormatBoard() {
       const cards = document.createElement('div');
       items.forEach(p => { cards.insertAdjacentHTML('beforeend', productCard(p)); });
       col.appendChild(cards);
-      board.appendChild(col);
+      if (items.length) board.appendChild(col);
     });
   } else {
     STATIONS.forEach(st => {
-      const items = PRODUCTS.filter(p => p.station === st.id);
+      const items = PRODUCTS.filter(p => p.station === st.id && passesBoardFilter(p));
       if (!items.length) return;
       const col = document.createElement('div');
       col.className = 'format-col';
@@ -1851,10 +2096,9 @@ function renderFormatBoard() {
 
   board.querySelectorAll('.pcard').forEach(card => {
     card.addEventListener('click', () => {
-      const st = +card.dataset.station;
       const p = PRODUCTS.find(x => x.id === card.dataset.pid);
-      if (p?.href && p.href.startsWith('http')) window.open(p.href, '_blank');
-      else openDrawer(st);
+      formatSelected = p?.id || null;
+      openDrawer(+card.dataset.station, p?.id || null);
     });
   });
 }
@@ -1919,7 +2163,7 @@ function renderFormatCircle() {
     const sel = formatSelected === p.id ? ' sel' : '';
     const dim = formatActiveGroup && formatActiveGroup !== gid ? ' dim' : '';
     const label = formatGroup === 'format' ? p.name : `${pad(p.station)} · ${p.name}`;
-    html += `<g class="circ-node${sel}${dim}" data-pid="${p.id}" data-station="${p.station}" data-gid="${gid}">
+    html += `<g class="circ-node${sel}${dim}" data-pid="${p.id}" data-station="${p.station}" data-gid="${gid}" tabindex="0" role="button" aria-label="${p.name}, stacja ${pad(p.station)}">
       <circle class="cn-ring" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="16" stroke="${nodeColor}"/>
       <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="11" fill="${nodeColor}" stroke="#0d0c09" stroke-width="2.5"/>
       <text x="${x.toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="middle" font-family="Bebas Neue" font-size="9" fill="#0d0c09">${formatGroup === 'format' ? FORMATS[p.format].code : pad(p.station)}</text>
@@ -1936,17 +2180,14 @@ function renderFormatCircle() {
     });
   });
   svg.querySelectorAll('.circ-node').forEach(node => {
-    node.addEventListener('click', () => {
+    const activate = () => {
       formatSelected = node.dataset.pid;
       formatActiveGroup = node.dataset.gid;
-      const p = PRODUCTS.find(x => x.id === node.dataset.pid);
-      const st = +node.dataset.station;
-      if (p?.href && p.href.startsWith('http')) {
-        window.open(p.href, '_blank');
-        renderFormatCircle();
-      } else {
-        openDrawer(st);
-      }
+      openDrawer(+node.dataset.station, node.dataset.pid);
+    };
+    node.addEventListener('click', activate);
+    node.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
     });
   });
 
@@ -1961,6 +2202,20 @@ function renderFormatCircle() {
   lg.querySelectorAll('[data-gid]').forEach(btn => {
     btn.addEventListener('click', () => selectFormatGroup(btn.dataset.gid));
   });
+
+  const mlist = document.getElementById('circMobileList');
+  if (mlist) {
+    mlist.innerHTML = PRODUCTS.map(p => {
+      const color = formatGroup === 'format' ? FORMATS[p.format].color : groupMeta(productGroupId(p)).color;
+      return `<button type="button" data-pid="${p.id}" data-station="${p.station}">
+        <span class="cm-dot" style="background:${color}"></span>
+        <span><strong>${pad(p.station)}</strong> · ${p.name}</span>
+      </button>`;
+    }).join('');
+    mlist.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => openDrawer(+btn.dataset.station, btn.dataset.pid));
+    });
+  }
 }
 
 function setFormatGroup(g) {
@@ -1972,33 +2227,56 @@ function setFormatGroup(g) {
   else if (mainTab === 'diagram') renderFormatCircle();
 }
 
+function syncTabUi(tab) {
+  document.querySelectorAll('#mainTabbar [data-tab], #bottomNav [data-tab]').forEach(b => {
+    const on = b.dataset.tab === tab;
+    b.classList.toggle('on', on);
+    if (b.getAttribute('role') === 'tab') b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  document.getElementById('pathSubnav').classList.toggle('on', tab === 'sciezki');
+  document.getElementById('formatSubToolbar').style.display =
+    (tab === 'tablica' || tab === 'diagram') ? 'flex' : 'none';
+}
+
 function setMainTab(tab, scrollTo) {
   mainTab = tab;
-  document.querySelectorAll('#mainTabbar [data-tab]').forEach(b =>
-    b.classList.toggle('on', b.dataset.tab === tab));
+  syncTabUi(tab);
   document.getElementById('tab-sciezki').classList.toggle('on', tab === 'sciezki');
   document.getElementById('tab-tablica').classList.toggle('on', tab === 'tablica');
   document.getElementById('tab-diagram').classList.toggle('on', tab === 'diagram');
-  document.getElementById('formatSubToolbar').style.display =
-    (tab === 'tablica' || tab === 'diagram') ? 'flex' : 'none';
+  document.getElementById('tab-linie').classList.toggle('on', tab === 'linie');
   if (tab === 'tablica') renderFormatBoard();
   else if (tab === 'diagram') renderFormatCircle();
+  closeSidebar();
   if (scrollTo) {
     const el = document.getElementById(scrollTo);
     if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
   }
-  if (location.hash !== '#' + tab) {
-    history.replaceState(null, '', '#' + tab);
+  const hash = scrollTo && tab === 'sciezki' ? scrollTo : tab;
+  if (location.hash !== '#' + hash) {
+    history.replaceState(null, '', '#' + hash);
   }
 }
 
 function initMainTabFromHash() {
   const hash = (location.hash || '').replace('#', '');
-  if (hash === 'tablica' || hash === 'diagram' || hash === 'sciezki') {
+  if (hash === 'tablica' || hash === 'diagram' || hash === 'sciezki' || hash === 'linie') {
     setMainTab(hash);
   } else if (hash === 'sciezka-darmowa' || hash === 'formaty-produktow') {
     setMainTab(hash === 'formaty-produktow' ? 'tablica' : 'sciezki', hash === 'sciezka-darmowa' ? 'sciezka-darmowa' : null);
+  } else if (['sekcja-mapa', 'sekcja-produkty'].includes(hash)) {
+    setMainTab('sciezki', hash);
   }
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar')?.classList.remove('open');
+  document.getElementById('sideScrim')?.classList.remove('open');
+}
+
+function openSidebar() {
+  document.getElementById('sidebar')?.classList.add('open');
+  document.getElementById('sideScrim')?.classList.add('open');
 }
 
 function renderFreeSpurMap() {
@@ -2175,16 +2453,18 @@ function renderSheetHead(n) {
     </div>
     ${lines.length ? `<div class="neigh-block">${neighboursHtml(n)}</div>` : ''}`;
 
-  document.getElementById('sheetBody').innerHTML = CONTENT[n];
+  document.getElementById('sheetBody').innerHTML = productFocusHtml(selectedProduct) + CONTENT[n];
   document.getElementById('dClose').onclick = closeDrawer;
   document.querySelectorAll('#sheetHead .njump, #sheetBody .njump').forEach(b => {
     b.onclick = () => openDrawer(+b.dataset.jump);
   });
 }
 
-function openDrawer(n) {
+function openDrawer(n, productId = null) {
   selected = n;
   activeLine = null;
+  selectedProduct = productId ? PRODUCTS.find(p => p.id === productId) || null : null;
+  if (productId) formatSelected = productId;
   renderSheetHead(n);
   document.getElementById('scrim').classList.add('open');
   document.getElementById('drawer').classList.add('open');
@@ -2195,6 +2475,7 @@ function openDrawer(n) {
 
 function closeDrawer() {
   selected = null;
+  selectedProduct = null;
   document.getElementById('scrim').classList.remove('open');
   document.getElementById('drawer').classList.remove('open');
   drawMap();
@@ -2235,6 +2516,9 @@ function drawMap() {
       dim = dim || (st.id !== selected && !stationLines[st.id].some(id => selLines.has(id)));
     }
     g.setAttribute('class', 'station' + (dim ? ' dim' : '') + (st.id === selected ? ' sel' : '') + (isHub ? ' hub' : ''));
+    g.setAttribute('tabindex', dim ? '-1' : '0');
+    g.setAttribute('role', 'button');
+    g.setAttribute('aria-label', `Stacja ${pad(st.id)}: ${st.name}`);
     const r = isHub ? 20 : (isT ? 15 : 12);
     g.innerHTML = `
       ${isT ? `<circle class="transfer" cx="${x}" cy="${y}" r="${r + 4}"></circle>` : ''}
@@ -2243,7 +2527,11 @@ function drawMap() {
       <text class="num" x="${x + r - 1}" y="${y - r + 4}" text-anchor="middle" fill="${st.color}">${pad(st.id)}</text>
       <circle class="ring2" cx="${x}" cy="${y}" r="${r + 6}" style="stroke:${st.id === selected ? st.color : '#f0ece4'}"></circle>
       <text class="label" x="${x}" y="${y + r + 14}" text-anchor="middle">${st.short}</text>`;
-    g.addEventListener('click', () => openDrawer(st.id));
+    const activate = () => openDrawer(st.id);
+    g.addEventListener('click', activate);
+    g.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
+    });
     sl.appendChild(g);
   });
 
@@ -2322,18 +2610,46 @@ document.getElementById('btnTransfers').addEventListener('click', toggleTransfer
 document.getElementById('btnTransfersSide').addEventListener('click', toggleTransfers);
 document.getElementById('scrim').addEventListener('click', closeDrawer);
 document.getElementById('sheetHandle').addEventListener('click', closeDrawer);
+document.getElementById('sideScrim').addEventListener('click', closeSidebar);
 document.getElementById('menuToggle').addEventListener('click', () => {
-  document.getElementById('sidebar').classList.toggle('open');
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar.classList.contains('open')) closeSidebar();
+  else openSidebar();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('drawer').classList.contains('open')) closeDrawer();
+    else closeSidebar();
+  }
+});
 document.querySelectorAll('.preview-open').forEach(btn => {
   btn.addEventListener('click', () => openDrawer(+btn.dataset.open));
+});
+document.getElementById('boardSearch')?.addEventListener('input', () => {
+  if (mainTab === 'tablica') renderFormatBoard();
+});
+document.querySelectorAll('.sl-scroll').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.dataset.scroll;
+    if (id) document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    closeSidebar();
+  });
+});
+document.querySelectorAll('#pathSubnav a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.querySelectorAll('#pathSubnav a').forEach(x => x.classList.remove('on'));
+    a.classList.add('on');
+  });
 });
 
 const hub = S(HUB_STATION);
 document.getElementById('hubNum').textContent = pad(HUB_STATION);
 document.getElementById('hubName').textContent = hub.name;
 document.getElementById('linesCount').textContent = LINES.length;
+
+if (window.matchMedia('(max-width: 900px)').matches) {
+  document.body.classList.add('has-bottom-nav');
+}
 
 drawMap();
 renderSideLines();
@@ -2343,18 +2659,21 @@ renderBranchGrid();
 renderForkGrid();
 renderFormatLegend();
 
-document.querySelectorAll('#mainTabbar [data-tab]').forEach(btn => {
-  btn.addEventListener('click', () => setMainTab(btn.dataset.tab));
+function bindTabButtons(selector) {
+  document.querySelectorAll(selector).forEach(btn => {
+    btn.addEventListener('click', () => setMainTab(btn.dataset.tab));
+  });
+}
+bindTabButtons('#mainTabbar [data-tab]');
+bindTabButtons('#bottomNav [data-tab]');
+document.getElementById('mainTabbar')?.addEventListener('keydown', e => {
+  const tabs = [...document.querySelectorAll('#mainTabbar [data-tab]')];
+  const i = tabs.findIndex(t => t.classList.contains('on'));
+  if (e.key === 'ArrowRight' && i < tabs.length - 1) { e.preventDefault(); tabs[i + 1].click(); tabs[i + 1].focus(); }
+  if (e.key === 'ArrowLeft' && i > 0) { e.preventDefault(); tabs[i - 1].click(); tabs[i - 1].focus(); }
 });
 document.querySelectorAll('#formatGroupSeg [data-fgroup]').forEach(btn => {
   btn.addEventListener('click', () => setFormatGroup(btn.dataset.fgroup));
-});
-document.querySelectorAll('[data-gotab]').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    setMainTab(link.dataset.gotab, link.dataset.scroll || null);
-    document.getElementById('sidebar')?.classList.remove('open');
-  });
 });
 window.addEventListener('hashchange', initMainTabFromHash);
 

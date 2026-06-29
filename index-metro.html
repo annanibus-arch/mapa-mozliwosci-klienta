@@ -388,6 +388,10 @@
       border-color: var(--gold-mid);
       background: var(--gold-lo);
     }
+    .sl-item.match {
+      border-color: rgba(201, 168, 32, 0.45);
+      background: rgba(201, 168, 32, 0.06);
+    }
     .sl-item .sd {
       width: 10px;
       height: 10px;
@@ -534,6 +538,10 @@
     }
     .mleg:hover, .mleg.on {
       border-color: var(--gold-mid);
+      color: var(--white);
+    }
+    .mleg.match {
+      border-color: rgba(201, 168, 32, 0.45);
       color: var(--white);
     }
     .mleg .sw { width: 18px; height: 5px; border-radius: 3px; }
@@ -1135,6 +1143,118 @@
       margin-bottom: 8px;
     }
     .seg.diagram-tools .tbtn { width: auto; padding: 8px 14px; }
+
+    /* ── Dobierz ścieżkę (quiz checkboxów) ── */
+    .path-finder {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 52px 20px;
+    }
+    .path-finder-box {
+      border: 1px solid var(--border2);
+      border-left: 2px solid var(--gold-mid);
+      background: linear-gradient(180deg, var(--surface), var(--bg));
+      border-radius: 4px;
+      padding: 18px 20px;
+    }
+    .path-finder h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .path-finder .pf-intro {
+      font-size: 13px;
+      color: var(--muted2);
+      line-height: 1.6;
+      max-width: 640px;
+      margin-bottom: 14px;
+    }
+    .interest-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .interest-grid label {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 8px;
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      border-radius: 1px;
+      padding: 9px 12px;
+      cursor: pointer;
+      transition: border-color .12s, background .12s;
+      max-width: 280px;
+    }
+    .interest-grid label:hover { border-color: var(--gold-mid); }
+    .interest-grid label.on {
+      border-color: var(--gold-mid);
+      background: var(--gold-lo);
+    }
+    .interest-grid input {
+      margin-top: 3px;
+      accent-color: var(--gold);
+      flex-shrink: 0;
+    }
+    .interest-grid .ilab { font-size: 12px; font-weight: 600; color: var(--white); line-height: 1.3; }
+    .interest-grid .ihint { display: block; font-size: 11px; color: var(--muted2); font-weight: 400; margin-top: 2px; }
+    .pf-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .pf-actions .tbtn { width: auto; }
+    .pf-results-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .pf-results { display: flex; flex-direction: column; gap: 8px; }
+    .pf-result {
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      border-radius: 1px;
+      padding: 12px 14px;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      color: inherit;
+      transition: border-color .12s, background .12s;
+      width: 100%;
+    }
+    .pf-result:hover { border-color: var(--gold-mid); }
+    .pf-result.top {
+      border-color: var(--gold-mid);
+      background: var(--gold-lo);
+    }
+    .pf-result .pfr-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .pf-result .pfr-bar { width: 22px; height: 5px; border-radius: 2px; flex-shrink: 0; }
+    .pf-result .pfr-name { font-size: 14px; font-weight: 700; }
+    .pf-result .pfr-badge {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-left: auto;
+    }
+    .pf-result .pfr-when { font-size: 12px; color: var(--muted2); line-height: 1.5; margin-bottom: 6px; }
+    .pf-result .pfr-desc { font-size: 11px; color: var(--muted2); line-height: 1.5; margin-bottom: 8px; }
+    .pf-result .pfr-seq { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; font-size: 11px; }
+    .pf-result .pfr-seq .lstep { padding: 3px 7px; }
+    .pf-empty { font-size: 12px; color: var(--muted); font-style: italic; }
     .format-legend {
       display: flex;
       flex-wrap: wrap;
@@ -1432,7 +1552,7 @@
       .main-tabbar { padding-left: 20px; padding-right: 20px; }
       .main-tabbar button { max-width: none; font-size: 10px; padding: 10px 6px; }
       .sub-toolbar { padding-left: 20px; padding-right: 20px; }
-      .path-subnav { padding-left: 20px; padding-right: 20px; }
+      .path-finder { padding-left: 20px; padding-right: 20px; }
       .product-strip { grid-template-columns: 1fr; }
       .branch-grid { grid-template-columns: 1fr; }
       .path-expand { padding-left: 20px; padding-right: 20px; }
@@ -1508,6 +1628,7 @@
 </div>
 
 <nav class="path-subnav on" id="pathSubnav" aria-label="Sekcje ścieżki">
+  <a href="#dobierz-sciezke">Dobierz</a>
   <a href="#sekcja-mapa">Mapa</a>
   <a href="#sekcja-produkty">01 / 02</a>
   <a href="#sciezka-darmowa">Darmowa</a>
@@ -1517,6 +1638,24 @@
 <div class="side-scrim" id="sideScrim" aria-hidden="true"></div>
 
 <div id="tab-sciezki" class="tab-panel on" role="tabpanel" aria-labelledby="tabbtn-sciezki">
+
+<section class="path-finder" id="dobierz-sciezke">
+  <div class="path-finder-box">
+    <div class="eyebrow">Dobierz ścieżkę</div>
+    <h2>CO CIĘ INTERESUJE?</h2>
+    <p class="pf-intro">Zaznacz, co jest dla Ciebie ważne — podpowiemy linię na mapie i opiszemy trasę. Możesz zaznaczyć kilka opcji naraz.</p>
+    <div class="interest-grid" id="interestGrid"></div>
+    <div class="pf-actions">
+      <button type="button" class="tbtn" id="pfApply">Pokaż na mapie</button>
+      <button type="button" class="tbtn" id="pfClear">Wyczyść wybór</button>
+    </div>
+    <div class="pf-results-label">Propozycje ścieżek</div>
+    <div class="pf-results" id="pathFinderResults">
+      <p class="pf-empty">Zaznacz przynajmniej jedną opcję powyżej.</p>
+    </div>
+  </div>
+</section>
+
 <div class="app-layout">
   <aside class="sidebar" id="sidebar">
     <div class="hub-box">
@@ -1762,13 +1901,59 @@ const POS = {
 };
 
 const LINES = [
-  { id: 'pelna', name: 'Pełna ścieżka', when: 'gdy chcesz przejść całą drogę od darmowej wiedzy po mentoring', color: '#c9a820', seq: [1, 2, 3, 5, 7] },
-  { id: 'samodzielna', name: 'Samodzielna nauka', when: 'gdy chcesz uczyć się we własnym tempie, bez mentora', color: '#8a7e6a', seq: [1, 2] },
-  { id: 'spolecznosc', name: 'Społeczność → programy', when: 'gdy chcesz wejść w społeczność i programy grupowe', color: '#d4b84a', seq: [1, 3, 5, 7] },
-  { id: 'wyjazdy', name: 'Eventy na żywo', when: 'gdy interesują Cię warsztaty i wyjazdy do Mental Shelter', color: '#a89030', seq: [1, 2, 4] },
-  { id: 'mmc_wyjazdy', name: 'MMC + wyjazdy', when: 'gdy łączysz społeczność ze wspólnymi eventami', color: '#9a8530', seq: [1, 3, 4] },
-  { id: 'konsultacje', name: 'Bezpośrednio do Michała', when: 'gdy chcesz rozmowę lub mentoring 1:1 z Michałem', color: '#6b8f71', seq: [1, 6, 7] },
-  { id: 'premium', name: 'Premium od razu', when: 'gdy wchodzisz na najwyższy poziom bez poprzednich etapów', color: '#e8c84a', seq: [6, 7] },
+  {
+    id: 'pelna', name: 'Główna oś MMC',
+    when: 'gdy chcesz iść przez społeczność i programy grupowe aż po LSM',
+    desc: '01 darmowa wiedza → 02 materiały → 03 MMC → 05 programy online → 07 LSM. To główna oś z mentorem w grupie — bez wyjazdów stacjonarnych (04) i bez konsultacji 1:1 (06) jako osobnych etapów.',
+    color: '#c9a820', seq: [1, 2, 3, 5, 7],
+  },
+  {
+    id: 'samodzielna', name: 'Samodzielna nauka',
+    when: 'gdy chcesz uczyć się we własnym tempie, bez mentora i bez MMC',
+    desc: 'Zostajesz na materiałach: książki, VOD, audio, Dziennik. Nie wymaga karty MMC ani programów grupowych.',
+    color: '#8a7e6a', seq: [1, 2],
+  },
+  {
+    id: 'spolecznosc', name: 'Społeczność → programy',
+    when: 'gdy chcesz wejść w społeczność i programy grupowe online',
+    desc: 'MMC jako przepustka, potem PB lub GLSM online z Michałem. Możesz pominąć stację 02, jeśli od razu idziesz w relację grupową.',
+    color: '#d4b84a', seq: [1, 3, 5, 7],
+  },
+  {
+    id: 'wyjazdy', name: 'Eventy na żywo',
+    when: 'gdy interesują Cię warsztaty i wyjazdy do Mental Shelter',
+    desc: 'Łączy darmowe wejście, opcjonalnie materiały płatne, i stacjonarne wyjazdy w Puszczy Noteckiej.',
+    color: '#a89030', seq: [1, 2, 4],
+  },
+  {
+    id: 'mmc_wyjazdy', name: 'MMC + wyjazdy',
+    when: 'gdy łączysz społeczność ze wspólnymi eventami na żywo',
+    desc: 'Karta MMC + wyjazdy stacjonarne. Społeczność i doświadczenie w grupie poza ekranem.',
+    color: '#9a8530', seq: [1, 3, 4],
+  },
+  {
+    id: 'konsultacje', name: 'Bezpośrednio do Michała',
+    when: 'gdy chcesz rozmowę lub mentoring 1:1 z Michałem',
+    desc: 'Konsultacja 1:1 (06) — wejście bezpośrednie, bez MMC. Opcjonalnie dalsza droga do LSM (07).',
+    color: '#6b8f71', seq: [1, 6, 7],
+  },
+  {
+    id: 'premium', name: 'Premium od razu',
+    when: 'gdy wchodzisz na najwyższy poziom bez poprzednich etapów',
+    desc: 'Konsultacja lub LSM bez przechodzenia przez wcześniejsze stacje. Dla osób, które wiedzą, czego chcą.',
+    color: '#e8c84a', seq: [6, 7],
+  },
+];
+
+/* Zaznaczenia klienta → punkty dla linii (łatwo dodać nowe ścieżki i zainteresowania) */
+const INTERESTS = [
+  { id: 'samodzielnie', label: 'Nauka we własnym tempie', hint: 'książki, VOD, audio, Dziennik', scores: { samodzielna: 3, wyjazdy: 1, pelna: 1 } },
+  { id: 'spolecznosc', label: 'Społeczność MMC', hint: 'Discord Mentalwayandia', scores: { spolecznosc: 3, pelna: 2, mmc_wyjazdy: 3 } },
+  { id: 'wyjazdy', label: 'Wyjazdy i warsztaty na żywo', hint: 'Mental Shelter', scores: { wyjazdy: 4, mmc_wyjazdy: 3 } },
+  { id: 'programy', label: 'Programy grupowe online', hint: 'Personal Branding, GLSM', scores: { spolecznosc: 2, pelna: 4 } },
+  { id: 'konsultacja', label: 'Rozmowa 1:1 z Michałem', hint: 'konsultacje w sklepie', scores: { konsultacje: 4, premium: 1 } },
+  { id: 'lsm', label: 'Długoterminowy mentoring (LSM)', hint: 'Life Spectrum Mentoring', scores: { pelna: 3, spolecznosc: 2, konsultacje: 2, premium: 3 } },
+  { id: 'szybko', label: 'Wysoki poziom bez długiej drogi', hint: 'bez przechodzenia przez wszystkie etapy', scores: { premium: 5, konsultacje: 2 } },
 ];
 
 /* ── Rozpiska: ścieżka darmowa ── */
@@ -2026,6 +2211,8 @@ const NS = 'http://www.w3.org/2000/svg';
 let activeLine = null;
 let selected = null;
 let transferMode = false;
+let pathFinderActive = false;
+let pathFinderMatches = new Set();
 
 const stationLines = {};
 STATIONS.forEach(s => stationLines[s.id] = []);
@@ -2153,11 +2340,13 @@ function renderPathCircle() {
   LINES.forEach(line => {
     for (let i = 0; i < line.seq.length - 1; i++) {
       const a = line.seq[i], b = line.seq[i + 1];
-      let dim = false;
-      if (activeLine) dim = activeLine !== line.id;
-      else if (selLines && selLines.size) dim = !selLines.has(line.id);
-      const on = activeLine === line.id;
-      html += `<path class="circ-chord metroLine${dim ? ' dim' : ''}${on ? ' on' : ''}" data-line="${line.id}" stroke="${line.color}" stroke-width="${on ? 4 : 2.5}" opacity="${on ? 0.9 : 0.35}" d="${circChordPath(pos, CCX, CCY, a, b)}"/>`;
+    let dim = false;
+    if (pathFinderActive && pathFinderMatches.size) dim = !pathFinderMatches.has(line.id);
+    else if (activeLine) dim = activeLine !== line.id;
+    else if (selLines && selLines.size) dim = !selLines.has(line.id);
+    const on = activeLine === line.id;
+    const match = pathFinderActive && pathFinderMatches.has(line.id);
+    html += `<path class="circ-chord metroLine${dim ? ' dim' : ''}${on ? ' on' : ''}${match && !on ? ' match' : ''}" data-line="${line.id}" stroke="${line.color}" stroke-width="${on ? 4 : (match ? 3.5 : 2.5)}" opacity="${on || match ? 0.9 : 0.35}" d="${circChordPath(pos, CCX, CCY, a, b)}"/>`;
     }
   });
   html += '</g><g id="circNodeLayer">';
@@ -2167,7 +2356,9 @@ function renderPathCircle() {
     const isHub = st.id === HUB_STATION;
     const vis = !transferMode || isT;
     let dim = !vis;
-    if (activeLine) dim = dim || !stationLines[st.id].includes(activeLine);
+    if (pathFinderActive && pathFinderMatches.size) {
+      dim = dim || !stationLines[st.id].some(id => pathFinderMatches.has(id));
+    } else if (activeLine) dim = dim || !stationLines[st.id].includes(activeLine);
     else if (selLines && selLines.size) {
       dim = dim || (st.id !== selected && !stationLines[st.id].some(id => selLines.has(id)));
     }
@@ -2203,7 +2394,7 @@ function renderPathCircle() {
 
   const lg = document.getElementById('circLegend');
   lg.innerHTML = LINES.map(line =>
-    `<button type="button" class="mleg${activeLine === line.id ? ' on' : ''}" data-line="${line.id}">
+    `<button type="button" class="mleg${activeLine === line.id ? ' on' : ''}${pathFinderActive && pathFinderMatches.has(line.id) && activeLine !== line.id ? ' match' : ''}" data-line="${line.id}">
       <span class="sw" style="background:${line.color}"></span>${line.name}
     </button>`
   ).join('');
@@ -2394,13 +2585,129 @@ function renderForkGrid() {
 function S(id) { return STATIONS.find(s => s.id === id); }
 function pad(n) { return String(n).padStart(2, '0'); }
 
+function getCheckedInterestIds() {
+  return [...document.querySelectorAll('#interestGrid input:checked')].map(cb => cb.value);
+}
+
+function scoreLines(checkedIds) {
+  const totals = Object.fromEntries(LINES.map(l => [l.id, 0]));
+  checkedIds.forEach(id => {
+    const item = INTERESTS.find(x => x.id === id);
+    if (!item?.scores) return;
+    Object.entries(item.scores).forEach(([lineId, pts]) => {
+      if (totals[lineId] != null) totals[lineId] += pts;
+    });
+  });
+  return LINES
+    .map(line => ({ line, score: totals[line.id] }))
+    .filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score || a.line.name.localeCompare(b.line.name, 'pl'));
+}
+
+function renderInterestGrid() {
+  const grid = document.getElementById('interestGrid');
+  grid.innerHTML = '';
+  INTERESTS.forEach(item => {
+    const label = document.createElement('label');
+    const id = `int-${item.id}`;
+    label.htmlFor = id;
+    label.innerHTML = `
+      <input type="checkbox" id="${id}" value="${item.id}">
+      <span>
+        <span class="ilab">${item.label}</span>
+        <span class="ihint">${item.hint}</span>
+      </span>`;
+    const sync = () => {
+      label.classList.toggle('on', label.querySelector('input').checked);
+      renderPathFinderResults();
+    };
+    label.querySelector('input').addEventListener('change', sync);
+    grid.appendChild(label);
+  });
+}
+
+function renderPathFinderResults() {
+  const box = document.getElementById('pathFinderResults');
+  const checked = getCheckedInterestIds();
+  if (!checked.length) {
+    box.innerHTML = '<p class="pf-empty">Zaznacz przynajmniej jedną opcję powyżej.</p>';
+    return;
+  }
+  const ranked = scoreLines(checked);
+  if (!ranked.length) {
+    box.innerHTML = '<p class="pf-empty">Brak dopasowania — spróbuj innej kombinacji.</p>';
+    return;
+  }
+  box.innerHTML = '';
+  ranked.forEach((entry, i) => {
+    const { line, score } = entry;
+    const seq = line.seq.map((n, j) =>
+      `${j ? '<span class="arrowmini">→</span>' : ''}<span class="lstep"><b>${pad(n)}</b> ${S(n).short}</span>`
+    ).join('');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pf-result' + (i === 0 ? ' top' : '');
+    btn.innerHTML = `
+      <div class="pfr-head">
+        <span class="pfr-bar" style="background:${line.color}"></span>
+        <span class="pfr-name">${line.name}</span>
+        ${i === 0 ? '<span class="pfr-badge">Najlepsze dopasowanie</span>' : ''}
+      </div>
+      <div class="pfr-when">${line.when}</div>
+      ${line.desc ? `<div class="pfr-desc">${line.desc}</div>` : ''}
+      <div class="pfr-seq">${seq}</div>`;
+    btn.addEventListener('click', () => applyPathFinder(line.id));
+    box.appendChild(btn);
+  });
+}
+
+function clearPathFinderState(resetChecks = true) {
+  pathFinderActive = false;
+  pathFinderMatches = new Set();
+  if (resetChecks) {
+    document.querySelectorAll('#interestGrid input').forEach(cb => {
+      cb.checked = false;
+      cb.closest('label')?.classList.remove('on');
+    });
+    renderPathFinderResults();
+  }
+}
+
+function applyPathFinder(preferredLineId = null) {
+  const checked = getCheckedInterestIds();
+  if (!checked.length) {
+    clearPathFinderState(true);
+    drawMap();
+    renderSideLines();
+    redrawPathViews();
+    return;
+  }
+  const ranked = scoreLines(checked);
+  if (!ranked.length) return;
+  pathFinderActive = true;
+  pathFinderMatches = new Set(ranked.map(x => x.line.id));
+  activeLine = preferredLineId && pathFinderMatches.has(preferredLineId)
+    ? preferredLineId
+    : ranked[0].line.id;
+  selected = null;
+  transferMode = false;
+  syncTransferBtns(false);
+  closeDrawer();
+  drawMap();
+  renderSideLines();
+  redrawPathViews();
+  document.getElementById('sekcja-mapa')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function renderSideLines() {
   const box = document.getElementById('sideLines');
   box.innerHTML = '';
   LINES.forEach(line => {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'sl-item' + (activeLine === line.id ? ' on' : '');
+    btn.className = 'sl-item'
+      + (activeLine === line.id ? ' on' : '')
+      + (pathFinderActive && pathFinderMatches.has(line.id) && activeLine !== line.id ? ' match' : '');
     btn.innerHTML = `
       <span class="sd" style="background:${line.color}"></span>
       <span>
@@ -2515,11 +2822,13 @@ function drawMap() {
   LINES.forEach(line => {
     const path = document.createElementNS(NS, 'path');
     let dim = false;
-    if (activeLine) dim = activeLine !== line.id;
+    if (pathFinderActive && pathFinderMatches.size) dim = !pathFinderMatches.has(line.id);
+    else if (activeLine) dim = activeLine !== line.id;
     else if (selLines && selLines.size) dim = !selLines.has(line.id);
-    path.setAttribute('class', 'metroLine' + (dim ? ' dim' : ''));
+    const match = pathFinderActive && pathFinderMatches.has(line.id);
+    path.setAttribute('class', 'metroLine' + (dim ? ' dim' : '') + (match && activeLine !== line.id ? ' match' : ''));
     path.setAttribute('stroke', line.color);
-    path.setAttribute('stroke-width', activeLine === line.id ? 10 : 7);
+    path.setAttribute('stroke-width', activeLine === line.id ? 10 : (match ? 8 : 7));
     path.setAttribute('d', line.seq.map((n, i) => `${i ? 'L' : 'M'}${POS[n][0]},${POS[n][1]}`).join(' '));
     path.addEventListener('click', () => selectLine(line.id));
     ll.appendChild(path);
@@ -2532,7 +2841,9 @@ function drawMap() {
     const isHub = st.id === HUB_STATION;
     const vis = !transferMode || isT;
     let dim = !vis;
-    if (activeLine) dim = dim || !stationLines[st.id].includes(activeLine);
+    if (pathFinderActive && pathFinderMatches.size) {
+      dim = dim || !stationLines[st.id].some(id => pathFinderMatches.has(id));
+    } else if (activeLine) dim = dim || !stationLines[st.id].includes(activeLine);
     else if (selLines && selLines.size) {
       dim = dim || (st.id !== selected && !stationLines[st.id].some(id => selLines.has(id)));
     }
@@ -2561,7 +2872,9 @@ function drawMap() {
   LINES.forEach(line => {
     const d = document.createElement('button');
     d.type = 'button';
-    d.className = 'mleg' + (activeLine === line.id ? ' on' : '');
+    d.className = 'mleg'
+      + (activeLine === line.id ? ' on' : '')
+      + (pathFinderActive && pathFinderMatches.has(line.id) && activeLine !== line.id ? ' match' : '');
     d.innerHTML = `<span class="sw" style="background:${line.color}"></span>${line.name}`;
     d.addEventListener('click', () => selectLine(line.id));
     lg.appendChild(d);
@@ -2580,6 +2893,7 @@ function renderLineGrid() {
     card.innerHTML = `
       <div class="lh"><span class="lbar" style="background:${line.color}"></span><span class="ln">${line.name}</span></div>
       <div class="lw">${line.when}</div>
+      ${line.desc ? `<div class="lw" style="margin-top:6px">${line.desc}</div>` : ''}
       <div class="lseq">${seq}</div>`;
     card.querySelectorAll('.lstep').forEach(el => {
       el.addEventListener('click', e => { e.stopPropagation(); openDrawer(+el.dataset.n); });
@@ -2590,6 +2904,7 @@ function renderLineGrid() {
 }
 
 function selectLine(id) {
+  clearPathFinderState(false);
   activeLine = activeLine === id ? null : id;
   selected = null;
   transferMode = false;
@@ -2601,6 +2916,7 @@ function selectLine(id) {
 }
 
 function resetView() {
+  clearPathFinderState(true);
   activeLine = null;
   selected = null;
   transferMode = false;
@@ -2634,6 +2950,14 @@ document.getElementById('btnTransfers').addEventListener('click', toggleTransfer
 document.getElementById('btnTransfersSide').addEventListener('click', toggleTransfers);
 document.getElementById('btnTransfersCirc').addEventListener('click', toggleTransfers);
 document.getElementById('btnResetCirc').addEventListener('click', resetView);
+document.getElementById('pfApply')?.addEventListener('click', () => applyPathFinder());
+document.getElementById('pfClear')?.addEventListener('click', () => {
+  clearPathFinderState(true);
+  activeLine = null;
+  drawMap();
+  renderSideLines();
+  redrawPathViews();
+});
 document.getElementById('scrim').addEventListener('click', closeDrawer);
 document.getElementById('sheetHandle').addEventListener('click', closeDrawer);
 document.getElementById('sideScrim').addEventListener('click', closeSidebar);
@@ -2677,6 +3001,7 @@ if (window.matchMedia('(max-width: 900px)').matches) {
   document.body.classList.add('has-bottom-nav');
 }
 
+renderInterestGrid();
 drawMap();
 renderSideLines();
 renderLineGrid();

@@ -1121,10 +1121,20 @@
       font-family: inherit;
       transition: background .12s, color .12s;
     }
-    .seg button.on {
-      background: var(--gold-lo);
-      color: var(--gold);
+    .line-st-block {
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
     }
+    .line-st-block:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+    .line-st-head {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .seg.diagram-tools .tbtn { width: auto; padding: 8px 14px; }
     .format-legend {
       display: flex;
       flex-wrap: wrap;
@@ -1486,12 +1496,15 @@
   <button type="button" role="tab" id="tabbtn-linie" aria-selected="false" aria-controls="tab-linie" data-tab="linie">Linie</button>
 </nav>
 
-<div class="sub-toolbar" id="formatSubToolbar" style="display:none">
-  <div class="seg" id="formatGroupSeg">
-    <button type="button" data-fgroup="format" class="on">Obszary formatu</button>
-    <button type="button" data-fgroup="station">Według stacji</button>
+<div class="sub-toolbar" id="pathSubToolbar" style="display:none">
+  <div class="seg" id="boardGroupSeg">
+    <button type="button" data-bgroup="station" class="on">Według stacji</button>
+    <button type="button" data-bgroup="line">Według linii</button>
   </div>
-  <div class="format-legend" id="formatLegend"></div>
+  <div class="seg diagram-tools" id="diagramToolsSeg" style="display:none">
+    <button type="button" class="tbtn" id="btnTransfersCirc">Tylko przesiadki</button>
+    <button type="button" class="tbtn" id="btnResetCirc">Reset</button>
+  </div>
 </div>
 
 <nav class="path-subnav on" id="pathSubnav" aria-label="Sekcje ścieżki">
@@ -1627,9 +1640,9 @@
 
 <div id="tab-tablica" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-tablica">
   <section class="format-section">
-    <div class="eyebrow">Produkty wg formatu</div>
+    <div class="eyebrow">Katalog produktów</div>
     <h2>TABLICA</h2>
-    <p class="format-intro">Kolumny wg <strong style="color:var(--white)">obszaru formatu</strong> (pisana, video, audio) albo wg <strong style="color:var(--white)">stacji metra</strong> (01–07). Kliknij kartę, żeby przejść do stacji.</p>
+    <p class="format-intro">Produkty wg <strong style="color:var(--white)">stacji metra</strong> (01–07) albo wg <strong style="color:var(--white)">linii ścieżki</strong>. Kliknij kartę, żeby otworzyć stację.</p>
     <div class="format-toolbar">
       <div class="board-search">
         <input type="search" id="boardSearch" placeholder="Szukaj produktu…" autocomplete="off" aria-label="Szukaj produktu">
@@ -1641,13 +1654,13 @@
 
 <div id="tab-diagram" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-diagram">
   <section class="format-section">
-    <div class="eyebrow">Produkty wg formatu</div>
+    <div class="eyebrow">Ścieżki klienta</div>
     <h2>DIAGRAM</h2>
-    <p class="format-intro">Te same produkty na okręgu — kolor węzła zależy od przełącznika u góry (format albo stacja). Kliknij <strong style="color:var(--white)">produkt</strong> lub <strong style="color:var(--white)">łuk</strong>, żeby podświetlić grupę i otworzyć szczegóły.</p>
+    <p class="format-intro">Siedem stacji na okręgu — jak mapa metra w widoku kołowym. <strong style="color:var(--white)">Łuki</strong> to linie ścieżki, <strong style="color:var(--white)">węzły</strong> to stacje. Kliknij linię lub legendę, żeby podświetlić trasę.</p>
     <div class="format-circle-wrap">
-      <svg id="formatCircleSvg" viewBox="0 0 700 520" aria-label="Diagram produktów na okręgu"></svg>
+      <svg id="formatCircleSvg" viewBox="0 0 700 520" aria-label="Diagram ścieżek — stacje i linie na okręgu"></svg>
       <div class="circ-legend" id="circLegend"></div>
-      <div class="circ-mobile-list" id="circMobileList" aria-label="Lista produktów na diagramie"></div>
+      <div class="circ-mobile-list" id="circMobileList" aria-label="Lista stacji na diagramie"></div>
     </div>
   </section>
 </div>
@@ -1873,12 +1886,8 @@ const FREE_FORKS = [
   { from: 'WayUp trial', fromId: 'wayup', to: 1, toLabel: 'Zostań na 01', why: 'Trial wystarczył — wracasz do sociali i newslettera bez płacenia.' },
 ];
 
-/* ── Produkty wg formatu (obszary jak filary oPAKUJ) ── */
-const FORMATS = {
-  pisana: { id: 'pisana', code: 'P', name: 'Treść pisana', color: '#c9a820', sub: 'Czytasz we własnym tempie — książki, dziennik, maile, posty' },
-  video:  { id: 'video',  code: 'V', name: 'Video',         color: '#b89428', sub: 'Oglądasz — VOD, YouTube, live, programy, wyjazdy na żywo' },
-  audio:  { id: 'audio',  code: 'A', name: 'Audio',         color: '#8a7e6a', sub: 'Słuchasz — audiobooki, szkolenia audio, rozmowy 1:1' },
-};
+/* ── Katalog produktów (grupowanie wg stacji / linii, nie wg formatu) ── */
+const FORMAT_LABELS = { pisana: 'Pisana', video: 'Video', audio: 'Audio' };
 
 const PRODUCTS = [
   { id: 'sm-posty',    name: 'Posty i artykuły (FB, X, LinkedIn)', format: 'pisana', station: 1, free: true,  platform: 'Social', desc: 'Darmowe teksty i krótkie formaty na publicznych profilach.' },
@@ -1902,9 +1911,8 @@ const PRODUCTS = [
   { id: 'lsm',         name: 'Life Spectrum Mentoring',            format: 'audio',  station: 7, free: false, platform: 'Indywidualnie', desc: 'Długoterminowa praca 1:1 — głównie rozmowy i sesje live.' },
 ];
 
-let formatGroup = 'format';
-let formatSelected = null;
-let formatActiveGroup = null;
+let boardGroup = 'station';
+let boardSelected = null;
 let selectedProduct = null;
 let mainTab = 'sciezki';
 
@@ -2024,17 +2032,9 @@ STATIONS.forEach(s => stationLines[s.id] = []);
 LINES.forEach(l => l.seq.forEach(id => stationLines[id].push(l.id)));
 const transfers = Object.fromEntries(STATIONS.map(s => [s.id, stationLines[s.id].length > 1]));
 
-function renderFormatLegend() {
-  const box = document.getElementById('formatLegend');
-  box.innerHTML = Object.values(FORMATS).map(f =>
-    `<span><i style="background:${f.color}"></i>${f.code} · ${f.name}</span>`
-  ).join('');
-}
-
 function productCard(p) {
-  const fmt = FORMATS[p.format];
-  const also = p.also ? `<span class="fmt">+ ${FORMATS[p.also]?.name || p.also}</span>` : '';
-  return `<div class="pcard" data-pid="${p.id}" data-station="${p.station}" style="--pc:${fmt.color}">
+  const st = S(p.station);
+  return `<div class="pcard" data-pid="${p.id}" data-station="${p.station}" style="--pc:${st.color}">
     <div class="pc-row1">
       <span class="pc-st">${pad(p.station)}</span>
       ${p.free ? '<span class="pc-free">Darmowe</span>' : ''}
@@ -2042,16 +2042,14 @@ function productCard(p) {
     <div class="pc-name">${p.name}</div>
     <div class="pc-desc">${p.desc}</div>
     <div class="pc-meta">
-      <span class="fmt">${fmt.name}</span>
       <span class="fmt">${p.platform}</span>
-      ${also}
+      ${FORMAT_LABELS[p.format] ? `<span class="fmt">${FORMAT_LABELS[p.format]}</span>` : ''}
     </div>
   </div>`;
 }
 
 function productFocusHtml(p) {
   if (!p) return '';
-  const fmt = FORMATS[p.format];
   const link = p.href && p.href.startsWith('http')
     ? `<a class="chip chip-cta" href="${p.href}" target="_blank" rel="noopener">Otwórz produkt →</a>`
     : '';
@@ -2060,9 +2058,9 @@ function productFocusHtml(p) {
     <div class="pf-name">${p.name}</div>
     <div class="pf-desc">${p.desc}</div>
     <div class="pf-meta">
-      <span class="fmt">${fmt.name}</span>
       <span class="fmt">Stacja ${pad(p.station)}</span>
       <span class="fmt">${p.platform}</span>
+      ${FORMAT_LABELS[p.format] ? `<span class="fmt">${FORMAT_LABELS[p.format]}</span>` : ''}
       ${p.free ? '<span class="pc-free">Darmowe</span>' : ''}
     </div>
     ${link}
@@ -2072,33 +2070,16 @@ function productFocusHtml(p) {
 function passesBoardFilter(p) {
   const q = (document.getElementById('boardSearch')?.value || '').trim().toLowerCase();
   if (!q) return true;
-  const fmt = FORMATS[p.format];
   const st = S(p.station);
-  const hay = [p.name, p.desc, p.platform, fmt.name, fmt.code, pad(p.station), st?.short, st?.name].join(' ').toLowerCase();
+  const hay = [p.name, p.desc, p.platform, FORMAT_LABELS[p.format], pad(p.station), st?.short, st?.name].join(' ').toLowerCase();
   return hay.includes(q);
 }
 
-function renderFormatBoard() {
+function renderPathBoard() {
   const board = document.getElementById('formatBoard');
   board.innerHTML = '';
 
-  if (formatGroup === 'format') {
-    Object.values(FORMATS).forEach(f => {
-      const items = PRODUCTS.filter(p => p.format === f.id && passesBoardFilter(p));
-      const col = document.createElement('div');
-      col.className = 'format-col';
-      col.innerHTML = `
-        <div class="format-col-head">
-          <span class="fc-count">${items.length}</span>
-          <span class="fc-tag"><span class="fc-dot" style="background:${f.color}"></span>${f.code} · ${f.name}</span>
-          <span class="fc-sub">${f.sub}</span>
-        </div>`;
-      const cards = document.createElement('div');
-      items.forEach(p => { cards.insertAdjacentHTML('beforeend', productCard(p)); });
-      col.appendChild(cards);
-      if (items.length) board.appendChild(col);
-    });
-  } else {
+  if (boardGroup === 'station') {
     STATIONS.forEach(st => {
       const items = PRODUCTS.filter(p => p.station === st.id && passesBoardFilter(p));
       if (!items.length) return;
@@ -2115,28 +2096,39 @@ function renderFormatBoard() {
       col.appendChild(cards);
       board.appendChild(col);
     });
+  } else {
+    LINES.forEach(line => {
+      const col = document.createElement('div');
+      col.className = 'format-col';
+      let blocks = '';
+      let count = 0;
+      line.seq.forEach(stId => {
+        const items = PRODUCTS.filter(p => p.station === stId && passesBoardFilter(p));
+        if (!items.length) return;
+        count += items.length;
+        const st = S(stId);
+        blocks += `<div class="line-st-block"><div class="line-st-head">${pad(stId)} · ${st.short}</div>`;
+        items.forEach(p => { blocks += productCard(p); });
+        blocks += '</div>';
+      });
+      if (!count) return;
+      col.innerHTML = `
+        <div class="format-col-head">
+          <span class="fc-count">${count}</span>
+          <span class="fc-tag"><span class="fc-dot" style="background:${line.color}"></span>${line.name}</span>
+          <span class="fc-sub">${line.when}</span>
+        </div>${blocks}`;
+      board.appendChild(col);
+    });
   }
 
   board.querySelectorAll('.pcard').forEach(card => {
     card.addEventListener('click', () => {
       const p = PRODUCTS.find(x => x.id === card.dataset.pid);
-      formatSelected = p?.id || null;
+      boardSelected = p?.id || null;
       openDrawer(+card.dataset.station, p?.id || null);
     });
   });
-}
-
-function productGroupId(p) {
-  return formatGroup === 'format' ? p.format : String(p.station);
-}
-
-function groupMeta(gid) {
-  if (formatGroup === 'format') {
-    const f = FORMATS[gid];
-    return { id: gid, color: f.color, label: `${f.code} · ${f.name}` };
-  }
-  const st = STATIONS.find(s => s.id === +gid);
-  return { id: gid, color: st?.color || '#8a7e6a', label: st ? `${pad(st.id)} · ${st.short}` : gid };
 }
 
 function circChordPath(pos, CCX, CCY, idA, idB) {
@@ -2146,51 +2138,50 @@ function circChordPath(pos, CCX, CCY, idA, idB) {
   return `M${A[0].toFixed(1)},${A[1].toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${B[0].toFixed(1)},${B[1].toFixed(1)}`;
 }
 
-function selectFormatGroup(gid) {
-  formatActiveGroup = formatActiveGroup === gid ? null : gid;
-  if (mainTab === 'diagram') renderFormatCircle();
-}
-
-function renderFormatCircle() {
+function renderPathCircle() {
   const svg = document.getElementById('formatCircleSvg');
   const CCX = 350, CCY = 260, CR = 200;
   const pos = {};
-  PRODUCTS.forEach((p, i) => {
-    const a = -Math.PI / 2 + i / PRODUCTS.length * 2 * Math.PI;
-    pos[p.id] = [CCX + CR * Math.cos(a), CCY + CR * Math.sin(a), a];
+  STATIONS.forEach((st, i) => {
+    const a = -Math.PI / 2 + i / STATIONS.length * 2 * Math.PI;
+    pos[st.id] = [CCX + CR * Math.cos(a), CCY + CR * Math.sin(a), a];
   });
 
-  const groups = formatGroup === 'format'
-    ? Object.keys(FORMATS)
-    : STATIONS.map(s => String(s.id));
+  const selLines = selected ? new Set(stationLines[selected]) : null;
 
   let html = '<g id="circLineLayer">';
-  groups.forEach(gid => {
-    const items = PRODUCTS.filter(p => productGroupId(p) === gid);
-    const meta = groupMeta(gid);
-    const dim = formatActiveGroup && formatActiveGroup !== gid;
-    const on = formatActiveGroup === gid;
-    for (let i = 0; i < items.length - 1; i++) {
-      html += `<path class="circ-chord metroLine${dim ? ' dim' : ''}${on ? ' on' : ''}" data-gid="${gid}" stroke="${meta.color}" stroke-width="${on ? 4 : 2.5}" opacity="${on ? 0.9 : 0.35}" d="${circChordPath(pos, CCX, CCY, items[i].id, items[i + 1].id)}"/>`;
+  LINES.forEach(line => {
+    for (let i = 0; i < line.seq.length - 1; i++) {
+      const a = line.seq[i], b = line.seq[i + 1];
+      let dim = false;
+      if (activeLine) dim = activeLine !== line.id;
+      else if (selLines && selLines.size) dim = !selLines.has(line.id);
+      const on = activeLine === line.id;
+      html += `<path class="circ-chord metroLine${dim ? ' dim' : ''}${on ? ' on' : ''}" data-line="${line.id}" stroke="${line.color}" stroke-width="${on ? 4 : 2.5}" opacity="${on ? 0.9 : 0.35}" d="${circChordPath(pos, CCX, CCY, a, b)}"/>`;
     }
   });
   html += '</g><g id="circNodeLayer">';
-  PRODUCTS.forEach(p => {
-    const [x, y, a] = pos[p.id];
-    const gid = productGroupId(p);
-    const meta = groupMeta(gid);
-    const nodeColor = formatGroup === 'format' ? FORMATS[p.format].color : meta.color;
-    const lx = CCX + (CR + 14) * Math.cos(a);
-    const ly = CCY + (CR + 14) * Math.sin(a);
+  STATIONS.forEach(st => {
+    const [x, y, a] = pos[st.id];
+    const isT = transfers[st.id];
+    const isHub = st.id === HUB_STATION;
+    const vis = !transferMode || isT;
+    let dim = !vis;
+    if (activeLine) dim = dim || !stationLines[st.id].includes(activeLine);
+    else if (selLines && selLines.size) {
+      dim = dim || (st.id !== selected && !stationLines[st.id].some(id => selLines.has(id)));
+    }
+    const sel = selected === st.id ? ' sel' : '';
+    const lx = CCX + (CR + 22) * Math.cos(a);
+    const ly = CCY + (CR + 22) * Math.sin(a);
     const anch = Math.cos(a) > 0.3 ? 'start' : (Math.cos(a) < -0.3 ? 'end' : 'middle');
-    const sel = formatSelected === p.id ? ' sel' : '';
-    const dim = formatActiveGroup && formatActiveGroup !== gid ? ' dim' : '';
-    const label = formatGroup === 'format' ? p.name : `${pad(p.station)} · ${p.name}`;
-    html += `<g class="circ-node${sel}${dim}" data-pid="${p.id}" data-station="${p.station}" data-gid="${gid}" tabindex="0" role="button" aria-label="${p.name}, stacja ${pad(p.station)}">
-      <circle class="cn-ring" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="16" stroke="${nodeColor}"/>
-      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="11" fill="${nodeColor}" stroke="#0d0c09" stroke-width="2.5"/>
-      <text x="${x.toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="middle" font-family="Bebas Neue" font-size="9" fill="#0d0c09">${formatGroup === 'format' ? FORMATS[p.format].code : pad(p.station)}</text>
-      <text class="cn-label" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${anch}" dominant-baseline="middle">${label.length > 24 ? label.slice(0, 23) + '…' : label}</text>
+    const r = isHub ? 14 : (isT ? 12 : 11);
+    html += `<g class="circ-node${sel}${dim ? ' dim' : ''}" data-station="${st.id}" tabindex="${dim ? '-1' : '0'}" role="button" aria-label="Stacja ${pad(st.id)}: ${st.name}">
+      ${isT ? `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r + 4}" fill="none" stroke="rgba(240,236,228,.25)" stroke-width="6"/>` : ''}
+      <circle class="cn-ring" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r + 5}" stroke="${isHub ? 'var(--gold)' : st.color}"/>
+      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}" fill="${st.color}" stroke="#0d0c09" stroke-width="2.5"/>
+      <text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle" font-family="Bebas Neue" font-size="11" fill="#0d0c09">${pad(st.id)}</text>
+      <text class="cn-label" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${anch}" dominant-baseline="middle">${st.short}</text>
     </g>`;
   });
   html += '</g>';
@@ -2199,15 +2190,11 @@ function renderFormatCircle() {
   svg.querySelectorAll('.circ-chord').forEach(path => {
     path.addEventListener('click', e => {
       e.stopPropagation();
-      selectFormatGroup(path.dataset.gid);
+      selectLine(path.dataset.line);
     });
   });
   svg.querySelectorAll('.circ-node').forEach(node => {
-    const activate = () => {
-      formatSelected = node.dataset.pid;
-      formatActiveGroup = node.dataset.gid;
-      openDrawer(+node.dataset.station, node.dataset.pid);
-    };
+    const activate = () => openDrawer(+node.dataset.station);
     node.addEventListener('click', activate);
     node.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
@@ -2215,39 +2202,40 @@ function renderFormatCircle() {
   });
 
   const lg = document.getElementById('circLegend');
-  lg.innerHTML = groups.map(gid => {
-    const meta = groupMeta(gid);
-    const count = PRODUCTS.filter(p => productGroupId(p) === gid).length;
-    return `<button type="button" class="mleg${formatActiveGroup === gid ? ' on' : ''}" data-gid="${gid}">
-      <span class="sw" style="background:${meta.color}"></span>${meta.label} <span style="color:var(--muted);font-weight:500">(${count})</span>
-    </button>`;
-  }).join('');
-  lg.querySelectorAll('[data-gid]').forEach(btn => {
-    btn.addEventListener('click', () => selectFormatGroup(btn.dataset.gid));
+  lg.innerHTML = LINES.map(line =>
+    `<button type="button" class="mleg${activeLine === line.id ? ' on' : ''}" data-line="${line.id}">
+      <span class="sw" style="background:${line.color}"></span>${line.name}
+    </button>`
+  ).join('');
+  lg.querySelectorAll('[data-line]').forEach(btn => {
+    btn.addEventListener('click', () => selectLine(btn.dataset.line));
   });
 
   const mlist = document.getElementById('circMobileList');
   if (mlist) {
-    mlist.innerHTML = PRODUCTS.map(p => {
-      const color = formatGroup === 'format' ? FORMATS[p.format].color : groupMeta(productGroupId(p)).color;
-      return `<button type="button" data-pid="${p.id}" data-station="${p.station}">
-        <span class="cm-dot" style="background:${color}"></span>
-        <span><strong>${pad(p.station)}</strong> · ${p.name}</span>
+    mlist.innerHTML = STATIONS.map(st => {
+      const lines = stationLines[st.id].map(id => LINES.find(l => l.id === id)?.name).filter(Boolean).join(', ');
+      return `<button type="button" data-station="${st.id}">
+        <span class="cm-dot" style="background:${st.color}"></span>
+        <span><strong>${pad(st.id)}</strong> · ${st.short}${lines ? `<span style="display:block;font-size:10px;color:var(--muted);margin-top:2px">${lines}</span>` : ''}</span>
       </button>`;
     }).join('');
     mlist.querySelectorAll('button').forEach(btn => {
-      btn.addEventListener('click', () => openDrawer(+btn.dataset.station, btn.dataset.pid));
+      btn.addEventListener('click', () => openDrawer(+btn.dataset.station));
     });
   }
 }
 
-function setFormatGroup(g) {
-  formatGroup = g;
-  formatActiveGroup = null;
-  document.querySelectorAll('#formatGroupSeg [data-fgroup]').forEach(b =>
-    b.classList.toggle('on', b.dataset.fgroup === g));
-  if (mainTab === 'tablica') renderFormatBoard();
-  else if (mainTab === 'diagram') renderFormatCircle();
+function setBoardGroup(g) {
+  boardGroup = g;
+  document.querySelectorAll('#boardGroupSeg [data-bgroup]').forEach(b =>
+    b.classList.toggle('on', b.dataset.bgroup === g));
+  if (mainTab === 'tablica') renderPathBoard();
+}
+
+function redrawPathViews() {
+  if (mainTab === 'diagram') renderPathCircle();
+  else if (mainTab === 'tablica') renderPathBoard();
 }
 
 function syncTabUi(tab) {
@@ -2257,8 +2245,10 @@ function syncTabUi(tab) {
     if (b.getAttribute('role') === 'tab') b.setAttribute('aria-selected', on ? 'true' : 'false');
   });
   document.getElementById('pathSubnav').classList.toggle('on', tab === 'sciezki');
-  document.getElementById('formatSubToolbar').style.display =
+  document.getElementById('pathSubToolbar').style.display =
     (tab === 'tablica' || tab === 'diagram') ? 'flex' : 'none';
+  document.getElementById('boardGroupSeg').style.display = tab === 'tablica' ? 'inline-flex' : 'none';
+  document.getElementById('diagramToolsSeg').style.display = tab === 'diagram' ? 'inline-flex' : 'none';
 }
 
 function setMainTab(tab, scrollTo) {
@@ -2268,8 +2258,8 @@ function setMainTab(tab, scrollTo) {
   document.getElementById('tab-tablica').classList.toggle('on', tab === 'tablica');
   document.getElementById('tab-diagram').classList.toggle('on', tab === 'diagram');
   document.getElementById('tab-linie').classList.toggle('on', tab === 'linie');
-  if (tab === 'tablica') renderFormatBoard();
-  else if (tab === 'diagram') renderFormatCircle();
+  if (tab === 'tablica') renderPathBoard();
+  else if (tab === 'diagram') renderPathCircle();
   closeSidebar();
   if (scrollTo) {
     const el = document.getElementById(scrollTo);
@@ -2495,13 +2485,13 @@ function openDrawer(n, productId = null) {
   selected = n;
   activeLine = null;
   selectedProduct = productId ? PRODUCTS.find(p => p.id === productId) || null : null;
-  if (productId) formatSelected = productId;
+  if (productId) boardSelected = productId;
   renderSheetHead(n);
   document.getElementById('scrim').classList.add('open');
   document.getElementById('drawer').classList.add('open');
   drawMap();
   renderSideLines();
-  if (mainTab === 'diagram') renderFormatCircle();
+  redrawPathViews();
 }
 
 function closeDrawer() {
@@ -2511,7 +2501,7 @@ function closeDrawer() {
   document.getElementById('drawer').classList.remove('open');
   drawMap();
   renderSideLines();
-  if (mainTab === 'diagram') renderFormatCircle();
+  redrawPathViews();
 }
 
 function drawMap() {
@@ -2607,6 +2597,7 @@ function selectLine(id) {
   closeDrawer();
   drawMap();
   renderSideLines();
+  redrawPathViews();
 }
 
 function resetView() {
@@ -2617,6 +2608,7 @@ function resetView() {
   closeDrawer();
   drawMap();
   renderSideLines();
+  redrawPathViews();
 }
 
 function toggleTransfers() {
@@ -2627,11 +2619,12 @@ function toggleTransfers() {
   closeDrawer();
   drawMap();
   renderSideLines();
+  redrawPathViews();
 }
 
 function syncTransferBtns(on) {
-  ['btnTransfers', 'btnTransfersSide'].forEach(id => {
-    document.getElementById(id).classList.toggle('on', on);
+  ['btnTransfers', 'btnTransfersSide', 'btnTransfersCirc'].forEach(id => {
+    document.getElementById(id)?.classList.toggle('on', on);
   });
 }
 
@@ -2639,6 +2632,8 @@ document.getElementById('btnReset').addEventListener('click', resetView);
 document.getElementById('btnResetSide').addEventListener('click', resetView);
 document.getElementById('btnTransfers').addEventListener('click', toggleTransfers);
 document.getElementById('btnTransfersSide').addEventListener('click', toggleTransfers);
+document.getElementById('btnTransfersCirc').addEventListener('click', toggleTransfers);
+document.getElementById('btnResetCirc').addEventListener('click', resetView);
 document.getElementById('scrim').addEventListener('click', closeDrawer);
 document.getElementById('sheetHandle').addEventListener('click', closeDrawer);
 document.getElementById('sideScrim').addEventListener('click', closeSidebar);
@@ -2657,7 +2652,7 @@ document.querySelectorAll('.preview-open').forEach(btn => {
   btn.addEventListener('click', () => openDrawer(+btn.dataset.open));
 });
 document.getElementById('boardSearch')?.addEventListener('input', () => {
-  if (mainTab === 'tablica') renderFormatBoard();
+  if (mainTab === 'tablica') renderPathBoard();
 });
 document.querySelectorAll('.sl-scroll').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -2688,7 +2683,6 @@ renderLineGrid();
 renderFreeSpurMap();
 renderBranchGrid();
 renderForkGrid();
-renderFormatLegend();
 
 function bindTabButtons(selector) {
   document.querySelectorAll(selector).forEach(btn => {
@@ -2703,8 +2697,8 @@ document.getElementById('mainTabbar')?.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight' && i < tabs.length - 1) { e.preventDefault(); tabs[i + 1].click(); tabs[i + 1].focus(); }
   if (e.key === 'ArrowLeft' && i > 0) { e.preventDefault(); tabs[i - 1].click(); tabs[i - 1].focus(); }
 });
-document.querySelectorAll('#formatGroupSeg [data-fgroup]').forEach(btn => {
-  btn.addEventListener('click', () => setFormatGroup(btn.dataset.fgroup));
+document.querySelectorAll('#boardGroupSeg [data-bgroup]').forEach(btn => {
+  btn.addEventListener('click', () => setBoardGroup(btn.dataset.bgroup));
 });
 window.addEventListener('hashchange', initMainTabFromHash);
 

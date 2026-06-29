@@ -657,6 +657,192 @@
     }
     .preview-open:hover { color: var(--gold); }
 
+    /* ── Rozpiska ścieżki darmowej ── */
+    .path-expand {
+      padding: 0 52px 52px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .path-expand h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .path-expand > .path-intro {
+      font-size: 13px;
+      color: var(--muted2);
+      line-height: 1.65;
+      max-width: 680px;
+      margin-bottom: 22px;
+    }
+    .free-hub {
+      border: 1px solid var(--border2);
+      background: linear-gradient(180deg, var(--surface), var(--bg));
+      border-left: 2px solid var(--gold-mid);
+      border-radius: 4px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .free-hub .hub-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #0d0c09;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 4px rgba(201,168,32,.15);
+    }
+    .free-hub .hub-text { flex: 1; min-width: 200px; }
+    .free-hub .hub-text strong { display: block; font-size: 15px; margin-bottom: 4px; }
+    .free-hub .hub-text span { font-size: 12px; color: var(--muted2); line-height: 1.5; }
+
+    svg.free-spur {
+      width: 100%;
+      max-width: 520px;
+      height: auto;
+      display: block;
+      margin: 0 auto 22px;
+    }
+    .free-spur .spurLine { fill: none; stroke-linecap: round; stroke-width: 5; opacity: .85; }
+    .free-spur .spurDot { cursor: pointer; }
+    .free-spur .spurDot circle.base { stroke: var(--bg); stroke-width: 3; }
+    .free-spur .spurDot text { font-family: 'Bebas Neue', sans-serif; font-size: 10px; pointer-events: none; }
+    .free-spur .spurDot text.lbl { font-family: Inter, sans-serif; font-size: 9px; fill: var(--muted2); }
+
+    .branch-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .branch-card {
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      border-radius: 4px;
+      padding: 16px;
+      border-top: 3px solid var(--branch-color, var(--gold));
+    }
+    .branch-card.on { border-color: var(--gold-mid); background: var(--gold-lo); }
+    .branch-head { margin-bottom: 12px; }
+    .branch-code {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+    .branch-name { font-size: 15px; font-weight: 700; margin-top: 2px; }
+    .branch-entry { font-size: 11px; color: var(--muted2); margin-top: 5px; line-height: 1.45; }
+
+    .branch-spine { display: flex; flex-direction: column; gap: 0; margin: 12px 0; }
+    .bstop {
+      display: flex;
+      gap: 12px;
+      cursor: pointer;
+    }
+    .bstop-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 18px;
+      flex-shrink: 0;
+    }
+    .bstop-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+      flex-shrink: 0;
+    }
+    .bstop-line {
+      flex: 1;
+      width: 3px;
+      min-height: 14px;
+      background: var(--border2);
+      margin: 3px 0;
+    }
+    .bstop-card {
+      flex: 1;
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      border-radius: 4px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      transition: border-color .12s;
+    }
+    .bstop:hover .bstop-card { border-color: var(--gold-mid); }
+    .bstop-card .bs-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .bstop-card .bs-what { font-size: 11px; color: var(--muted2); line-height: 1.45; margin-bottom: 8px; }
+    .bstop-card .bs-need {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+      margin-bottom: 8px;
+    }
+    .bstop-card .bs-need b { color: var(--white); font-weight: 600; }
+
+    .fork-panel {
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      border-radius: 4px;
+      padding: 18px 20px;
+    }
+    .fork-panel h3 {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .fork-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 10px;
+    }
+    .fork-item {
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      border-radius: 4px;
+      padding: 12px 14px;
+      font-size: 12px;
+    }
+    .fork-item .fi-from {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .fork-item .fi-arrow {
+      font-family: 'Bebas Neue', sans-serif;
+      color: var(--gold);
+      font-size: 16px;
+      margin: 4px 0;
+    }
+    .fork-item .fi-why { color: var(--muted2); line-height: 1.45; margin-top: 4px; }
+    .fork-item button.fi-btn {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--gold);
+      background: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
     .lines-list {
       padding: 0 52px 48px;
       max-width: 1200px;
@@ -766,6 +952,8 @@
 
     @media (max-width: 900px) {
       .product-strip { grid-template-columns: 1fr; }
+      .branch-grid { grid-template-columns: 1fr; }
+      .path-expand { padding-left: 20px; padding-right: 20px; }
       .app-layout {
         grid-template-columns: 1fr;
         padding-left: 20px;
@@ -815,6 +1003,10 @@
     </div>
     <div class="side-label">Linie ścieżki <span id="linesCount" style="color:var(--muted2)">7</span></div>
     <div id="sideLines"></div>
+    <a class="sl-item" href="#sciezka-darmowa" style="text-decoration:none;margin-top:4px">
+      <span class="sd" style="background:var(--gold)"></span>
+      <span><div class="sn">Ścieżka darmowa ↓</div><div class="sw">Rozpiska 3 wejść na stacji 01</div></span>
+    </a>
     <div class="side-foot">
       <button class="tbtn" id="btnTransfersSide">Tylko przesiadki</button>
       <button class="tbtn" id="btnResetSide">Reset widoku</button>
@@ -897,6 +1089,29 @@
     </div>
   </div>
 </div>
+
+<section class="path-expand" id="sciezka-darmowa">
+  <div class="eyebrow">Rozpiska ścieżek</div>
+  <h2>ŚCIEŻKA DARMOWA</h2>
+  <p class="path-intro">Stacja <strong style="color:var(--white)">01</strong> to nie jeden produkt — to <strong style="color:var(--white)">trzy równoległe wejścia</strong>. Możesz zacząć od sociali, newslettera albo WayUp. Nie musisz przechodzić ich po kolei. Poniżej rozpisane przystanki, wymagania i dokąd możesz jechać dalej.</p>
+
+  <div class="free-hub">
+    <div class="hub-circle">01</div>
+    <div class="hub-text">
+      <strong>Darmowa wiedza — węzeł wejściowy</strong>
+      <span>Bez logowania (social), z emailem (newsletter) lub z darmowym kontem WayUp (trial 30 dni). Wszystkie trzy linie łączą się tutaj i rozchodzą na pozostałe ścieżki klienta.</span>
+    </div>
+  </div>
+
+  <svg class="free-spur" id="freeSpurMap" viewBox="0 0 480 300" aria-label="Rozgałęzienie ścieżki darmowej"></svg>
+
+  <div class="branch-grid" id="branchGrid"></div>
+
+  <div class="fork-panel">
+    <h3>Dokąd dalej z darmowej ścieżki</h3>
+    <div class="fork-grid" id="forkGrid"></div>
+  </div>
+</section>
 
 <div class="lines-list">
   <h2>LINIE ŚCIEŻKI</h2>
@@ -992,6 +1207,121 @@ const LINES = [
   { id: 'mmc_wyjazdy', name: 'MMC + wyjazdy', when: 'gdy łączysz społeczność ze wspólnymi eventami', color: '#9a8530', seq: [1, 3, 4] },
   { id: 'konsultacje', name: 'Bezpośrednio do Michała', when: 'gdy chcesz rozmowę lub mentoring 1:1 z Michałem', color: '#6b8f71', seq: [1, 6, 7] },
   { id: 'premium', name: 'Premium od razu', when: 'gdy wchodzisz na najwyższy poziom bez poprzednich etapów', color: '#e8c84a', seq: [6, 7] },
+];
+
+/* ── Rozpiska: ścieżka darmowa ── */
+const FREE_BRANCHES = [
+  {
+    id: 'social',
+    code: '01-A',
+    name: 'Linia Social Media',
+    color: '#c9a820',
+    entry: 'Wejście bez konta — wystarczy obserwować publiczne profile Michała.',
+    spurPos: [80, 220],
+    stops: [
+      {
+        code: 'A1',
+        name: 'Facebook',
+        what: 'Posty, transmisje na żywo, dłuższe wpisy — główny kanał społecznościowy.',
+        need: 'Nic — profil publiczny',
+        links: [{ label: 'Facebook', href: 'https://www.facebook.com/KolczMajk/' }],
+      },
+      {
+        code: 'A2',
+        name: 'YouTube',
+        what: 'Darmowe nagrania, wywiady, fragmenty szkoleń — najlepsze do głębszego wchłonięcia treści.',
+        need: 'Nic — kanał publiczny',
+        links: [{ label: 'YouTube', href: 'https://www.youtube.com/Ko%C5%82czMajk' }],
+      },
+      {
+        code: 'A3',
+        name: 'Instagram, X, TikTok, LinkedIn',
+        what: 'Krótsze formaty, codzienne myśli, kulisy pracy — dobry start „przy okazji".',
+        need: 'Nic — profile publiczne',
+        links: [
+          { label: 'Instagram', href: 'https://www.instagram.com/kolcz_majk/' },
+          { label: 'X', href: 'https://x.com/KolczMajk' },
+          { label: 'TikTok', href: 'https://www.tiktok.com/@kolczmajk' },
+          { label: 'LinkedIn', href: 'https://www.linkedin.com/in/micha%C5%82-wawrzyniak/' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'newsletter',
+    code: '01-B',
+    name: 'Linia Newsletter',
+    color: '#d4b84a',
+    entry: 'Wejście z adresem e-mail — regularna, uporządkowana wiedza prosto na skrzynkę.',
+    spurPos: [240, 220],
+    stops: [
+      {
+        code: 'B1',
+        name: 'Zapis na listę',
+        what: 'Formularz na mwway.pl — podajesz email, dostajesz maile od Michała w wybranym rytmie.',
+        need: 'Adres e-mail',
+        links: [{ label: 'Zapisz się →', href: 'https://mwway.pl/zapisz-sie' }],
+      },
+      {
+        code: 'B2',
+        name: 'Regularne maile',
+        what: 'Treści behawioralne, zapowiedzi wydarzeń, linki do nowych materiałów. Bez spamu — możesz się wypisać.',
+        need: 'Skrzynka mailowa',
+        links: [],
+      },
+      {
+        code: 'B3',
+        name: 'Pierwsze zaproszenia',
+        what: 'Z newslettera często dowiesz się pierwszy o Dzienniku, wyjazdach i programach — zanim trafią na social.',
+        need: 'Czytanie maili',
+        links: [],
+      },
+    ],
+  },
+  {
+    id: 'wayup',
+    code: '01-C',
+    name: 'Linia WayUp (trial)',
+    color: '#a89030',
+    entry: 'Wejście z darmowym kontem — wybrane szkolenia VOD przez 30 dni bez opłat.',
+    spurPos: [400, 220],
+    stops: [
+      {
+        code: 'C1',
+        name: 'Założenie konta WayUp',
+        what: 'Rejestracja na wayup.pl — darmowe konto, bez karty MMC i bez zakupu w sklepie.',
+        need: 'Email + hasło',
+        links: [{ label: 'wayup.pl →', href: 'https://www.wayup.pl/' }],
+      },
+      {
+        code: 'C2',
+        name: 'Aktywacja 30 dni gratis',
+        what: 'Wybrane szkolenia VOD dostępne bezpłatnie przez 30 dni. To nadal stacja 01 — nie mylić z płatnym VOD na stacji 02.',
+        need: 'Konto WayUp',
+        links: [{ label: 'FAQ WayUp ↓', href: '#sys-wayup' }],
+      },
+      {
+        code: 'C3',
+        name: 'Po okresie próbnym',
+        what: 'Możesz zostać na darmowych treściach (social / newsletter) albo przejść na stację 02 i kupić VOD, książki lub Dziennik.',
+        need: 'Decyzja — bez przymusu',
+        links: [{ label: 'Stacja 02 →', href: '#', action: 'open:2' }],
+      },
+    ],
+  },
+];
+
+const FREE_FORKS = [
+  { from: 'Social', fromId: 'social', to: 1, toLabel: 'Zostań na 01', why: 'Wystarczy Ci darmowa wiedza z postów i nagrań — bez zakupów.' },
+  { from: 'Social', fromId: 'social', to: 2, toLabel: '02 Materiały', why: 'Chcesz więcej niż posty — książka, Dziennik lub pełne VOD.' },
+  { from: 'Social', fromId: 'social', to: 3, toLabel: '03 MMC', why: 'Social Cię przekonał — wchodzisz w społeczność Mentalwayandia.' },
+  { from: 'Social', fromId: 'social', to: 6, toLabel: '06 Konsultacja', why: 'Od razu chcesz rozmowy z Michałem — bez pośrednich kroków.' },
+  { from: 'Newsletter', fromId: 'newsletter', to: 2, toLabel: '02 Materiały', why: 'Mail zaprosił Cię do Dziennika, książki lub szkolenia — kupujesz osobno.' },
+  { from: 'Newsletter', fromId: 'newsletter', to: 4, toLabel: '04 Wyjazdy', why: 'Dowiadujesz się o majówkach i warsztatach stacjonarnych.' },
+  { from: 'Newsletter', fromId: 'newsletter', to: 3, toLabel: '03 MMC', why: 'Zaproszenie do społeczności — karta jako przepustka.' },
+  { from: 'WayUp trial', fromId: 'wayup', to: 2, toLabel: '02 VOD płatne', why: 'Trial się kończy — kupujesz szkolenia, które Cię wciągnęły.' },
+  { from: 'WayUp trial', fromId: 'wayup', to: 2, toLabel: '02 Dziennik / książki', why: 'Chcesz materiał do pracy własnej, nie tylko oglądania VOD.' },
+  { from: 'WayUp trial', fromId: 'wayup', to: 1, toLabel: 'Zostań na 01', why: 'Trial wystarczył — wracasz do sociali i newslettera bez płacenia.' },
 ];
 
 const CONTENT = {
@@ -1109,6 +1439,105 @@ const stationLines = {};
 STATIONS.forEach(s => stationLines[s.id] = []);
 LINES.forEach(l => l.seq.forEach(id => stationLines[id].push(l.id)));
 const transfers = Object.fromEntries(STATIONS.map(s => [s.id, stationLines[s.id].length > 1]));
+
+function renderFreeSpurMap() {
+  const svg = document.getElementById('freeSpurMap');
+  if (!svg) return;
+  const hubX = 240, hubY = 70;
+  let html = '';
+  FREE_BRANCHES.forEach(b => {
+    const [bx, by] = b.spurPos;
+    html += `<path class="spurLine" stroke="${b.color}" d="M${hubX},${hubY} L${bx},${by}"/>`;
+    html += `<g class="spurDot" data-branch="${b.id}">
+      <circle class="base" cx="${bx}" cy="${by}" r="14" fill="${b.color}"/>
+      <text x="${bx}" y="${by + 4}" text-anchor="middle" fill="#0d0c09">${b.code.split('-')[1]}</text>
+      <text class="lbl" x="${bx}" y="${by + 28}" text-anchor="middle">${b.name.replace('Linia ', '')}</text>
+    </g>`;
+  });
+  html += `<g class="spurDot" data-open="1">
+    <circle class="transfer" cx="${hubX}" cy="${hubY}" r="20" fill="none" stroke="rgba(240,236,228,.25)" stroke-width="8"/>
+    <circle class="base" cx="${hubX}" cy="${hubY}" r="18" fill="#c9a820" stroke="#0d0c09" stroke-width="3"/>
+    <text x="${hubX}" y="${hubY + 5}" text-anchor="middle" fill="#0d0c09" font-family="Bebas Neue" font-size="14">01</text>
+    <text class="lbl" x="${hubX}" y="${hubY + 32}" text-anchor="middle">Darmowa wiedza</text>
+  </g>`;
+  svg.innerHTML = html;
+  svg.querySelectorAll('[data-branch]').forEach(el => {
+    el.addEventListener('click', () => highlightBranch(el.dataset.branch));
+  });
+  svg.querySelector('[data-open="1"]')?.addEventListener('click', () => openDrawer(1));
+}
+
+function highlightBranch(id) {
+  document.querySelectorAll('.branch-card').forEach(c => {
+    c.classList.toggle('on', c.dataset.branch === id);
+  });
+  const card = document.querySelector(`.branch-card[data-branch="${id}"]`);
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function renderBranchGrid() {
+  const grid = document.getElementById('branchGrid');
+  grid.innerHTML = '';
+  FREE_BRANCHES.forEach(branch => {
+    const card = document.createElement('article');
+    card.className = 'branch-card';
+    card.dataset.branch = branch.id;
+    card.style.setProperty('--branch-color', branch.color);
+    const stops = branch.stops.map((s, i) => {
+      const links = s.links.map(l =>
+        l.href && !l.action
+          ? `<a class="chip chip-lit" href="${l.href}" target="_blank">${l.label}</a>`
+          : l.action === 'open:2'
+            ? `<button type="button" class="chip chip-lit preview-open" data-open="2">${l.label}</button>`
+            : l.href
+              ? `<a class="chip chip-lit" href="${l.href}">${l.label}</a>`
+              : ''
+      ).join('');
+      return `<div class="bstop" data-branch="${branch.id}">
+        <div class="bstop-col">
+          <span class="bstop-dot" style="background:${branch.color}"></span>
+          ${i < branch.stops.length - 1 ? '<span class="bstop-line" style="background:' + branch.color + '55"></span>' : ''}
+        </div>
+        <div class="bstop-card">
+          <div class="branch-code">${s.code}</div>
+          <div class="bs-name">${s.name}</div>
+          <div class="bs-what">${s.what}</div>
+          <div class="bs-need">Potrzebujesz: <b>${s.need}</b></div>
+          ${links ? `<div class="chips">${links}</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+    card.innerHTML = `
+      <div class="branch-head">
+        <div class="branch-code">${branch.code} · ${branch.name}</div>
+        <div class="branch-entry">${branch.entry}</div>
+      </div>
+      <div class="branch-spine">${stops}</div>`;
+    card.addEventListener('click', () => highlightBranch(branch.id));
+    grid.appendChild(card);
+  });
+  document.querySelectorAll('#branchGrid .preview-open').forEach(btn => {
+    btn.addEventListener('click', e => { e.stopPropagation(); openDrawer(+btn.dataset.open); });
+  });
+}
+
+function renderForkGrid() {
+  const grid = document.getElementById('forkGrid');
+  grid.innerHTML = '';
+  FREE_FORKS.forEach(f => {
+    const branch = FREE_BRANCHES.find(b => b.id === f.fromId);
+    const item = document.createElement('div');
+    item.className = 'fork-item';
+    item.innerHTML = `
+      <div class="fi-from">Z linii: ${f.from}</div>
+      <div class="fi-arrow">01 → ${pad(f.to)} ${f.toLabel}</div>
+      <div class="fi-why">${f.why}</div>
+      <button type="button" class="fi-btn" data-open="${f.to}">Otwórz stację ${pad(f.to)} →</button>`;
+    item.querySelector('.fi-btn').addEventListener('click', () => openDrawer(f.to));
+    item.style.borderLeft = `2px solid ${branch?.color || 'var(--gold)'}`;
+    grid.appendChild(item);
+  });
+}
 
 function S(id) { return STATIONS.find(s => s.id === id); }
 function pad(n) { return String(n).padStart(2, '0'); }
@@ -1346,6 +1775,9 @@ document.getElementById('linesCount').textContent = LINES.length;
 drawMap();
 renderSideLines();
 renderLineGrid();
+renderFreeSpurMap();
+renderBranchGrid();
+renderForkGrid();
 </script>
 </body>
 </html>

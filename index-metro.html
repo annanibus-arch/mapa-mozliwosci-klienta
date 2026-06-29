@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Twoja ścieżka z MentalWay — mapa metra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0d0c09;
+      --gold:    #c9a820;
+      --gold-lo: rgba(201,168,32,0.12);
+      --gold-mid: rgba(201,168,32,0.3);
+      --white:   #f0ece4;
+      --muted:   #635a4a;
+      --muted2:  #8a7e6a;
+      --border:  #1e1c17;
+      --border2: #272318;
+      --surface: #111009;
+      --l1: #c9a820;
+      --l2: #8a7e6a;
+      --l3: #d4b84a;
+      --l4: #a89030;
+      --l5: #e8c84a;
+      --l6: #6b8f71;
+      --l7: #9a8530;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', -apple-system, sans-serif;
+      line-height: 1.5;
+    }
+
+    header {
+      padding: 22px 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border2);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .logo-sq { width: 7px; height: 7px; background: var(--gold); flex-shrink: 0; }
+    .proto-badge {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--gold-mid);
+      padding: 5px 10px;
+      border-radius: 2px;
+    }
+
+    .hero {
+      padding: 56px 52px 32px;
+      max-width: 1100px;
+    }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .eyebrow::before { content: '■'; font-size: 7px; }
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 8vw, 88px);
+      letter-spacing: 2px;
+      line-height: 0.92;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+    h1 em { font-style: normal; color: var(--gold); }
+    .hero-note {
+      font-size: 14px;
+      color: var(--muted2);
+      line-height: 1.7;
+      max-width: 620px;
+    }
+
+    .metro-wrap {
+      padding: 0 52px 48px;
+      max-width: 1100px;
+    }
+    .metro-panel {
+      border: 1px solid var(--border2);
+      background: linear-gradient(180deg, var(--surface), var(--bg));
+      border-radius: 4px;
+      padding: 20px 20px 16px;
+    }
+    .metro-tools {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .metro-tools h2 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+    .metro-tools p {
+      font-size: 12px;
+      color: var(--muted2);
+      margin-top: 4px;
+      max-width: 480px;
+      line-height: 1.55;
+    }
+    .tool-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tbtn {
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      color: var(--muted2);
+      border-radius: 2px;
+      padding: 7px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .tbtn:hover, .tbtn.on {
+      border-color: var(--gold-mid);
+      background: var(--gold-lo);
+      color: var(--gold);
+    }
+
+    svg.metro {
+      width: 100%;
+      height: auto;
+      display: block;
+      overflow: visible;
+      background: radial-gradient(circle at 50% 45%, rgba(201,168,32,.04), transparent 62%);
+      border-radius: 4px;
+      min-height: 340px;
+    }
+    .metroLine {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: .88;
+      transition: opacity .18s;
+      cursor: pointer;
+    }
+    .metroLine.dim { opacity: .1; }
+    .station { cursor: pointer; transition: opacity .16s; }
+    .station text { pointer-events: none; }
+    .station .num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+    }
+    .station .label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      fill: var(--muted2);
+    }
+    .station .transfer {
+      fill: none;
+      stroke: rgba(240,236,228,.25);
+      stroke-width: 8;
+    }
+    .station .base { stroke: var(--bg); stroke-width: 3.5; }
+    .station .ring2 {
+      fill: none;
+      stroke-width: 2.4;
+      opacity: 0;
+      transition: opacity .16s;
+    }
+    .station.dim { opacity: .18; }
+    .station.sel .ring2, .station.hot .ring2 { opacity: 1; }
+    .station.sel .label { fill: var(--white); font-weight: 600; }
+
+    .maplegend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .mleg {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      color: var(--muted2);
+      border: 1px solid var(--border2);
+      border-radius: 999px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: border-color .12s, color .12s;
+    }
+    .mleg:hover, .mleg.on {
+      border-color: var(--gold-mid);
+      color: var(--white);
+    }
+    .mleg .sw { width: 18px; height: 5px; border-radius: 3px; }
+
+    .detail {
+      margin-top: 20px;
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      border-left: 2px solid var(--gold-mid);
+      padding: 22px 24px;
+      display: none;
+    }
+    .detail.open { display: block; }
+    .detail-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .detail-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 42px;
+      color: var(--gold);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .detail-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .detail-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      line-height: 1.2;
+    }
+    .detail-desc {
+      font-size: 13px;
+      color: var(--muted2);
+      margin-top: 6px;
+      max-width: 640px;
+      line-height: 1.6;
+    }
+    .detail-lines {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .line-chip {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border: 1px solid var(--border2);
+      border-radius: 999px;
+      padding: 4px 9px;
+    }
+    .direct-entry {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border2);
+      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .direct-entry::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 12px;
+      border: 1px solid var(--border2);
+      color: var(--muted2);
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 1px;
+      text-decoration: none;
+      transition: border-color .15s, color .15s;
+      white-space: nowrap;
+    }
+    a.chip:hover { border-color: var(--gold); color: var(--gold); }
+    .chip-lit  { border-color: rgba(201,168,32,.35); color: var(--gold); }
+    .chip-cta  { background: var(--gold); border-color: var(--gold); color: #0d0c09; font-weight: 700; }
+    a.chip-cta:hover { opacity: .85; }
+
+    .mmc-block { margin-top: 16px; border: 1px solid var(--border2); }
+    .mmc-row {
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+    .mmc-row + .mmc-row { border-top: 1px solid var(--border); }
+    .mmc-row-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      flex-shrink: 0;
+      min-width: 130px;
+    }
+    .events-block {
+      margin-top: 16px;
+      border: 1px solid var(--border2);
+      border-left: 2px solid rgba(201,168,32,.25);
+      background: var(--surface);
+      padding: 16px 18px;
+    }
+    .events-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 10px; }
+    .event-row { display: flex; align-items: baseline; gap: 12px; font-size: 12px; margin-bottom: 6px; }
+    .event-date {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      color: var(--gold);
+      min-width: 110px;
+      flex-shrink: 0;
+    }
+    .event-name { color: var(--muted2); }
+
+    .lines-list {
+      padding: 0 52px 48px;
+      max-width: 1100px;
+    }
+    .lines-list h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .lines-list > p {
+      font-size: 13px;
+      color: var(--muted2);
+      margin-bottom: 18px;
+      max-width: 560px;
+    }
+    .lineGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 12px;
+    }
+    .lcard {
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      padding: 16px;
+      transition: border-color .15s;
+    }
+    .lcard:hover { border-color: var(--gold-mid); }
+    .lcard .lh { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .lcard .lbar { width: 26px; height: 5px; border-radius: 3px; }
+    .lcard .ln { font-weight: 700; font-size: 14px; }
+    .lcard .lw { font-size: 12px; color: var(--muted2); margin-bottom: 12px; line-height: 1.5; }
+    .lseq { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .lstep {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      border-radius: 2px;
+      padding: 5px 9px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: border-color .12s;
+    }
+    .lstep:hover { border-color: var(--gold-mid); color: var(--gold); }
+    .lstep b { font-family: 'Bebas Neue', sans-serif; color: var(--gold); font-size: 14px; }
+    .arrowmini { color: var(--muted); font-size: 12px; }
+
+    .faq-section { padding: 0 52px 80px; max-width: 1000px; }
+    .faq-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      letter-spacing: 1px;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+    .faq-note { font-size: 13px; color: var(--muted2); line-height: 1.7; margin-bottom: 32px; max-width: 560px; }
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--border2);
+      border: 1px solid var(--border2);
+    }
+    .faq-block { background: var(--bg); padding: 22px 24px; }
+    .faq-block-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .faq-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .faq-list li { font-size: 13px; color: var(--muted2); line-height: 1.5; padding-left: 14px; position: relative; }
+    .faq-list li::before { content: '—'; position: absolute; left: 0; color: var(--muted); }
+
+    footer {
+      border-top: 1px solid var(--border2);
+      padding: 24px 52px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    footer nav { display: flex; gap: 28px; }
+    footer nav a { font-size: 12px; color: var(--muted); text-decoration: none; }
+    footer nav a:hover { color: var(--gold); }
+
+    @media (max-width: 720px) {
+      header, .hero, .metro-wrap, .lines-list, .faq-section, footer { padding-left: 20px; padding-right: 20px; }
+      h1 { font-size: 56px; }
+      .faq-grid { grid-template-columns: 1fr; }
+      .event-row { flex-direction: column; gap: 2px; }
+      svg.metro { min-height: 280px; }
+      .station .label { font-size: 8.5px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><span class="logo-sq"></span>MentalWay</div>
+  <span class="proto-badge">Wersja robocza · mapa metra</span>
+</header>
+
+<div class="hero">
+  <div class="eyebrow">Mapa ścieżki klienta</div>
+  <h1>TWOJA<br>ŚCIEŻKA<br>Z <em>MENTAL</em><em>WAY</em></h1>
+  <p class="hero-note">Siedem stacji — siedem poziomów rozwoju. Możesz wsiąść na dowolnej i jechać inną linią. Wspólne stacje (biała obwódka) to przesiadki między ścieżkami.</p>
+</div>
+
+<div class="metro-wrap">
+  <div class="metro-panel">
+    <div class="metro-tools">
+      <div>
+        <h2>Mapa metra MentalWay</h2>
+        <p>Kliknij stację, żeby zobaczyć szczegóły poziomu. Kliknij linię w legendzie, żeby podświetlić jedną ścieżkę klienta.</p>
+      </div>
+      <div class="tool-btns">
+        <button class="tbtn" id="btnTransfers">Tylko przesiadki</button>
+        <button class="tbtn" id="btnReset">Reset</button>
+      </div>
+    </div>
+    <svg id="metroSvg" class="metro" viewBox="0 0 900 420" aria-label="Mapa metra ścieżki klienta MentalWay">
+      <g id="lineLayer"></g>
+      <g id="stationLayer"></g>
+    </svg>
+    <div class="maplegend" id="maplegend"></div>
+    <div class="detail" id="detail"></div>
+  </div>
+</div>
+
+<div class="lines-list">
+  <h2>LINIE ŚCIEŻKI</h2>
+  <p>Każda linia to inny sposób wejścia w ekosystem MentalWay. Nie musisz przejechać wszystkich stacji po kolei.</p>
+  <div class="lineGrid" id="lineGrid"></div>
+</div>
+
+<div class="faq-section" id="systemy">
+  <div class="eyebrow">Systemy i FAQ</div>
+  <div class="faq-title">Praktyczne pytania o platformy</div>
+  <p class="faq-note">Każdy poziom ścieżki realizuje się przez jeden z systemów MentalWay — tu znajdziesz odpowiedzi na pytania o konto, logowanie, zakupy i dostęp.</p>
+  <div class="faq-grid">
+    <div class="faq-block">
+      <div class="faq-block-tag">WayUp · platforma szkoleniowa</div>
+      <ul class="faq-list">
+        <li>Rejestracja i logowanie</li>
+        <li>Gdzie znajdę darmowe / zakupione szkolenia</li>
+        <li>Aktywacja i czas dostępu do VOD</li>
+      </ul>
+    </div>
+    <div class="faq-block">
+      <div class="faq-block-tag">Sklep MentalWay · zakupy</div>
+      <ul class="faq-list">
+        <li>Jak założyć konto</li>
+        <li>Gdzie znajdę zakupione produkty</li>
+        <li>Reset hasła, kody rabatowe</li>
+      </ul>
+    </div>
+    <div class="faq-block">
+      <div class="faq-block-tag">Discord · Mentalwayandia</div>
+      <ul class="faq-list">
+        <li>Zakup i autoryzacja Karty MMC</li>
+        <li>Link z zaproszeniem, widoczność kanałów</li>
+        <li>Zasady i cele społeczności</li>
+      </ul>
+    </div>
+    <div class="faq-block">
+      <div class="faq-block-tag">Dziennik Behawioralny</div>
+      <ul class="faq-list">
+        <li>Gdzie i kiedy zamówić</li>
+        <li>Pierwsze kroki, aktywacja dołączonych VOD</li>
+        <li>Wersja PDF, autoryzacja roli na Discordzie</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="logo" style="font-size:11px;"><span class="logo-sq" style="width:6px;height:6px;"></span>MentalWay</div>
+  <nav>
+    <a href="index.html">Wersja klasyczna</a>
+    <a href="#systemy">Systemy i FAQ</a>
+    <a href="https://www.sklep.mentalway.pl/">Sklep</a>
+    <a href="https://mentalway.pl/">mentalway.pl</a>
+  </nav>
+</footer>
+
+<script>
+const STATIONS = [
+  { id: 1, name: 'Darmowa wiedza', short: 'Darmowa wiedza', tag: 'Darmowo · Samodzielnie', color: '#c9a820' },
+  { id: 2, name: 'Materiały szkoleniowe', short: 'Materiały', tag: 'Płatne · Samodzielnie', color: '#8a7e6a' },
+  { id: 3, name: 'Społeczność MMC', short: 'Społeczność', tag: 'Karta MMC', color: '#d4b84a' },
+  { id: 4, name: 'Wyjazdy stacjonarne', short: 'Wyjazdy', tag: 'Grupowo · Stacjonarnie', color: '#a89030' },
+  { id: 5, name: 'Programy grupowe online', short: 'Programy online', tag: 'Online · Z mentorem', color: '#e8c84a' },
+  { id: 6, name: 'Konsultacje 1:1', short: 'Konsultacje', tag: 'Indywidualnie · Z Michałem', color: '#6b8f71' },
+  { id: 7, name: 'Life Spectrum Mentoring', short: 'LSM', tag: 'Premium · Długoterminowo', color: '#c9a820' },
+];
+
+const POS = {
+  1: [70, 210],
+  2: [230, 100],
+  3: [400, 100],
+  4: [570, 310],
+  5: [570, 100],
+  6: [230, 330],
+  7: [780, 210],
+};
+
+const LINES = [
+  { id: 'pelna', name: 'Pełna ścieżka', when: 'od darmowej wiedzy po mentoring grupowy i indywidualny', color: '#c9a820', seq: [1, 2, 3, 5, 7] },
+  { id: 'samodzielna', name: 'Samodzielna nauka', when: 'materiały i VOD bez mentora', color: '#8a7e6a', seq: [1, 2] },
+  { id: 'spolecznosc', name: 'Społeczność → programy', when: 'MMC otwiera PB, GLSM i Impact Call', color: '#d4b84a', seq: [1, 3, 5, 7] },
+  { id: 'wyjazdy', name: 'Eventy na żywo', when: 'warsztaty, majówki i wakacje w Mental Shelter', color: '#a89030', seq: [1, 2, 4] },
+  { id: 'mmc_wyjazdy', name: 'MMC + wyjazdy', when: 'społeczność i wspólne eventy stacjonarne', color: '#9a8530', seq: [1, 3, 4] },
+  { id: 'konsultacje', name: 'Bezpośrednio do Michała', when: 'konsultacje 1:1 i mentoring indywidualny', color: '#6b8f71', seq: [1, 6, 7] },
+  { id: 'premium', name: 'Premium od razu', when: 'wejście bezpośrednie — bez poprzednich poziomów', color: '#e8c84a', seq: [6, 7] },
+];
+
+const CONTENT = {
+  1: `
+    <p class="detail-desc">Bez logowania, bez zakupu. Trzy niezależne źródła darmowej wiedzy od Michała.</p>
+    <div class="mmc-block">
+      <div class="mmc-row"><span class="mmc-row-label">Social media</span>
+        <a class="chip chip-lit" href="https://www.facebook.com/KolczMajk/" target="_blank">Facebook</a>
+        <a class="chip chip-lit" href="https://www.youtube.com/Ko%C5%82czMajk" target="_blank">YouTube</a>
+        <a class="chip chip-lit" href="https://www.instagram.com/kolcz_majk/" target="_blank">Instagram</a>
+      </div>
+      <div class="mmc-row"><span class="mmc-row-label">Newsletter</span>
+        <a class="chip chip-lit" href="https://mwway.pl/zapisz-sie" target="_blank">Regularne maile od Michała →</a>
+      </div>
+      <div class="mmc-row"><span class="mmc-row-label">WayUp</span>
+        <a class="chip chip-lit" href="https://www.wayup.pl/" target="_blank">Wybrane szkolenia bezpłatnie przez 30 dni →</a>
+      </div>
+    </div>`,
+  2: `
+    <p class="detail-desc">Nauka samodzielna we własnym tempie. Każdy produkt niezależnie — kupujesz co Cię interesuje.</p>
+    <div class="chips">
+      <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Książki</a>
+      <a class="chip" href="https://mwway.pl/dziennik-q3-2026" target="_blank">Dziennik Behawioralny</a>
+      <a class="chip" href="https://www.wayup.pl/" target="_blank">Szkolenia VOD</a>
+      <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Audiobooki</a>
+    </div>`,
+  3: `
+    <p class="detail-desc">Karta MMC jest przepustką do społeczności i warunkiem wejścia do programów PB i GLSM.</p>
+    <div class="chips"><a class="chip chip-cta" href="https://www.mwway.pl/mmc-2026" target="_blank">Kup kartę MMC →</a></div>
+    <div class="mmc-block">
+      <div class="mmc-row"><span class="mmc-row-label">Z kartą od razu</span>
+        <span class="chip chip-lit">Discord Mentalwayandia</span>
+        <span class="chip chip-lit">Dashboard spolecznosc.mentalway.pl</span>
+      </div>
+      <div class="mmc-row"><span class="mmc-row-label">Karta otwiera</span>
+        <span class="chip">Personal Branding</span>
+        <span class="chip">GLSM</span>
+        <span class="chip">Impact Call</span>
+      </div>
+    </div>`,
+  4: `
+    <p class="detail-desc">Fizyczne wyjazdy do posiadłości <strong style="color:var(--white)">Mental Shelter w Puszczy Noteckiej</strong>.</p>
+    <div class="chips">
+      <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Warsztaty weekendowe</a>
+      <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Majówki</a>
+      <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Wakacje tematyczne</a>
+    </div>
+    <div class="events-block">
+      <div class="events-title">Najbliższe wydarzenia 2026</div>
+      <div class="event-row"><span class="event-date">4–12 lipca</span><span class="event-name">Wakacje z Brandingiem</span></div>
+      <div class="event-row"><span class="event-date">18–20 września</span><span class="event-name">GLSM 3/4 — zjazd stacjonarny</span></div>
+    </div>`,
+  5: `
+    <p class="detail-desc">Programy grupowe online prowadzone przez Michała. Oba wymagają aktywnej karty MMC.</p>
+    <div class="chips" style="flex-direction:column;align-items:flex-start;gap:8px;">
+      <span class="chip chip-lit">Personal Branding</span>
+      <span class="chip chip-lit">GLSM — Grupowy Life Spectrum Mentoring</span>
+    </div>`,
+  6: `
+    <div class="direct-entry">wejście bezpośrednie — nie wymaga poprzednich poziomów</div>
+    <p class="detail-desc">Bezpośrednia rozmowa z Michałem. Niezależna od karty MMC.</p>
+    <div class="chips"><a class="chip chip-cta" href="https://www.sklep.mentalway.pl/" target="_blank">Kup konsultację →</a></div>`,
+  7: `
+    <div class="direct-entry">wejście bezpośrednie — nie wymaga poprzednich poziomów</div>
+    <p class="detail-desc">Autorski program Michała — indywidualna praca rozwojowa, długoterminowy mentoring najwyższego poziomu.</p>
+    <div class="chips"><span class="chip chip-lit">Life Spectrum Mentoring</span></div>`,
+};
+
+const NS = 'http://www.w3.org/2000/svg';
+let activeLine = null;
+let selected = null;
+let transferMode = false;
+
+const stationLines = {};
+STATIONS.forEach(s => stationLines[s.id] = []);
+LINES.forEach(l => l.seq.forEach(id => stationLines[id].push(l.id)));
+const transfers = Object.fromEntries(STATIONS.map(s => [s.id, stationLines[s.id].length > 1]));
+const majorTransfers = STATIONS.filter(s => stationLines[s.id].length >= 3).map(s => s.id);
+
+function S(id) { return STATIONS.find(s => s.id === id); }
+
+function drawMap() {
+  const ll = document.getElementById('lineLayer');
+  const sl = document.getElementById('stationLayer');
+  ll.innerHTML = '';
+  sl.innerHTML = '';
+
+  const selLines = selected ? new Set(stationLines[selected]) : null;
+
+  LINES.forEach(line => {
+    const path = document.createElementNS(NS, 'path');
+    let dim = false;
+    if (activeLine) dim = activeLine !== line.id;
+    else if (selLines && selLines.size) dim = !selLines.has(line.id);
+    path.setAttribute('class', 'metroLine' + (dim ? ' dim' : ''));
+    path.setAttribute('stroke', line.color);
+    path.setAttribute('stroke-width', activeLine === line.id ? 10 : 7);
+    path.setAttribute('d', line.seq.map((n, i) => `${i ? 'L' : 'M'}${POS[n][0]},${POS[n][1]}`).join(' '));
+    path.addEventListener('click', () => selectLine(line.id));
+    ll.appendChild(path);
+  });
+
+  STATIONS.forEach(st => {
+    const [x, y] = POS[st.id];
+    const g = document.createElementNS(NS, 'g');
+    const isT = transfers[st.id];
+    const isM = majorTransfers.includes(st.id);
+    const vis = !transferMode || isT;
+    let dim = !vis;
+    if (activeLine) dim = dim || !stationLines[st.id].includes(activeLine);
+    else if (selLines && selLines.size) {
+      dim = dim || (st.id !== selected && !stationLines[st.id].some(id => selLines.has(id)));
+    }
+    g.setAttribute('class', 'station' + (dim ? ' dim' : '') + (st.id === selected ? ' sel' : ''));
+    const r = isM ? 17 : (isT ? 14 : 12);
+    g.innerHTML = `
+      ${isT ? `<circle class="transfer" cx="${x}" cy="${y}" r="${r + 3}"></circle>` : ''}
+      <circle class="base" cx="${x}" cy="${y}" r="${r}" fill="${st.color}"></circle>
+      <circle cx="${x + r - 1}" cy="${y - r + 1}" r="6.5" fill="#0d0c09" stroke="${st.color}" stroke-width="1.3"></circle>
+      <text class="num" x="${x + r - 1}" y="${y - r + 4}" text-anchor="middle" fill="${st.color}">${String(st.id).padStart(2, '0')}</text>
+      <circle class="ring2" cx="${x}" cy="${y}" r="${r + 6}" style="stroke:${st.id === selected ? st.color : '#f0ece4'}"></circle>
+      <text class="label" x="${x}" y="${y + r + 14}" text-anchor="middle">${st.short}</text>`;
+    g.addEventListener('click', () => selectStation(st.id));
+    sl.appendChild(g);
+  });
+
+  const lg = document.getElementById('maplegend');
+  lg.innerHTML = '';
+  LINES.forEach(line => {
+    const d = document.createElement('button');
+    d.type = 'button';
+    d.className = 'mleg' + (activeLine === line.id ? ' on' : '');
+    d.innerHTML = `<span class="sw" style="background:${line.color}"></span>${line.name}`;
+    d.addEventListener('click', () => selectLine(line.id));
+    lg.appendChild(d);
+  });
+}
+
+function renderLineGrid() {
+  const grid = document.getElementById('lineGrid');
+  grid.innerHTML = '';
+  LINES.forEach(line => {
+    const seq = line.seq.map((n, i) =>
+      `${i ? '<span class="arrowmini">→</span>' : ''}<span class="lstep" data-n="${n}"><b>${String(n).padStart(2, '0')}</b> ${S(n).short}</span>`
+    ).join('');
+    const card = document.createElement('div');
+    card.className = 'lcard';
+    card.innerHTML = `
+      <div class="lh"><span class="lbar" style="background:${line.color}"></span><span class="ln">${line.name}</span></div>
+      <div class="lw">${line.when}</div>
+      <div class="lseq">${seq}</div>`;
+    card.querySelectorAll('.lstep').forEach(el => {
+      el.addEventListener('click', () => selectStation(+el.dataset.n));
+    });
+    card.addEventListener('click', e => {
+      if (!e.target.closest('.lstep')) selectLine(line.id);
+    });
+    grid.appendChild(card);
+  });
+}
+
+function selectLine(id) {
+  activeLine = activeLine === id ? null : id;
+  selected = null;
+  transferMode = false;
+  document.getElementById('btnTransfers').classList.remove('on');
+  document.getElementById('detail').classList.remove('open');
+  drawMap();
+}
+
+function selectStation(id) {
+  selected = id;
+  activeLine = null;
+  const st = S(id);
+  const lines = stationLines[id].map(lid => LINES.find(l => l.id === lid));
+  const detail = document.getElementById('detail');
+  detail.classList.add('open');
+  detail.innerHTML = `
+    <div class="detail-head">
+      <div class="detail-num">${String(id).padStart(2, '0')}</div>
+      <div>
+        <div class="detail-tag">${st.tag}</div>
+        <div class="detail-title">${st.name}</div>
+        <div class="detail-lines">
+          ${lines.map(l => `<span class="line-chip" style="border-color:${l.color};color:${l.color}">${l.name}</span>`).join('')}
+          ${transfers[id] ? '<span class="line-chip" style="border-color:rgba(240,236,228,.3);color:var(--muted2)">Przesiadka</span>' : ''}
+        </div>
+      </div>
+    </div>
+    ${CONTENT[id]}`;
+  drawMap();
+  detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+document.getElementById('btnReset').addEventListener('click', () => {
+  activeLine = null;
+  selected = null;
+  transferMode = false;
+  document.getElementById('btnTransfers').classList.remove('on');
+  document.getElementById('detail').classList.remove('open');
+  drawMap();
+});
+
+document.getElementById('btnTransfers').addEventListener('click', e => {
+  transferMode = !transferMode;
+  e.target.classList.toggle('on', transferMode);
+  drawMap();
+});
+
+drawMap();
+renderLineGrid();
+</script>
+</body>
+</html>

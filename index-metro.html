@@ -518,7 +518,7 @@
     a.chip:hover { border-color: var(--gold); color: var(--gold); }
     .chip-lit  { border-color: rgba(201,168,32,.35); color: var(--gold); }
     .chip-cta  { background: var(--gold); border-color: var(--gold); color: #0d0c09; font-weight: 700; }
-    a.chip-cta:hover { opacity: .85; }
+    .chip.njump { cursor: pointer; font-family: inherit; }
 
     .mmc-block { margin-top: 16px; border: 1px solid var(--border2); }
     .mmc-row {
@@ -555,6 +555,107 @@
       flex-shrink: 0;
     }
     .event-name { color: var(--muted2); }
+    .events-foot { margin-top: 10px; font-size: 11px; color: var(--muted); font-style: italic; }
+
+    .sys-refs {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+    }
+    .sys-refs-label {
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-right: 2px;
+    }
+    .sys-ref {
+      color: var(--muted2);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--border2);
+      transition: color .15s, border-color .15s;
+    }
+    .sys-ref:hover { color: var(--gold); border-color: var(--gold); }
+    .sys-dot { color: var(--border2); }
+    .mmc-divider { font-size: 11px; color: var(--muted); margin-left: 4px; }
+
+    .wayup-note {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--border2);
+      border-left: 2px solid var(--gold-mid);
+      background: var(--bg);
+      font-size: 11px;
+      color: var(--muted2);
+      line-height: 1.55;
+    }
+    .wayup-note strong { color: var(--white); font-weight: 600; }
+
+    /* ── Zawsze widoczne: stacje 01 i 02 ── */
+    .product-strip {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .product-col {
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      border-radius: 4px;
+      padding: 16px 18px;
+    }
+    .product-col.paid { border-left: 2px solid rgba(138,126,106,.5); }
+    .product-col.free { border-left: 2px solid var(--gold-mid); }
+    .preview-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .preview-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      color: var(--gold);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .preview-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 3px;
+    }
+    .preview-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+    .preview-desc {
+      font-size: 12px;
+      color: var(--muted2);
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+    .preview-open {
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: 0;
+      padding: 0;
+      font-family: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .preview-open:hover { color: var(--gold); }
 
     .lines-list {
       padding: 0 52px 48px;
@@ -664,6 +765,7 @@
     }
 
     @media (max-width: 900px) {
+      .product-strip { grid-template-columns: 1fr; }
       .app-layout {
         grid-template-columns: 1fr;
         padding-left: 20px;
@@ -737,6 +839,61 @@
         <g id="stationLayer"></g>
       </svg>
       <div class="maplegend" id="maplegend"></div>
+
+      <div class="product-strip">
+        <div class="product-col free">
+          <div class="preview-head">
+            <span class="preview-num">01</span>
+            <div>
+              <div class="preview-tag">Darmowo · Samodzielnie</div>
+              <div class="preview-title">Darmowa wiedza</div>
+            </div>
+          </div>
+          <p class="preview-desc">Bez logowania, bez zakupu. Social media, newsletter i wybrane szkolenia WayUp gratis przez 30 dni.</p>
+          <div class="mmc-block">
+            <div class="mmc-row">
+              <span class="mmc-row-label">Social media</span>
+              <a class="chip chip-lit" href="https://www.facebook.com/KolczMajk/" target="_blank">Facebook</a>
+              <a class="chip chip-lit" href="https://www.youtube.com/Ko%C5%82czMajk" target="_blank">YouTube</a>
+              <a class="chip chip-lit" href="https://www.instagram.com/kolcz_majk/" target="_blank">Instagram</a>
+              <a class="chip chip-lit" href="https://x.com/KolczMajk" target="_blank">X</a>
+              <a class="chip chip-lit" href="https://www.tiktok.com/@kolczmajk" target="_blank">TikTok</a>
+              <a class="chip chip-lit" href="https://www.linkedin.com/in/micha%C5%82-wawrzyniak/" target="_blank">LinkedIn</a>
+            </div>
+            <div class="mmc-row">
+              <span class="mmc-row-label">Newsletter</span>
+              <a class="chip chip-lit" href="https://mwway.pl/zapisz-sie" target="_blank">Regularne maile od Michała →</a>
+            </div>
+            <div class="mmc-row">
+              <span class="mmc-row-label">WayUp</span>
+              <a class="chip chip-lit" href="https://www.wayup.pl/" target="_blank">Wybrane szkolenia bezpłatnie przez 30 dni →</a>
+            </div>
+          </div>
+          <p class="wayup-note"><strong>WayUp na stacji 01</strong> = darmowy dostęp próbny do wybranych szkoleń. To nie to samo co płatne VOD na stacji 02.</p>
+          <button type="button" class="preview-open" data-open="1">Więcej o stacji 01 →</button>
+        </div>
+
+        <div class="product-col paid">
+          <div class="preview-head">
+            <span class="preview-num">02</span>
+            <div>
+              <div class="preview-tag">Płatne · Samodzielnie · Bez karty MMC</div>
+              <div class="preview-title">Materiały szkoleniowe</div>
+            </div>
+          </div>
+          <p class="preview-desc">Nauka we własnym tempie. Kupujesz produkty osobno — książki, Dziennik, VOD, audio. Bez wymogu karty MMC.</p>
+          <div class="chips">
+            <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Książki</a>
+            <a class="chip" href="https://mwway.pl/dziennik-q3-2026" target="_blank">Dziennik Behawioralny — edycja Q3 2026</a>
+            <a class="chip" href="https://www.wayup.pl/" target="_blank">Szkolenia VOD</a>
+            <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Szkolenia audio</a>
+            <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Audiobooki</a>
+            <a class="chip" href="#wydarzenia">Eventy online — uczestnictwo zdalne ↓</a>
+          </div>
+          <p class="wayup-note"><strong>WayUp na stacji 02</strong> = płatne szkolenia VOD (po okresie próbnym lub od razu). Książki i Dziennik kupujesz w sklepie / na mwway.pl.</p>
+          <button type="button" class="preview-open" data-open="2">Więcej o stacji 02 →</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -752,7 +909,7 @@
   <div class="faq-title">Praktyczne pytania o platformy</div>
   <p class="faq-note">Każdy poziom ścieżki realizuje się przez jeden z systemów MentalWay — tu znajdziesz odpowiedzi na pytania o konto, logowanie, zakupy i dostęp.</p>
   <div class="faq-grid">
-    <div class="faq-block">
+    <div class="faq-block" id="sys-wayup">
       <div class="faq-block-tag">WayUp · platforma szkoleniowa</div>
       <ul class="faq-list">
         <li>Rejestracja i logowanie</li>
@@ -760,7 +917,7 @@
         <li>Aktywacja i czas dostępu do VOD</li>
       </ul>
     </div>
-    <div class="faq-block">
+    <div class="faq-block" id="sys-sklep">
       <div class="faq-block-tag">Sklep MentalWay · zakupy</div>
       <ul class="faq-list">
         <li>Jak założyć konto</li>
@@ -768,7 +925,7 @@
         <li>Reset hasła, kody rabatowe</li>
       </ul>
     </div>
-    <div class="faq-block">
+    <div class="faq-block" id="sys-discord">
       <div class="faq-block-tag">Discord · Mentalwayandia</div>
       <ul class="faq-list">
         <li>Zakup i autoryzacja Karty MMC</li>
@@ -776,10 +933,10 @@
         <li>Zasady i cele społeczności</li>
       </ul>
     </div>
-    <div class="faq-block">
-      <div class="faq-block-tag">Dziennik Behawioralny</div>
+    <div class="faq-block" id="sys-dziennik">
+      <div class="faq-block-tag">Dziennik Behawioralny · edycja Q3 2026</div>
       <ul class="faq-list">
-        <li>Gdzie i kiedy zamówić</li>
+        <li>Gdzie i kiedy zamówić → <a href="https://mwway.pl/dziennik-q3-2026" target="_blank" style="color:var(--gold)">mwway.pl/dziennik-q3-2026</a></li>
         <li>Pierwsze kroki, aktywacja dołączonych VOD</li>
         <li>Wersja PDF, autoryzacja roli na Discordzie</li>
       </ul>
@@ -809,7 +966,7 @@ const HUB_STATION = 3;
 
 const STATIONS = [
   { id: 1, name: 'Darmowa wiedza', short: 'Darmowa wiedza', tag: 'Darmowo · Samodzielnie', color: '#c9a820' },
-  { id: 2, name: 'Materiały szkoleniowe', short: 'Materiały', tag: 'Płatne · Samodzielnie', color: '#8a7e6a' },
+  { id: 2, name: 'Materiały szkoleniowe', short: 'Materiały', tag: 'Płatne · Samodzielnie · Bez karty MMC', color: '#8a7e6a' },
   { id: 3, name: 'Społeczność MMC', short: 'Społeczność', tag: 'Karta MMC', color: '#d4b84a' },
   { id: 4, name: 'Wyjazdy stacjonarne', short: 'Wyjazdy', tag: 'Grupowo · Stacjonarnie', color: '#a89030' },
   { id: 5, name: 'Programy grupowe online', short: 'Programy online', tag: 'Online · Z mentorem', color: '#e8c84a' },
@@ -845,6 +1002,9 @@ const CONTENT = {
         <a class="chip chip-lit" href="https://www.facebook.com/KolczMajk/" target="_blank">Facebook</a>
         <a class="chip chip-lit" href="https://www.youtube.com/Ko%C5%82czMajk" target="_blank">YouTube</a>
         <a class="chip chip-lit" href="https://www.instagram.com/kolcz_majk/" target="_blank">Instagram</a>
+        <a class="chip chip-lit" href="https://x.com/KolczMajk" target="_blank">X</a>
+        <a class="chip chip-lit" href="https://www.tiktok.com/@kolczmajk" target="_blank">TikTok</a>
+        <a class="chip chip-lit" href="https://www.linkedin.com/in/micha%C5%82-wawrzyniak/" target="_blank">LinkedIn</a>
       </div>
       <div class="mmc-row"><span class="mmc-row-label">Newsletter</span>
         <a class="chip chip-lit" href="https://mwway.pl/zapisz-sie" target="_blank">Regularne maile od Michała →</a>
@@ -852,28 +1012,49 @@ const CONTENT = {
       <div class="mmc-row"><span class="mmc-row-label">WayUp</span>
         <a class="chip chip-lit" href="https://www.wayup.pl/" target="_blank">Wybrane szkolenia bezpłatnie przez 30 dni →</a>
       </div>
+    </div>
+    <p class="wayup-note"><strong>Stacja 01 = darmowo.</strong> WayUp tutaj to bezpłatny dostęp próbny — nie mylić z płatnymi szkoleniami VOD na stacji 02.</p>
+    <div class="sys-refs">
+      <span class="sys-refs-label">Pytania techniczne</span>
+      <a href="#sys-wayup" class="sys-ref">WayUp — konto, logowanie, dostęp</a>
     </div>`,
   2: `
-    <p class="detail-desc">Nauka samodzielna we własnym tempie. Każdy produkt niezależnie — kupujesz co Cię interesuje.</p>
+    <p class="detail-desc">Nauka samodzielna we własnym tempie. Każdy produkt niezależnie — kupujesz co Cię interesuje, w dowolnej kolejności. Bez karty MMC.</p>
     <div class="chips">
       <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Książki</a>
-      <a class="chip" href="https://mwway.pl/dziennik-q3-2026" target="_blank">Dziennik Behawioralny</a>
+      <a class="chip" href="https://mwway.pl/dziennik-q3-2026" target="_blank">Dziennik Behawioralny — edycja Q3 2026</a>
       <a class="chip" href="https://www.wayup.pl/" target="_blank">Szkolenia VOD</a>
+      <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Szkolenia audio</a>
       <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Audiobooki</a>
+      <a class="chip" href="#wydarzenia">Eventy online — uczestnictwo zdalne ↓</a>
+    </div>
+    <p class="wayup-note"><strong>Stacja 02 = płatne.</strong> Książki, Dziennik Behawioralny, VOD, audio i audiobooki — każdy produkt kupujesz osobno.</p>
+    <div class="sys-refs">
+      <span class="sys-refs-label">Pytania techniczne</span>
+      <a href="#sys-wayup" class="sys-ref">WayUp</a>
+      <span class="sys-dot">·</span>
+      <a href="#sys-sklep" class="sys-ref">Sklep</a>
+      <span class="sys-dot">·</span>
+      <a href="#sys-dziennik" class="sys-ref">Dziennik Behawioralny</a>
     </div>`,
   3: `
-    <p class="detail-desc">Karta MMC jest przepustką do społeczności i warunkiem wejścia do programów PB i GLSM. To główna przesiadka na mapie — większość ścieżek przechodzi przez tę stację.</p>
+    <p class="detail-desc">Karta MMC jest przepustką do społeczności i warunkiem wejścia do programów PB i GLSM. Trzy formy: miesięczna (69 PLN), roczna, lifetime. To główna przesiadka na mapie.</p>
     <div class="chips"><a class="chip chip-cta" href="https://www.mwway.pl/mmc-2026" target="_blank">Kup kartę MMC →</a></div>
     <div class="mmc-block">
       <div class="mmc-row"><span class="mmc-row-label">Z kartą od razu</span>
         <span class="chip chip-lit">Discord Mentalwayandia</span>
         <span class="chip chip-lit">Dashboard spolecznosc.mentalway.pl</span>
       </div>
-      <div class="mmc-row"><span class="mmc-row-label">Karta otwiera</span>
-        <span class="chip">Personal Branding</span>
-        <span class="chip">GLSM</span>
-        <span class="chip">Impact Call</span>
+      <div class="mmc-row"><span class="mmc-row-label">Karta otwiera drzwi do</span>
+        <button type="button" class="chip njump" data-jump="5">Personal Branding → L5</button>
+        <button type="button" class="chip njump" data-jump="5">GLSM → L5</button>
+        <button type="button" class="chip njump" data-jump="7">Impact Call → L7</button>
+        <span class="mmc-divider">kupowane oddzielnie</span>
       </div>
+    </div>
+    <div class="sys-refs">
+      <span class="sys-refs-label">Pytania techniczne</span>
+      <a href="#sys-discord" class="sys-ref">Discord — Mentalwayandia: autoryzacja, zasady, kanały</a>
     </div>`,
   4: `
     <p class="detail-desc">Fizyczne wyjazdy do posiadłości <strong style="color:var(--white)">Mental Shelter w Puszczy Noteckiej</strong>.</p>
@@ -882,21 +1063,37 @@ const CONTENT = {
       <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Majówki</a>
       <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Wakacje tematyczne</a>
     </div>
-    <div class="events-block">
-      <div class="events-title">Najbliższe wydarzenia 2026</div>
-      <div class="event-row"><span class="event-date">4–12 lipca</span><span class="event-name">Wakacje z Brandingiem</span></div>
-      <div class="event-row"><span class="event-date">18–20 września</span><span class="event-name">GLSM 3/4 — zjazd stacjonarny</span></div>
+    <div class="events-block" id="wydarzenia">
+      <div class="events-title">Kalendarz spotkań i wyjazdów 2026</div>
+      <div class="event-row"><span class="event-date">4–12 lipca</span><span class="event-name">Wakacje z Brandingiem — wyjazd tematyczny</span></div>
+      <div class="event-row"><span class="event-date">18–20 września</span><span class="event-name">GLSM 3/4 — zjazd + warsztat stacjonarny</span></div>
+      <div class="event-row"><span class="event-date">20–22 listopada</span><span class="event-name">GLSM 4/4 — zjazd + warsztat stacjonarny</span></div>
+      <p class="events-foot">Terminy aktualizowane na bieżąco — kolejne edycje ogłaszane z miesięcznym–dwumiesięcznym wyprzedzeniem.</p>
+    </div>
+    <div class="sys-refs">
+      <span class="sys-refs-label">Pytania techniczne</span>
+      <a href="#sys-sklep" class="sys-ref">Sklep — zakup, bilety, kody rabatowe</a>
     </div>`,
   5: `
-    <p class="detail-desc">Programy grupowe online prowadzone przez Michała. Oba wymagają aktywnej karty MMC.</p>
+    <p class="detail-desc">Programy grupowe online prowadzone bezpośrednio przez Michała. Oba wymagają aktywnej karty MMC.</p>
     <div class="chips" style="flex-direction:column;align-items:flex-start;gap:8px;">
       <span class="chip chip-lit">Personal Branding</span>
       <span class="chip chip-lit">GLSM — Grupowy Life Spectrum Mentoring</span>
+    </div>
+    <div class="sys-refs">
+      <span class="sys-refs-label">Pytania techniczne</span>
+      <a href="#sys-sklep" class="sys-ref">Sklep — zakup programu</a>
+      <span class="sys-dot">·</span>
+      <a href="#sys-discord" class="sys-ref">Discord — dostęp przez kartę MMC</a>
     </div>`,
   6: `
     <div class="direct-entry">wejście bezpośrednie — nie wymaga poprzednich poziomów</div>
     <p class="detail-desc">Bezpośrednia rozmowa z Michałem. Niezależna od karty MMC.</p>
-    <div class="chips"><a class="chip chip-cta" href="https://www.sklep.mentalway.pl/" target="_blank">Kup konsultację →</a></div>`,
+    <div class="chips"><a class="chip chip-cta" href="https://www.sklep.mentalway.pl/" target="_blank">Kup konsultację →</a></div>
+    <div class="sys-refs">
+      <span class="sys-refs-label">Pytania techniczne</span>
+      <a href="#sys-sklep" class="sys-ref">Sklep — zakup, dostęp do zakupionych produktów</a>
+    </div>`,
   7: `
     <div class="direct-entry">wejście bezpośrednie — nie wymaga poprzednich poziomów</div>
     <p class="detail-desc">Autorski program Michała — indywidualna praca rozwojowa, długoterminowy mentoring najwyższego poziomu.</p>
@@ -990,7 +1187,7 @@ function renderSheetHead(n) {
 
   document.getElementById('sheetBody').innerHTML = CONTENT[n];
   document.getElementById('dClose').onclick = closeDrawer;
-  document.querySelectorAll('#sheetHead .njump').forEach(b => {
+  document.querySelectorAll('#sheetHead .njump, #sheetBody .njump').forEach(b => {
     b.onclick = () => openDrawer(+b.dataset.jump);
   });
 }
@@ -1137,6 +1334,9 @@ document.getElementById('menuToggle').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('open');
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+document.querySelectorAll('.preview-open').forEach(btn => {
+  btn.addEventListener('click', () => openDrawer(+btn.dataset.open));
+});
 
 const hub = S(HUB_STATION);
 document.getElementById('hubNum').textContent = pad(HUB_STATION);

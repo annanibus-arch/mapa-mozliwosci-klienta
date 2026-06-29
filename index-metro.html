@@ -1192,7 +1192,7 @@
       height: 3px;
       background: var(--border2);
       border-radius: 2px;
-      margin: 0 4px 12px;
+      margin: 0 0 10px;
       overflow: hidden;
     }
     .tier-track-fill {
@@ -1202,41 +1202,17 @@
       border-radius: 2px;
       transition: width .2s ease;
     }
-    .tier-scale {
-      display: flex;
-      gap: 6px;
-    }
-    .tier-btn {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      padding: 8px 4px;
-      border: 1px solid var(--border2);
-      background: var(--bg);
-      border-radius: 1px;
-      cursor: pointer;
-      font-family: inherit;
-      color: inherit;
-      transition: border-color .12s, background .12s;
-    }
-    .tier-btn:hover { border-color: var(--gold-mid); }
-    .tier-btn.on {
-      border-color: var(--gold-mid);
-      background: var(--gold-lo);
-    }
-    .tier-btn.disabled,
     .interest-grid label.disabled {
       opacity: 0.3;
       cursor: not-allowed;
       pointer-events: none;
       filter: grayscale(0.35);
     }
-    .tier-rozpiska tr.disabled td {
-      opacity: 0.35;
-      filter: grayscale(0.4);
+    .tier-rozpiska tbody tr.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+      filter: grayscale(0.35);
     }
     .pf-lock-hint {
       font-size: 11px;
@@ -1246,37 +1222,6 @@
       min-height: 0;
     }
     .pf-lock-hint:empty { display: none; }
-    .tier-names {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      width: 100%;
-    }
-    .tier-name-journey {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--white);
-      text-align: center;
-      line-height: 1.2;
-    }
-    .tier-name-mentor {
-      font-size: 9px;
-      font-weight: 600;
-      color: var(--muted2);
-      text-align: center;
-      line-height: 1.2;
-    }
-    .tier-btn.on .tier-name-journey { color: var(--gold); }
-    .tier-lab {
-      font-size: 8px;
-      font-weight: 700;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.25;
-    }
     .tier-detail {
       font-size: 12px;
       color: var(--muted2);
@@ -1286,11 +1231,23 @@
     }
     .tier-detail strong { color: var(--white); font-weight: 600; }
     .tier-detail .tier-alt { color: var(--gold); font-weight: 600; }
-    .tier-rozpiska-wrap { margin-top: 12px; }
     .tier-rozpiska {
       width: 100%;
       border-collapse: collapse;
       font-size: 11px;
+    }
+    .tier-rozpiska tbody tr {
+      cursor: pointer;
+      transition: background .12s;
+    }
+    .tier-rozpiska tbody tr:hover:not(.disabled) td {
+      background: rgba(201, 168, 32, 0.06);
+    }
+    .tier-rozpiska tbody tr.on td {
+      background: var(--gold-lo);
+    }
+    .tier-rozpiska tbody tr.on td:first-child {
+      color: var(--gold);
     }
     .tier-rozpiska th,
     .tier-rozpiska td {
@@ -1317,6 +1274,13 @@
     .tier-rozpiska tr.on td { background: var(--gold-lo); }
     .tier-rozpiska .tr-journey { color: var(--white); font-weight: 600; }
     .tier-rozpiska .tr-mentor { color: var(--muted2); }
+    .tier-rozpiska .tr-sub {
+      display: block;
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 2px;
+    }
     .interest-grid {
       display: flex;
       flex-wrap: wrap;
@@ -1700,11 +1664,6 @@
       .main-tabbar button { max-width: none; font-size: 10px; padding: 10px 6px; }
       .sub-toolbar { padding-left: 20px; padding-right: 20px; }
       .path-finder { padding-left: 20px; padding-right: 20px; }
-      .tier-scale { flex-wrap: wrap; }
-      .tier-btn { min-width: calc(20% - 6px); }
-      .tier-name-journey { font-size: 10px; }
-      .tier-name-mentor { font-size: 8px; }
-      .tier-lab { font-size: 7px; }
       .tier-rozpiska { font-size: 10px; }
       .tier-rozpiska th, .tier-rozpiska td { padding: 6px 8px; }
       .product-strip { grid-template-columns: 1fr; }
@@ -1802,17 +1761,13 @@
     <div class="pf-tier-block">
       <div class="pf-tier-head">
         <span class="pf-results-label">Poziom inwestycji</span>
-        <span class="pf-tier-scale-hint">Na przycisku: podróż metrem (góra) · relacja z mentorem (dół)</span>
+        <span class="pf-tier-scale-hint">Kliknij wiersz — podróż · relacja z mentorem · stacje</span>
       </div>
       <div class="tier-scale-wrap">
         <div class="tier-track" aria-hidden="true"><div class="tier-track-fill" id="tierTrackFill"></div></div>
-        <div class="tier-scale" id="tierScale" role="radiogroup" aria-label="Skala poziomów — podróż i relacja z mentorem"></div>
+        <table class="tier-rozpiska" id="tierRozpiska" role="radiogroup" aria-label="Wybierz poziom inwestycji"></table>
       </div>
-      <p class="tier-detail" id="tierDetail">Wybierz poziom — ta sama trasa, dwa sposoby patrzenia: jak jedziesz metrem i jak blisko jesteś mentora.</p>
-      <div class="tier-rozpiska-wrap">
-        <div class="pf-results-label">Rozpiska poziomów</div>
-        <table class="tier-rozpiska" id="tierRozpiska" aria-label="Dwa systemy nazw poziomów ścieżki"></table>
-      </div>
+      <p class="tier-detail" id="tierDetail">Kliknij wiersz w tabeli — ta sama trasa, dwa sposoby patrzenia: jak jedziesz metrem i jak blisko jesteś mentora.</p>
     </div>
 
     <div class="pf-results-label">Co Cię interesuje?</div>
@@ -1824,7 +1779,7 @@
     </div>
     <div class="pf-results-label">Propozycje ścieżek</div>
     <div class="pf-results" id="pathFinderResults">
-      <p class="pf-empty">Wybierz poziom na skali, zaznacz zainteresowania — albo oba naraz.</p>
+      <p class="pf-empty">Kliknij wiersz w tabeli lub zaznacz zainteresowania — albo oba naraz.</p>
     </div>
   </div>
 </section>
@@ -2886,20 +2841,6 @@ function applyPfLocks() {
     state = computePfLockState();
   }
 
-  document.querySelectorAll('#tierScale .tier-btn').forEach((btn, i) => {
-    const tid = TIER_ORDER[i];
-    const dis = !state.tierAllowed[tid];
-    btn.classList.toggle('disabled', dis);
-    btn.classList.toggle('on', selectedTier === tid);
-    btn.disabled = dis;
-    btn.setAttribute('aria-disabled', dis ? 'true' : 'false');
-    btn.setAttribute('aria-checked', selectedTier === tid ? 'true' : 'false');
-  });
-
-  const fill = document.getElementById('tierTrackFill');
-  const idx = selectedTier ? tierIdx(selectedTier) : -1;
-  if (fill) fill.style.width = idx >= 0 ? `${((idx + 1) / TIERS.length) * 100}%` : '0%';
-
   document.querySelectorAll('#interestGrid label').forEach(label => {
     const id = label.querySelector('input')?.value;
     const dis = !!(id && !state.interestAllowed[id]);
@@ -2908,7 +2849,7 @@ function applyPfLocks() {
     if (inp) inp.disabled = dis;
   });
 
-  renderTierRozpiska();
+  updateTierRowUi(state);
   updateTierDetail();
 
   const hint = document.getElementById('pfLockHint');
@@ -2922,7 +2863,7 @@ function applyPfLocks() {
     } else if (selectedTier) {
       msg = 'Wybrany poziom wyszarza zainteresowania, które na nim nie występują. Odznacz poziom, by zobaczyć pełną listę.';
     } else if (state.checked.length) {
-      msg = 'Zaznaczone zainteresowania wyszarzają niepasujące poziomy skali — zostają tylko zgodne trasy.';
+      msg = 'Zaznaczone zainteresowania wyszarzają niepasujące wiersze tabeli — zostają tylko zgodne trasy.';
     }
     hint.textContent = msg;
   }
@@ -2962,57 +2903,29 @@ function scoreLines(checkedIds, tierId = selectedTier) {
     .sort((a, b) => b.score - a.score || a.line.name.localeCompare(b.line.name, 'pl'));
 }
 
-function renderTierScale() {
-  const wrap = document.getElementById('tierScale');
-  const fill = document.getElementById('tierTrackFill');
-  if (!wrap) return;
-  wrap.innerHTML = '';
-  TIERS.forEach(t => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'tier-btn';
-    btn.setAttribute('role', 'radio');
-    btn.setAttribute('aria-checked', 'false');
-    btn.setAttribute('aria-label', tierAriaLabel(t));
-    btn.innerHTML = `
-      <div class="tier-names">
-        <span class="tier-name-journey">${t.journey.title}</span>
-        <span class="tier-name-mentor">${t.mentor.title}</span>
-      </div>
-      <span class="tier-lab">${t.journey.sub}</span>`;
-    btn.addEventListener('click', () => selectTier(t.id));
-    wrap.appendChild(btn);
+function updateTierRowUi(state = computePfLockState()) {
+  document.querySelectorAll('#tierRozpiska tbody tr[data-tier]').forEach(tr => {
+    const tid = tr.dataset.tier;
+    const dis = !state.tierAllowed[tid];
+    tr.classList.toggle('disabled', dis);
+    tr.classList.toggle('on', selectedTier === tid);
+    tr.setAttribute('aria-checked', selectedTier === tid ? 'true' : 'false');
+    tr.tabIndex = dis ? -1 : 0;
   });
-  applyPfLocks();
-}
-
-function tierAriaLabel(tier) {
-  return `Poziom ${tier.step}: ${tier.journey.title} · ${tier.mentor.title}`;
-}
-
-function tierHeadline(tier) {
-  return `${tier.journey.title} · ${tier.mentor.title}`;
-}
-
-function tierBadgeLabel(tier) {
-  return tier.journey.title;
+  const fill = document.getElementById('tierTrackFill');
+  const idx = selectedTier ? tierIdx(selectedTier) : -1;
+  if (fill) fill.style.width = idx >= 0 ? `${((idx + 1) / TIERS.length) * 100}%` : '0%';
 }
 
 function renderTierRozpiska() {
   const table = document.getElementById('tierRozpiska');
   if (!table) return;
-  const state = computePfLockState();
   const rows = TIERS.map(t => {
     const st = t.stations.map(id => `${pad(id)} ${S(id).short}`).join(', ');
-    const cls = [
-      selectedTier === t.id ? 'on' : '',
-      state.tierAllowed[t.id] ? '' : 'disabled',
-    ].filter(Boolean).join(' ');
-    const attr = cls ? ` class="${cls}"` : '';
-    return `<tr${attr}>
+    return `<tr data-tier="${t.id}" role="radio" tabindex="0" aria-checked="false" aria-label="${tierAriaLabel(t)}">
       <td>${t.step}</td>
-      <td class="tr-journey">${t.journey.title}<span style="display:block;font-weight:400;color:var(--muted);font-size:10px;margin-top:2px">${t.journey.sub}</span></td>
-      <td class="tr-mentor">${t.mentor.title}<span style="display:block;font-weight:400;color:var(--muted);font-size:10px;margin-top:2px">${t.mentor.sub}</span></td>
+      <td class="tr-journey">${t.journey.title}<span class="tr-sub">${t.journey.sub}</span></td>
+      <td class="tr-mentor">${t.mentor.title}<span class="tr-sub">${t.mentor.sub}</span></td>
       <td>${st}</td>
     </tr>`;
   }).join('');
@@ -3026,6 +2939,32 @@ function renderTierRozpiska() {
       </tr>
     </thead>
     <tbody>${rows}</tbody>`;
+
+  if (!table.dataset.bound) {
+    table.dataset.bound = '1';
+    table.addEventListener('click', e => {
+      const tr = e.target.closest('tbody tr[data-tier]');
+      if (!tr || tr.classList.contains('disabled')) return;
+      selectTier(tr.dataset.tier);
+    });
+    table.addEventListener('keydown', e => {
+      const tr = e.target.closest('tbody tr[data-tier]');
+      if (!tr || tr.classList.contains('disabled')) return;
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectTier(tr.dataset.tier);
+      }
+    });
+  }
+  updateTierRowUi();
+}
+
+function tierAriaLabel(tier) {
+  return `Poziom ${tier.step}: ${tier.journey.title} · ${tier.mentor.title}`;
+}
+
+function tierBadgeLabel(tier) {
+  return tier.journey.title;
 }
 
 function updateTierDetail() {
@@ -3033,7 +2972,7 @@ function updateTierDetail() {
   if (!el) return;
   const tier = selectedTier ? getTierById(selectedTier) : null;
   if (!tier) {
-    el.textContent = 'Wybierz poziom — ta sama trasa, dwa sposoby patrzenia: jak jedziesz metrem i jak blisko jesteś mentora.';
+    el.textContent = 'Kliknij wiersz w tabeli — ta sama trasa, dwa sposoby patrzenia: jak jedziesz metrem i jak blisko jesteś mentora.';
     return;
   }
   const stLabels = tier.stations.map(id => `${pad(id)} ${S(id).short}`).join(' · ');
@@ -3077,7 +3016,7 @@ function renderPathFinderResults() {
   const checked = getCheckedInterestIds();
   const tier = selectedTier ? getTierById(selectedTier) : null;
   if (!checked.length && !tier) {
-    box.innerHTML = '<p class="pf-empty">Wybierz poziom na skali, zaznacz zainteresowania — albo oba naraz.</p>';
+    box.innerHTML = '<p class="pf-empty">Kliknij wiersz w tabeli lub zaznacz zainteresowania — albo oba naraz.</p>';
     return;
   }
   const ranked = scoreLines(checked, selectedTier);
@@ -3456,7 +3395,7 @@ if (window.matchMedia('(max-width: 900px)').matches) {
   document.body.classList.add('has-bottom-nav');
 }
 
-renderTierScale();
+renderTierRozpiska();
 renderInterestGrid();
 drawMap();
 renderSideLines();

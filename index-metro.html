@@ -90,6 +90,61 @@
       max-width: 620px;
     }
 
+    /* ── Główne zakładki ── */
+    .main-tabbar {
+      display: flex;
+      gap: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 52px 20px;
+      border-bottom: 1px solid var(--border2);
+    }
+    .main-tabbar button {
+      flex: 1;
+      max-width: 200px;
+      border: 1px solid var(--border2);
+      border-bottom: 0;
+      background: var(--surface);
+      color: var(--muted2);
+      padding: 12px 18px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background .12s, color .12s, border-color .12s;
+      margin-right: -1px;
+      border-radius: 4px 4px 0 0;
+    }
+    .main-tabbar button:first-child { margin-left: 0; }
+    .main-tabbar button.on {
+      background: var(--bg);
+      color: var(--gold);
+      border-color: var(--gold-mid);
+      border-bottom: 1px solid var(--bg);
+      margin-bottom: -1px;
+      position: relative;
+      z-index: 2;
+    }
+    .main-tabbar button:hover:not(.on) {
+      color: var(--white);
+      border-color: var(--border2);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.on { display: block; }
+
+    .sub-toolbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 52px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
     /* ── LAYOUT: sidebar + mapa ── */
     .app-layout {
       display: grid;
@@ -1146,6 +1201,9 @@
     }
 
     @media (max-width: 900px) {
+      .main-tabbar { padding-left: 20px; padding-right: 20px; }
+      .main-tabbar button { max-width: none; font-size: 11px; padding: 10px 8px; }
+      .sub-toolbar { padding-left: 20px; padding-right: 20px; }
       .product-strip { grid-template-columns: 1fr; }
       .branch-grid { grid-template-columns: 1fr; }
       .path-expand { padding-left: 20px; padding-right: 20px; }
@@ -1186,9 +1244,24 @@
 <div class="hero">
   <div class="eyebrow">Mapa ścieżki klienta</div>
   <h1>TWOJA<br>ŚCIEŻKA<br>Z <em>MENTAL</em><em>WAY</em></h1>
-  <p class="hero-note">Siedem stacji — siedem poziomów rozwoju. Możesz wsiąść na dowolnej i jechać inną linią. Wspólne stacje (biała obwódka) to przesiadki między ścieżkami.</p>
+  <p class="hero-note">Siedem stacji — siedem poziomów rozwoju. Możesz wsiąść na dowolnej i jechać inną linią. Przełącz zakładkę, żeby zobaczyć ścieżki, tablicę produktów albo diagram.</p>
 </div>
 
+<nav class="main-tabbar" id="mainTabbar" aria-label="Widoki mapy">
+  <button type="button" data-tab="sciezki" class="on">Ścieżki</button>
+  <button type="button" data-tab="tablica">Tablica</button>
+  <button type="button" data-tab="diagram">Diagram</button>
+</nav>
+
+<div class="sub-toolbar" id="formatSubToolbar" style="display:none">
+  <div class="seg" id="formatGroupSeg">
+    <button type="button" data-fgroup="format" class="on">Obszary formatu</button>
+    <button type="button" data-fgroup="station">Według stacji</button>
+  </div>
+  <div class="format-legend" id="formatLegend"></div>
+</div>
+
+<div id="tab-sciezki" class="tab-panel on">
 <div class="app-layout">
   <aside class="sidebar" id="sidebar">
     <div class="hub-box">
@@ -1199,13 +1272,17 @@
     </div>
     <div class="side-label">Linie ścieżki <span id="linesCount" style="color:var(--muted2)">7</span></div>
     <div id="sideLines"></div>
-    <a class="sl-item" href="#sciezka-darmowa" style="text-decoration:none;margin-top:4px">
+    <a class="sl-item" href="#" data-gotab="sciezki" data-scroll="sciezka-darmowa" style="text-decoration:none;margin-top:4px">
       <span class="sd" style="background:var(--gold)"></span>
-      <span><div class="sn">Ścieżka darmowa ↓</div><div class="sw">Rozpiska 3 wejść na stacji 01</div></span>
+      <span><div class="sn">Ścieżka darmowa</div><div class="sw">Rozpiska 3 wejść na stacji 01</div></span>
     </a>
-    <a class="sl-item" href="#formaty-produktow" style="text-decoration:none">
+    <a class="sl-item" href="#" data-gotab="tablica" style="text-decoration:none">
       <span class="sd" style="background:#6b8f71"></span>
-      <span><div class="sn">Formaty produktów ↓</div><div class="sw">Pisana · Video · Audio</div></span>
+      <span><div class="sn">Tablica formatów</div><div class="sw">Pisana · Video · Audio</div></span>
+    </a>
+    <a class="sl-item" href="#" data-gotab="diagram" style="text-decoration:none">
+      <span class="sd" style="background:#a89030"></span>
+      <span><div class="sn">Diagram produktów</div><div class="sw">Okrąg wg formatu</div></span>
     </a>
     <div class="side-foot">
       <button class="tbtn" id="btnTransfersSide">Tylko przesiadki</button>
@@ -1313,36 +1390,32 @@
   </div>
 </section>
 
-<section class="format-section" id="formaty-produktow">
-  <div class="eyebrow">Inna perspektywa</div>
-  <h2>PRODUKTY WG FORMATU</h2>
-  <p class="format-intro">Mapa metra sortuje po <strong style="color:var(--white)">poziomie ścieżki</strong> (stacje 01–07). Tu ten sam ekosystem widzisz przez pryzmat <strong style="color:var(--white)">rodzaju produktu</strong> — jak w oPAKUJ: obszary (format) albo wyniki (stacja), tablica albo diagram.</p>
-
-  <div class="format-toolbar">
-    <div class="seg" id="formatViewSeg">
-      <button type="button" data-fview="board" class="on">Tablica</button>
-      <button type="button" data-fview="circle">Diagram</button>
-    </div>
-    <div class="seg" id="formatGroupSeg">
-      <button type="button" data-fgroup="format" class="on">Obszary formatu</button>
-      <button type="button" data-fgroup="station">Według stacji</button>
-    </div>
-    <div class="format-legend" id="formatLegend"></div>
-  </div>
-
-  <div id="formatBoardView"><div class="format-board" id="formatBoard"></div></div>
-  <div id="formatCircleView" style="display:none">
-    <div class="format-circle-wrap">
-      <svg id="formatCircleSvg" viewBox="0 0 700 520" aria-label="Diagram produktów na okręgu"></svg>
-      <div class="circ-legend" id="circLegend"></div>
-    </div>
-  </div>
-</section>
-
 <div class="lines-list">
   <h2>LINIE ŚCIEŻKI</h2>
   <p>Każda linia to inny sposób wejścia w ekosystem MentalWay. Nie musisz przejechać wszystkich stacji po kolei.</p>
   <div class="lineGrid" id="lineGrid"></div>
+</div>
+</div><!-- /tab-sciezki -->
+
+<div id="tab-tablica" class="tab-panel">
+  <section class="format-section">
+    <div class="eyebrow">Produkty wg formatu</div>
+    <h2>TABLICA</h2>
+    <p class="format-intro">Kolumny wg <strong style="color:var(--white)">obszaru formatu</strong> (pisana, video, audio) albo wg <strong style="color:var(--white)">stacji metra</strong> (01–07). Kliknij kartę, żeby przejść do stacji.</p>
+    <div class="format-board" id="formatBoard"></div>
+  </section>
+</div>
+
+<div id="tab-diagram" class="tab-panel">
+  <section class="format-section">
+    <div class="eyebrow">Produkty wg formatu</div>
+    <h2>DIAGRAM</h2>
+    <p class="format-intro">Te same produkty na okręgu — kolor węzła = format. Kliknij produkt, żeby otworzyć stację na ścieżce.</p>
+    <div class="format-circle-wrap">
+      <svg id="formatCircleSvg" viewBox="0 0 700 520" aria-label="Diagram produktów na okręgu"></svg>
+      <div class="circ-legend" id="circLegend"></div>
+    </div>
+  </section>
 </div>
 
 <div class="faq-section" id="systemy">
@@ -1579,9 +1652,9 @@ const PRODUCTS = [
   { id: 'lsm',         name: 'Life Spectrum Mentoring',            format: 'audio',  station: 7, free: false, platform: 'Indywidualnie', desc: 'Długoterminowa praca 1:1 — głównie rozmowy i sesje live.' },
 ];
 
-let formatView = 'board';
 let formatGroup = 'format';
 let formatSelected = null;
+let mainTab = 'sciezki';
 
 const CONTENT = {
   1: `
@@ -1823,22 +1896,41 @@ function renderFormatCircle() {
   ).join('');
 }
 
-function setFormatView(v) {
-  formatView = v;
-  document.querySelectorAll('#formatViewSeg [data-fview]').forEach(b =>
-    b.classList.toggle('on', b.dataset.fview === v));
-  document.getElementById('formatBoardView').style.display = v === 'board' ? '' : 'none';
-  document.getElementById('formatCircleView').style.display = v === 'circle' ? '' : 'none';
-  if (v === 'board') renderFormatBoard();
-  else renderFormatCircle();
-}
-
 function setFormatGroup(g) {
   formatGroup = g;
   document.querySelectorAll('#formatGroupSeg [data-fgroup]').forEach(b =>
     b.classList.toggle('on', b.dataset.fgroup === g));
-  if (formatView === 'board') renderFormatBoard();
-  else renderFormatCircle();
+  if (mainTab === 'tablica') renderFormatBoard();
+  else if (mainTab === 'diagram') renderFormatCircle();
+}
+
+function setMainTab(tab, scrollTo) {
+  mainTab = tab;
+  document.querySelectorAll('#mainTabbar [data-tab]').forEach(b =>
+    b.classList.toggle('on', b.dataset.tab === tab));
+  document.getElementById('tab-sciezki').classList.toggle('on', tab === 'sciezki');
+  document.getElementById('tab-tablica').classList.toggle('on', tab === 'tablica');
+  document.getElementById('tab-diagram').classList.toggle('on', tab === 'diagram');
+  document.getElementById('formatSubToolbar').style.display =
+    (tab === 'tablica' || tab === 'diagram') ? 'flex' : 'none';
+  if (tab === 'tablica') renderFormatBoard();
+  else if (tab === 'diagram') renderFormatCircle();
+  if (scrollTo) {
+    const el = document.getElementById(scrollTo);
+    if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+  if (location.hash !== '#' + tab) {
+    history.replaceState(null, '', '#' + tab);
+  }
+}
+
+function initMainTabFromHash() {
+  const hash = (location.hash || '').replace('#', '');
+  if (hash === 'tablica' || hash === 'diagram' || hash === 'sciezki') {
+    setMainTab(hash);
+  } else if (hash === 'sciezka-darmowa' || hash === 'formaty-produktow') {
+    setMainTab(hash === 'formaty-produktow' ? 'tablica' : 'sciezki', hash === 'sciezka-darmowa' ? 'sciezka-darmowa' : null);
+  }
 }
 
 function renderFreeSpurMap() {
@@ -2180,14 +2272,23 @@ renderFreeSpurMap();
 renderBranchGrid();
 renderForkGrid();
 renderFormatLegend();
-renderFormatBoard();
 
-document.querySelectorAll('#formatViewSeg [data-fview]').forEach(btn => {
-  btn.addEventListener('click', () => setFormatView(btn.dataset.fview));
+document.querySelectorAll('#mainTabbar [data-tab]').forEach(btn => {
+  btn.addEventListener('click', () => setMainTab(btn.dataset.tab));
 });
 document.querySelectorAll('#formatGroupSeg [data-fgroup]').forEach(btn => {
   btn.addEventListener('click', () => setFormatGroup(btn.dataset.fgroup));
 });
+document.querySelectorAll('[data-gotab]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    setMainTab(link.dataset.gotab, link.dataset.scroll || null);
+    document.getElementById('sidebar')?.classList.remove('open');
+  });
+});
+window.addEventListener('hashchange', initMainTabFromHash);
+
+initMainTabFromHash();
 </script>
 </body>
 </html>

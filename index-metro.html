@@ -1227,25 +1227,28 @@
       border-color: var(--gold-mid);
       background: var(--gold-lo);
     }
-    .tier-grade.long {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px;
+    .tier-names {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      width: 100%;
+    }
+    .tier-name-journey {
+      font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.2px;
-      text-transform: none;
-      line-height: 1.2;
+      color: var(--white);
       text-align: center;
-      color: var(--muted2);
+      line-height: 1.2;
     }
-    .tier-btn.on .tier-grade.long { color: var(--gold); }
-    .tier-btn.on .tier-grade:not(.long) { color: var(--gold); }
-    .tier-grade {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 26px;
-      line-height: 1;
-      letter-spacing: 1px;
+    .tier-name-mentor {
+      font-size: 9px;
+      font-weight: 600;
       color: var(--muted2);
+      text-align: center;
+      line-height: 1.2;
     }
+    .tier-btn.on .tier-name-journey { color: var(--gold); }
     .tier-lab {
       font-size: 8px;
       font-weight: 700;
@@ -1263,6 +1266,38 @@
       margin: 0;
     }
     .tier-detail strong { color: var(--white); font-weight: 600; }
+    .tier-detail .tier-alt { color: var(--gold); font-weight: 600; }
+    .tier-rozpiska-wrap { margin-top: 12px; }
+    .tier-rozpiska {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    .tier-rozpiska th,
+    .tier-rozpiska td {
+      border: 1px solid var(--border2);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.45;
+    }
+    .tier-rozpiska th {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: var(--surface);
+    }
+    .tier-rozpiska td:first-child {
+      font-weight: 700;
+      color: var(--muted2);
+      white-space: nowrap;
+      width: 1%;
+    }
+    .tier-rozpiska tr.on td { background: var(--gold-lo); }
+    .tier-rozpiska .tr-journey { color: var(--white); font-weight: 600; }
+    .tier-rozpiska .tr-mentor { color: var(--muted2); }
     .interest-grid {
       display: flex;
       flex-wrap: wrap;
@@ -1648,7 +1683,11 @@
       .path-finder { padding-left: 20px; padding-right: 20px; }
       .tier-scale { flex-wrap: wrap; }
       .tier-btn { min-width: calc(20% - 6px); }
+      .tier-name-journey { font-size: 10px; }
+      .tier-name-mentor { font-size: 8px; }
       .tier-lab { font-size: 7px; }
+      .tier-rozpiska { font-size: 10px; }
+      .tier-rozpiska th, .tier-rozpiska td { padding: 6px 8px; }
       .product-strip { grid-template-columns: 1fr; }
       .branch-grid { grid-template-columns: 1fr; }
       .path-expand { padding-left: 20px; padding-right: 20px; }
@@ -1744,13 +1783,17 @@
     <div class="pf-tier-block">
       <div class="pf-tier-head">
         <span class="pf-results-label">Poziom inwestycji</span>
-        <span class="pf-tier-scale-hint">od wejścia na piechotę (darmo) do S-klasy premium</span>
+        <span class="pf-tier-scale-hint">Na przycisku: podróż metrem (góra) · relacja z mentorem (dół)</span>
       </div>
       <div class="tier-scale-wrap">
         <div class="tier-track" aria-hidden="true"><div class="tier-track-fill" id="tierTrackFill"></div></div>
-        <div class="tier-scale" id="tierScale" role="radiogroup" aria-label="Skala od darmowego wejścia do premium"></div>
+        <div class="tier-scale" id="tierScale" role="radiogroup" aria-label="Skala poziomów — podróż i relacja z mentorem"></div>
       </div>
-      <p class="tier-detail" id="tierDetail">Wybierz poziom — od darmowego wejścia na piechotę po mentoring S-klasy.</p>
+      <p class="tier-detail" id="tierDetail">Wybierz poziom — ta sama trasa, dwa sposoby patrzenia: jak jedziesz metrem i jak blisko jesteś mentora.</p>
+      <div class="tier-rozpiska-wrap">
+        <div class="pf-results-label">Rozpiska poziomów</div>
+        <table class="tier-rozpiska" id="tierRozpiska" aria-label="Dwa systemy nazw poziomów ścieżki"></table>
+      </div>
     </div>
 
     <div class="pf-results-label">Co Cię interesuje?</div>
@@ -2066,37 +2109,52 @@ const INTERESTS = [
   { id: 'szybko', label: 'Wysoki poziom bez długiej drogi', hint: 'bez przechodzenia przez wszystkie etapy', scores: { premium: 5, konsultacje: 2 } },
 ];
 
-/* Skala: na piechotę (darmo) → C/B/A/S (powiązana ze stacjami metra) */
+/* Poziomy ścieżki — dwa nazewnictwa: podróż (metro) + relacja z mentorem */
 const TIERS = [
   {
-    id: 'walk', grade: null, label: 'Na piechotę',
-    hint: 'Stacja 01 — darmowa wiedza bez biletu: social, newsletter, trial WayUp. Jak metro: najpierw idziesz pieszo, bez opłat.',
+    id: 'walk',
+    step: 1,
     stations: [1],
+    hint: 'Stacja 01 — darmowa wiedza: social, newsletter, trial WayUp. Wejście bez biletu.',
     lineBonus: { samodzielna: 2, wyjazdy: 1, spolecznosc: 1, pelna: 1 },
+    journey: { title: 'Na piechotę', sub: 'Za darmo' },
+    mentor: { title: 'Obserwuję', sub: 'Bez mentora' },
   },
   {
-    id: 'c', grade: 'C', label: 'Start płatny',
-    hint: 'Stacja 02 — książki, VOD, audio, Dziennik. Bez karty MMC.',
+    id: 'ticket',
+    step: 2,
     stations: [2],
+    hint: 'Stacja 02 — książki, VOD, audio, Dziennik. Uczysz się solo, bez karty MMC.',
     lineBonus: { samodzielna: 4, wyjazdy: 2, pelna: 1 },
+    journey: { title: 'Bilet', sub: 'Materiały' },
+    mentor: { title: 'Uczę się sam', sub: 'Solo' },
   },
   {
-    id: 'b', grade: 'B', label: 'Społeczność',
-    hint: 'Stacja 03 — karta MMC, Discord Mentalwayandia.',
+    id: 'pass',
+    step: 3,
     stations: [3],
+    hint: 'Stacja 03 — karta MMC, Discord Mentalwayandia. Stały dostęp do społeczności.',
     lineBonus: { spolecznosc: 4, mmc_wyjazdy: 3, pelna: 3 },
+    journey: { title: 'Karnet', sub: 'MMC' },
+    mentor: { title: 'We wspólnocie', sub: 'Z innymi' },
   },
   {
-    id: 'a', grade: 'A', label: 'Programy',
-    hint: 'Stacje 04–05 — wyjazdy do Mental Shelter lub programy online z mentorem.',
+    id: 'express',
+    step: 4,
     stations: [4, 5],
+    hint: 'Stacje 04–05 — wyjazdy do Mental Shelter lub programy online z mentorem w grupie.',
     lineBonus: { wyjazdy: 3, mmc_wyjazdy: 3, pelna: 4, spolecznosc: 3 },
+    journey: { title: 'Ekspres', sub: 'Program · wyjazd' },
+    mentor: { title: 'Pracuję w grupie', sub: 'Z mentorem' },
   },
   {
-    id: 's', grade: 'S', label: 'Premium',
-    hint: 'Stacje 06–07 — konsultacja 1:1 z Michałem lub Life Spectrum Mentoring.',
+    id: 'rocket',
+    step: 5,
     stations: [6, 7],
+    hint: 'Stacje 06–07 — konsultacja 1:1 lub LSM. Najszybsza droga na szczyt — jak rakieta albo pendolino.',
     lineBonus: { konsultacje: 5, premium: 5, pelna: 2 },
+    journey: { title: 'Rakieta', sub: 'LSM · 1:1' },
+    mentor: { title: 'Idę z Michałem', sub: 'Premium' },
   },
 ];
 
@@ -2778,31 +2836,56 @@ function renderTierScale() {
     btn.setAttribute('role', 'radio');
     btn.setAttribute('aria-checked', selectedTier === t.id ? 'true' : 'false');
     btn.setAttribute('aria-label', tierAriaLabel(t));
-    const gradeHtml = t.grade
-      ? `<span class="tier-grade">${t.grade}</span>`
-      : `<span class="tier-grade long">${t.label}</span>`;
-    const subHtml = t.grade
-      ? `<span class="tier-lab">${t.label}</span>`
-      : `<span class="tier-lab">Za darmo</span>`;
-    btn.innerHTML = `${gradeHtml}${subHtml}`;
+    btn.innerHTML = `
+      <div class="tier-names">
+        <span class="tier-name-journey">${t.journey.title}</span>
+        <span class="tier-name-mentor">${t.mentor.title}</span>
+      </div>
+      <span class="tier-lab">${t.journey.sub}</span>`;
     btn.addEventListener('click', () => selectTier(t.id));
     wrap.appendChild(btn);
   });
   const idx = selectedTier ? TIERS.findIndex(t => t.id === selectedTier) : -1;
   if (fill) fill.style.width = idx >= 0 ? `${((idx + 1) / TIERS.length) * 100}%` : '0%';
   updateTierDetail();
+  renderTierRozpiska();
 }
 
 function tierAriaLabel(tier) {
-  return tier.grade ? `${tier.grade}-klasa — ${tier.label}` : `${tier.label} — za darmo`;
+  return `Poziom ${tier.step}: ${tier.journey.title} · ${tier.mentor.title}`;
 }
 
 function tierHeadline(tier) {
-  return tier.grade ? `${tier.grade}-klasa · ${tier.label}` : tier.label;
+  return `${tier.journey.title} · ${tier.mentor.title}`;
 }
 
 function tierBadgeLabel(tier) {
-  return tier.grade ? `${tier.grade}-klasa` : 'Na piechotę';
+  return tier.journey.title;
+}
+
+function renderTierRozpiska() {
+  const table = document.getElementById('tierRozpiska');
+  if (!table) return;
+  const rows = TIERS.map(t => {
+    const st = t.stations.map(id => `${pad(id)} ${S(id).short}`).join(', ');
+    const on = selectedTier === t.id ? ' class="on"' : '';
+    return `<tr${on}>
+      <td>${t.step}</td>
+      <td class="tr-journey">${t.journey.title}<span style="display:block;font-weight:400;color:var(--muted);font-size:10px;margin-top:2px">${t.journey.sub}</span></td>
+      <td class="tr-mentor">${t.mentor.title}<span style="display:block;font-weight:400;color:var(--muted);font-size:10px;margin-top:2px">${t.mentor.sub}</span></td>
+      <td>${st}</td>
+    </tr>`;
+  }).join('');
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Podróż (metro)</th>
+        <th scope="col">Relacja z mentorem</th>
+        <th scope="col">Stacje</th>
+      </tr>
+    </thead>
+    <tbody>${rows}</tbody>`;
 }
 
 function updateTierDetail() {
@@ -2810,11 +2893,11 @@ function updateTierDetail() {
   if (!el) return;
   const tier = selectedTier ? getTierById(selectedTier) : null;
   if (!tier) {
-    el.textContent = 'Wybierz poziom — od darmowego wejścia na piechotę po mentoring S-klasy.';
+    el.textContent = 'Wybierz poziom — ta sama trasa, dwa sposoby patrzenia: jak jedziesz metrem i jak blisko jesteś mentora.';
     return;
   }
   const stLabels = tier.stations.map(id => `${pad(id)} ${S(id).short}`).join(' · ');
-  el.innerHTML = `<strong>${tierHeadline(tier)}</strong> — ${tier.hint} <span style="color:var(--muted)">(${stLabels})</span>`;
+  el.innerHTML = `<strong>${tier.journey.title}</strong> <span class="tier-alt">· ${tier.mentor.title}</span> — ${tier.hint} <span style="color:var(--muted)">(${stLabels})</span>`;
 }
 
 function selectTier(id) {

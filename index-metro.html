@@ -1227,6 +1227,18 @@
       border-color: var(--gold-mid);
       background: var(--gold-lo);
     }
+    .tier-grade.long {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      text-transform: none;
+      line-height: 1.2;
+      text-align: center;
+      color: var(--muted2);
+    }
+    .tier-btn.on .tier-grade.long { color: var(--gold); }
+    .tier-btn.on .tier-grade:not(.long) { color: var(--gold); }
     .tier-grade {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 26px;
@@ -1234,7 +1246,6 @@
       letter-spacing: 1px;
       color: var(--muted2);
     }
-    .tier-btn.on .tier-grade { color: var(--gold); }
     .tier-lab {
       font-size: 8px;
       font-weight: 700;
@@ -1733,13 +1744,13 @@
     <div class="pf-tier-block">
       <div class="pf-tier-head">
         <span class="pf-results-label">Poziom inwestycji</span>
-        <span class="pf-tier-scale-hint">F = freemium · S = mentoring premium</span>
+        <span class="pf-tier-scale-hint">od wejścia na piechotę (darmo) do S-klasy premium</span>
       </div>
       <div class="tier-scale-wrap">
         <div class="tier-track" aria-hidden="true"><div class="tier-track-fill" id="tierTrackFill"></div></div>
-        <div class="tier-scale" id="tierScale" role="radiogroup" aria-label="Skala od freemium do premium"></div>
+        <div class="tier-scale" id="tierScale" role="radiogroup" aria-label="Skala od darmowego wejścia do premium"></div>
       </div>
-      <p class="tier-detail" id="tierDetail">Wybierz klasę — pokażemy stacje i ścieżki na tym poziomie.</p>
+      <p class="tier-detail" id="tierDetail">Wybierz poziom — od darmowego wejścia na piechotę po mentoring S-klasy.</p>
     </div>
 
     <div class="pf-results-label">Co Cię interesuje?</div>
@@ -1750,7 +1761,7 @@
     </div>
     <div class="pf-results-label">Propozycje ścieżek</div>
     <div class="pf-results" id="pathFinderResults">
-      <p class="pf-empty">Wybierz poziom F–S, zaznacz zainteresowania — albo oba naraz.</p>
+      <p class="pf-empty">Wybierz poziom na skali, zaznacz zainteresowania — albo oba naraz.</p>
     </div>
   </div>
 </section>
@@ -2055,11 +2066,11 @@ const INTERESTS = [
   { id: 'szybko', label: 'Wysoki poziom bez długiej drogi', hint: 'bez przechodzenia przez wszystkie etapy', scores: { premium: 5, konsultacje: 2 } },
 ];
 
-/* Skala F→S: freemium do premium (powiązana ze stacjami metra) */
+/* Skala: na piechotę (darmo) → C/B/A/S (powiązana ze stacjami metra) */
 const TIERS = [
   {
-    id: 'f', grade: 'F', label: 'Freemium',
-    hint: 'Stacja 01 — darmowa wiedza, social, newsletter, trial WayUp.',
+    id: 'walk', grade: null, label: 'Na piechotę',
+    hint: 'Stacja 01 — darmowa wiedza bez biletu: social, newsletter, trial WayUp. Jak metro: najpierw idziesz pieszo, bez opłat.',
     stations: [1],
     lineBonus: { samodzielna: 2, wyjazdy: 1, spolecznosc: 1, pelna: 1 },
   },
@@ -2766,10 +2777,14 @@ function renderTierScale() {
     btn.className = 'tier-btn' + (selectedTier === t.id ? ' on' : '');
     btn.setAttribute('role', 'radio');
     btn.setAttribute('aria-checked', selectedTier === t.id ? 'true' : 'false');
-    btn.setAttribute('aria-label', `${t.grade} — ${t.label}`);
-    btn.innerHTML = `
-      <span class="tier-grade">${t.grade}</span>
-      <span class="tier-lab">${t.label}</span>`;
+    btn.setAttribute('aria-label', tierAriaLabel(t));
+    const gradeHtml = t.grade
+      ? `<span class="tier-grade">${t.grade}</span>`
+      : `<span class="tier-grade long">${t.label}</span>`;
+    const subHtml = t.grade
+      ? `<span class="tier-lab">${t.label}</span>`
+      : `<span class="tier-lab">Za darmo</span>`;
+    btn.innerHTML = `${gradeHtml}${subHtml}`;
     btn.addEventListener('click', () => selectTier(t.id));
     wrap.appendChild(btn);
   });
@@ -2778,16 +2793,28 @@ function renderTierScale() {
   updateTierDetail();
 }
 
+function tierAriaLabel(tier) {
+  return tier.grade ? `${tier.grade}-klasa — ${tier.label}` : `${tier.label} — za darmo`;
+}
+
+function tierHeadline(tier) {
+  return tier.grade ? `${tier.grade}-klasa · ${tier.label}` : tier.label;
+}
+
+function tierBadgeLabel(tier) {
+  return tier.grade ? `${tier.grade}-klasa` : 'Na piechotę';
+}
+
 function updateTierDetail() {
   const el = document.getElementById('tierDetail');
   if (!el) return;
   const tier = selectedTier ? getTierById(selectedTier) : null;
   if (!tier) {
-    el.textContent = 'Wybierz klasę — pokażemy stacje i ścieżki na tym poziomie.';
+    el.textContent = 'Wybierz poziom — od darmowego wejścia na piechotę po mentoring S-klasy.';
     return;
   }
   const stLabels = tier.stations.map(id => `${pad(id)} ${S(id).short}`).join(' · ');
-  el.innerHTML = `<strong>${tier.grade}-klasa · ${tier.label}</strong> — ${tier.hint} <span style="color:var(--muted)">(${stLabels})</span>`;
+  el.innerHTML = `<strong>${tierHeadline(tier)}</strong> — ${tier.hint} <span style="color:var(--muted)">(${stLabels})</span>`;
 }
 
 function selectTier(id) {
@@ -2823,7 +2850,7 @@ function renderPathFinderResults() {
   const checked = getCheckedInterestIds();
   const tier = selectedTier ? getTierById(selectedTier) : null;
   if (!checked.length && !tier) {
-    box.innerHTML = '<p class="pf-empty">Wybierz poziom F–S, zaznacz zainteresowania — albo oba naraz.</p>';
+    box.innerHTML = '<p class="pf-empty">Wybierz poziom na skali, zaznacz zainteresowania — albo oba naraz.</p>';
     return;
   }
   const ranked = scoreLines(checked, selectedTier);
@@ -2843,7 +2870,7 @@ function renderPathFinderResults() {
     const reachesTier = tier && line.seq.some(st => tier.stations.includes(st));
     const tierBadge = i === 0
       ? '<span class="pfr-badge">Najlepsze dopasowanie</span>'
-      : (reachesTier ? `<span class="pfr-badge">${tier.grade}-klasa</span>` : '');
+      : (reachesTier ? `<span class="pfr-badge">${tierBadgeLabel(tier)}</span>` : '');
     btn.innerHTML = `
       <div class="pfr-head">
         <span class="pfr-bar" style="background:${line.color}"></span>

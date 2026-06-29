@@ -20,6 +20,9 @@
       --border:  #1e1c17;
       --border2: #272318;
       --surface: #111009;
+      --fmt-pisana: #c9a820;
+      --fmt-video:  #b89428;
+      --fmt-audio:  #8a7e6a;
     }
 
     html { scroll-behavior: smooth; }
@@ -28,6 +31,8 @@
       color: var(--white);
       font-family: 'Inter', -apple-system, sans-serif;
       line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     body.has-bottom-nav { padding-bottom: 62px; }
 
@@ -237,7 +242,8 @@
     .product-focus {
       border: 1px solid var(--gold-mid);
       background: var(--gold-lo);
-      border-radius: 4px;
+      border-radius: 1px;
+      border-left: 2px solid var(--gold-mid);
       padding: 14px 16px;
       margin-bottom: 18px;
     }
@@ -552,11 +558,12 @@
       width: min(960px, 96vw);
       max-height: 88vh;
       transform: translateX(-50%) translateY(102%);
-      background: var(--surface);
+      background: var(--bg);
       border: 1px solid var(--border2);
       border-bottom: 0;
-      border-radius: 16px 16px 0 0;
-      box-shadow: 0 -24px 60px rgba(0,0,0,.55);
+      border-top: 2px solid var(--gold-mid);
+      border-radius: 4px 4px 0 0;
+      box-shadow: 0 -20px 48px rgba(0,0,0,.5);
       z-index: 50;
       display: flex;
       flex-direction: column;
@@ -574,18 +581,20 @@
       cursor: pointer;
     }
     .sheet-head {
-      padding: 6px 22px 14px;
-      border-bottom: 1px solid var(--border2);
+      padding: 14px 22px 0;
       flex: 0 0 auto;
     }
     .sh-row {
       display: flex;
       align-items: flex-start;
-      gap: 14px;
+      gap: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border2);
     }
     .sh-num {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 44px;
+      font-size: 56px;
+      letter-spacing: 1px;
       color: var(--gold);
       line-height: 1;
       flex-shrink: 0;
@@ -597,20 +606,20 @@
       letter-spacing: 2.5px;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
     .sh-name {
       font-size: 20px;
       font-weight: 700;
       letter-spacing: -0.4px;
-      line-height: 1.15;
+      line-height: 1.2;
     }
     .dclose {
-      width: 34px;
-      height: 34px;
-      border-radius: 4px;
+      width: 32px;
+      height: 32px;
+      border-radius: 1px;
       border: 1px solid var(--border2);
-      background: var(--bg);
+      background: var(--surface);
       color: var(--muted2);
       display: flex;
       align-items: center;
@@ -624,42 +633,55 @@
     }
     .dclose:hover { color: var(--white); border-color: var(--gold-mid); }
 
+    .sheet-connections {
+      padding: 12px 22px 14px;
+      border-bottom: 1px solid var(--border2);
+      background: linear-gradient(180deg, var(--surface), var(--bg));
+    }
+    .sheet-conn-lab {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
     .sh-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 5px;
       align-items: center;
-      margin-top: 10px;
     }
-    .line-chip {
+    .sheet .line-chip,
+    .sheet .njump {
       font-size: 10px;
       font-weight: 600;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
       border: 1px solid var(--border2);
-      border-radius: 999px;
-      padding: 4px 9px;
+      border-radius: 1px;
+      padding: 4px 8px;
+    }
+    .line-chip {
+      font-weight: 600;
     }
     .meta-sep {
       color: var(--muted);
-      font-size: 10px;
-      letter-spacing: 1px;
+      font-size: 9px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
+      width: 100%;
+      margin-top: 4px;
     }
     .njump {
-      font-size: 10px;
-      font-weight: 600;
-      border: 1px solid var(--border2);
       background: var(--bg);
       color: var(--muted2);
-      border-radius: 999px;
-      padding: 4px 9px;
       cursor: pointer;
       font-family: inherit;
       transition: border-color .12s, color .12s;
     }
     .njump:hover { border-color: var(--gold-mid); color: var(--gold); }
 
-    .neigh-block { margin-top: 12px; }
+    .neigh-block { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
     .nrow {
       display: flex;
       align-items: baseline;
@@ -689,7 +711,8 @@
       font-size: 13px;
       color: var(--muted2);
       line-height: 1.6;
-      max-width: 640px;
+      max-width: 520px;
+      margin-bottom: 18px;
     }
     .direct-entry {
       font-size: 9px;
@@ -1435,7 +1458,7 @@
       .event-row { flex-direction: column; gap: 2px; }
       svg.metro { min-height: 280px; }
       .station .label { font-size: 8.5px; }
-      .sheet { max-height: 92vh; border-radius: 14px 14px 0 0; }
+      .sheet { max-height: 92vh; border-radius: 4px 4px 0 0; }
       .nrow .nl { min-width: 0; }
       .circ-node .cn-label { display: none; }
       .circ-mobile-list { display: flex; }
@@ -1853,8 +1876,8 @@ const FREE_FORKS = [
 /* ── Produkty wg formatu (obszary jak filary oPAKUJ) ── */
 const FORMATS = {
   pisana: { id: 'pisana', code: 'P', name: 'Treść pisana', color: '#c9a820', sub: 'Czytasz we własnym tempie — książki, dziennik, maile, posty' },
-  video:  { id: 'video',  code: 'V', name: 'Video',         color: '#a89030', sub: 'Oglądasz — VOD, YouTube, live, programy, wyjazdy na żywo' },
-  audio:  { id: 'audio',  code: 'A', name: 'Audio',         color: '#6b8f71', sub: 'Słuchasz — audiobooki, szkolenia audio, rozmowy 1:1' },
+  video:  { id: 'video',  code: 'V', name: 'Video',         color: '#b89428', sub: 'Oglądasz — VOD, YouTube, live, programy, wyjazdy na żywo' },
+  audio:  { id: 'audio',  code: 'A', name: 'Audio',         color: '#8a7e6a', sub: 'Słuchasz — audiobooki, szkolenia audio, rozmowy 1:1' },
 };
 
 const PRODUCTS = [
@@ -2435,6 +2458,11 @@ function renderSheetHead(n) {
   const neighChips = neigh.map(x =>
     `<button type="button" class="njump" data-jump="${x}">${pad(x)} ${S(x).short}</button>`
   ).join('');
+  const badges = [
+    transfers[n] ? '<span class="line-chip" style="border-color:rgba(240,236,228,.3);color:var(--muted2)">Przesiadka</span>' : '',
+    n === HUB_STATION ? '<span class="line-chip" style="border-color:var(--gold-mid);color:var(--gold)">Główna przesiadka</span>' : '',
+  ].filter(Boolean).join('');
+  const hasConnections = lines.length || badges || neighChips;
 
   document.getElementById('sheetHead').innerHTML = `
     <div class="sh-row">
@@ -2442,16 +2470,19 @@ function renderSheetHead(n) {
       <div class="sh-title">
         <div class="sh-tag">${st.tag}</div>
         <div class="sh-name">${st.name}</div>
-        <div class="sh-meta">
-          ${lineChips}
-          ${transfers[n] ? '<span class="line-chip" style="border-color:rgba(240,236,228,.3);color:var(--muted2)">Przesiadka</span>' : ''}
-          ${n === HUB_STATION ? '<span class="line-chip" style="border-color:var(--gold-mid);color:var(--gold)">Główna przesiadka</span>' : ''}
-          ${neighChips ? `<span class="meta-sep">Sąsiednie:</span>${neighChips}` : ''}
-        </div>
       </div>
       <button type="button" class="dclose" id="dClose" aria-label="Zamknij">×</button>
     </div>
-    ${lines.length ? `<div class="neigh-block">${neighboursHtml(n)}</div>` : ''}`;
+    ${hasConnections ? `
+    <div class="sheet-connections">
+      <div class="sheet-conn-lab">Połączenia metra</div>
+      <div class="sh-meta">
+        ${lineChips}
+        ${badges}
+        ${neighChips ? `<span class="meta-sep">Sąsiednie stacje</span>${neighChips}` : ''}
+      </div>
+      ${lines.length ? `<div class="neigh-block">${neighboursHtml(n)}</div>` : ''}
+    </div>` : ''}`;
 
   document.getElementById('sheetBody').innerHTML = productFocusHtml(selectedProduct) + CONTENT[n];
   document.getElementById('dClose').onclick = closeDrawer;

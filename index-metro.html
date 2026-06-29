@@ -1172,29 +1172,54 @@
       margin-bottom: 14px;
     }
     .pf-tier-block {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    .pf-choice-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px 16px;
+      align-items: start;
       margin-bottom: 16px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border2);
     }
-    .pf-optional-block {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border2);
+    .pf-tier-block,
+    .pf-interests-block {
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      padding: 14px;
+      min-width: 0;
+      transition: opacity .15s, border-color .15s;
     }
-    .pf-opt-tag {
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+    .pf-tier-block.on,
+    .pf-interests-block.on {
+      border-color: var(--gold-mid);
+      background: linear-gradient(180deg, rgba(201, 168, 32, 0.04), transparent);
+    }
+    .pf-tier-block.locked,
+    .pf-interests-block.locked {
+      opacity: 0.32;
+      pointer-events: none;
+      filter: grayscale(0.3);
+    }
+    .pf-or {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 48px;
       color: var(--muted);
-      margin-left: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
-    .pf-optional-hint {
+    .pf-mode-hint {
       font-size: 12px;
       color: var(--muted2);
       line-height: 1.5;
-      margin: 0 0 12px;
+      margin: 0 0 14px;
     }
+    .pf-mode-hint strong { color: var(--gold); font-weight: 600; }
     .pf-tier-head {
       display: flex;
       flex-wrap: wrap;
@@ -1669,6 +1694,8 @@
       .main-tabbar button { max-width: none; font-size: 10px; padding: 10px 6px; }
       .sub-toolbar { padding-left: 20px; padding-right: 20px; }
       .path-finder { padding-left: 20px; padding-right: 20px; }
+      .pf-choice-grid { grid-template-columns: 1fr; gap: 10px; }
+      .pf-or { padding: 4px 0; }
       .tier-rozpiska { font-size: 10px; }
       .tier-rozpiska th, .tier-rozpiska td { padding: 6px 8px; }
       .product-strip { grid-template-columns: 1fr; }
@@ -1761,29 +1788,34 @@
   <div class="path-finder-box">
     <div class="eyebrow">Dobierz ścieżkę</div>
     <h2>DOBIERZ SWOJĄ TRASĘ</h2>
-    <p class="pf-intro">Najpierw wybierz <strong style="color:var(--white)">poziom inwestycji</strong> — od razu zobaczysz propozycje tras. Checkboxy poniżej są opcjonalne i tylko doprecyzowują wynik.</p>
+    <p class="pf-intro">Wybierz <strong style="color:var(--white)">albo</strong> poziom inwestycji w tabeli, <strong style="color:var(--white)">albo</strong> to, co Cię interesuje — jedno naraz. Potem zobaczysz propozycję trasy na mapie.</p>
+    <p class="pf-mode-hint" id="pfModeHint">Wybierz tabelę <strong>albo</strong> checkboxy.</p>
 
-    <div class="pf-tier-block">
-      <div class="pf-tier-head">
-        <span class="pf-results-label">Krok 1 · Poziom inwestycji</span>
-        <span class="pf-tier-scale-hint">Kliknij wiersz — podróż · relacja z mentorem · stacje</span>
+    <div class="pf-choice-grid">
+      <div class="pf-tier-block" id="pfTierBlock">
+        <div class="pf-tier-head">
+          <span class="pf-results-label">Poziom inwestycji</span>
+          <span class="pf-tier-scale-hint">Podróż · relacja · stacje</span>
+        </div>
+        <div class="tier-scale-wrap">
+          <div class="tier-track" aria-hidden="true"><div class="tier-track-fill" id="tierTrackFill"></div></div>
+          <table class="tier-rozpiska" id="tierRozpiska" role="radiogroup" aria-label="Wybierz poziom inwestycji"></table>
+        </div>
+        <p class="tier-detail" id="tierDetail">Kliknij wiersz — podpowiemy trasę na mapie.</p>
       </div>
-      <div class="tier-scale-wrap">
-        <div class="tier-track" aria-hidden="true"><div class="tier-track-fill" id="tierTrackFill"></div></div>
-        <table class="tier-rozpiska" id="tierRozpiska" role="radiogroup" aria-label="Wybierz poziom inwestycji"></table>
+
+      <div class="pf-or" aria-hidden="true"><span>albo</span></div>
+
+      <div class="pf-interests-block" id="pfInterestsBlock">
+        <div class="pf-results-label">Co Cię interesuje?</div>
+        <p class="pf-tier-scale-hint" style="margin-bottom:10px">Forma współpracy i tematy — bez podawania budżetu</p>
+        <div class="interest-grid" id="interestGrid"></div>
       </div>
-      <p class="tier-detail" id="tierDetail">Kliknij wiersz w tabeli — od razu podpowiemy trasę na mapie.</p>
     </div>
 
     <div class="pf-results-label">Propozycje ścieżek</div>
     <div class="pf-results" id="pathFinderResults">
-      <p class="pf-empty">Krok 1: kliknij wiersz w tabeli. Możesz też pominąć i od razu doprecyzować w kroku 2.</p>
-    </div>
-
-    <div class="pf-optional-block">
-      <div class="pf-results-label">Krok 2 · Co Cię interesuje? <span class="pf-opt-tag">opcjonalnie</span></div>
-      <p class="pf-optional-hint">Doprecyzuj wybór — nie blokuje poziomu z kroku 1, tylko zmienia ranking linii.</p>
-      <div class="interest-grid" id="interestGrid"></div>
+      <p class="pf-empty">Wybierz poziom w tabeli albo zaznacz zainteresowania.</p>
     </div>
     <div class="pf-actions">
       <button type="button" class="tbtn" id="pfApply">Pokaż na mapie</button>
@@ -2399,6 +2431,7 @@ let transferMode = false;
 let pathFinderActive = false;
 let pathFinderMatches = new Set();
 let selectedTier = null;
+let pfMode = null;
 
 const stationLines = {};
 STATIONS.forEach(s => stationLines[s.id] = []);
@@ -2781,14 +2814,39 @@ function tierIdx(id) {
   return TIER_ORDER.indexOf(id);
 }
 
-function syncPfUi() {
+function clearInterests() {
+  document.querySelectorAll('#interestGrid input').forEach(cb => {
+    cb.checked = false;
+    cb.closest('label')?.classList.remove('on');
+  });
+}
+
+function syncPfModeUi() {
+  const tierLocked = pfMode === 'interests';
+  const interestsLocked = pfMode === 'tier';
+  document.getElementById('pfTierBlock')?.classList.toggle('locked', tierLocked);
+  document.getElementById('pfInterestsBlock')?.classList.toggle('locked', interestsLocked);
+  document.getElementById('pfTierBlock')?.classList.toggle('on', pfMode === 'tier');
+  document.getElementById('pfInterestsBlock')?.classList.toggle('on', pfMode === 'interests');
   updateTierRowUi();
   updateTierDetail();
+  const hint = document.getElementById('pfModeHint');
+  if (!hint) return;
+  if (pfMode === 'tier') {
+    hint.innerHTML = 'Aktywny: <strong>poziom inwestycji</strong>. Wyczyść wybór, żeby przejść do zainteresowań.';
+  } else if (pfMode === 'interests') {
+    hint.innerHTML = 'Aktywne: <strong>zainteresowania</strong>. Wyczyść wybór, żeby wybrać poziom w tabeli.';
+  } else {
+    hint.innerHTML = 'Wybierz tabelę <strong>albo</strong> checkboxy.';
+  }
+}
+
+function syncPfUi() {
+  syncPfModeUi();
 }
 
 function refreshPathFinderMap() {
-  const checked = getCheckedInterestIds();
-  if (selectedTier || checked.length) applyPathFinder();
+  if (pfMode) applyPathFinder();
   else if (pathFinderActive) {
     pathFinderActive = false;
     pathFinderMatches = new Set();
@@ -2809,21 +2867,24 @@ function getTierStations(tierId) {
 
 function scoreLines(checkedIds, tierId = selectedTier) {
   const totals = Object.fromEntries(LINES.map(l => [l.id, 0]));
-  checkedIds.forEach(id => {
-    const item = INTERESTS.find(x => x.id === id);
-    if (!item?.scores) return;
-    Object.entries(item.scores).forEach(([lineId, pts]) => {
-      if (totals[lineId] != null) totals[lineId] += pts;
+  if (pfMode === 'interests') {
+    checkedIds.forEach(id => {
+      const item = INTERESTS.find(x => x.id === id);
+      if (!item?.scores) return;
+      Object.entries(item.scores).forEach(([lineId, pts]) => {
+        if (totals[lineId] != null) totals[lineId] += pts;
+      });
     });
-  });
-  const tier = tierId ? getTierById(tierId) : null;
-  if (tier) {
-    LINES.forEach(line => {
-      if (line.seq.some(st => tier.stations.includes(st))) totals[line.id] += 4;
-    });
-    Object.entries(tier.lineBonus || {}).forEach(([lineId, pts]) => {
-      if (totals[lineId] != null) totals[lineId] += pts;
-    });
+  } else if (pfMode === 'tier' && tierId) {
+    const tier = getTierById(tierId);
+    if (tier) {
+      LINES.forEach(line => {
+        if (line.seq.some(st => tier.stations.includes(st))) totals[line.id] += 4;
+      });
+      Object.entries(tier.lineBonus || {}).forEach(([lineId, pts]) => {
+        if (totals[lineId] != null) totals[lineId] += pts;
+      });
+    }
   }
   return LINES
     .map(line => ({ line, score: totals[line.id] }))
@@ -2906,8 +2967,10 @@ function updateTierDetail() {
 }
 
 function selectTier(id) {
+  if (pfMode === 'interests') return;
   selectedTier = selectedTier === id ? null : id;
-  syncPfUi();
+  pfMode = selectedTier ? 'tier' : null;
+  syncPfModeUi();
   renderPathFinderResults();
   refreshPathFinderMap();
 }
@@ -2926,7 +2989,12 @@ function renderInterestGrid() {
         <span class="ihint">${item.hint}</span>
       </span>`;
     const sync = () => {
+      if (pfMode === 'tier') return;
       label.classList.toggle('on', label.querySelector('input').checked);
+      const checked = getCheckedInterestIds();
+      pfMode = checked.length ? 'interests' : null;
+      if (checked.length) selectedTier = null;
+      syncPfModeUi();
       renderPathFinderResults();
       refreshPathFinderMap();
     };
@@ -2939,8 +3007,12 @@ function renderPathFinderResults() {
   const box = document.getElementById('pathFinderResults');
   const checked = getCheckedInterestIds();
   const tier = selectedTier ? getTierById(selectedTier) : null;
-  if (!checked.length && !tier) {
-    box.innerHTML = '<p class="pf-empty">Krok 1: kliknij wiersz w tabeli. Możesz też pominąć i od razu doprecyzować w kroku 2.</p>';
+  if (!tier && !checked.length) {
+    box.innerHTML = '<p class="pf-empty">Wybierz poziom w tabeli albo zaznacz zainteresowania.</p>';
+    return;
+  }
+  if (!pfMode) {
+    box.innerHTML = '<p class="pf-empty">Wybierz poziom w tabeli albo zaznacz zainteresowania.</p>';
     return;
   }
   const ranked = scoreLines(checked, selectedTier);
@@ -2958,7 +3030,7 @@ function renderPathFinderResults() {
     btn.type = 'button';
     btn.className = 'pf-result' + (i === 0 ? ' top' : '');
     const tierBadge = i === 0
-      ? `<span class="pfr-badge">${tier ? tierBadgeLabel(tier) : 'Najlepsze dopasowanie'}</span>`
+      ? `<span class="pfr-badge">${pfMode === 'tier' && tier ? tierBadgeLabel(tier) : 'Najlepsze dopasowanie'}</span>`
       : '';
     btn.innerHTML = `
       <div class="pfr-head">
@@ -2979,19 +3051,17 @@ function clearPathFinderState(resetChecks = true) {
   pathFinderMatches = new Set();
   if (resetChecks) {
     selectedTier = null;
-    document.querySelectorAll('#interestGrid input').forEach(cb => {
-      cb.checked = false;
-      cb.closest('label')?.classList.remove('on');
-    });
-    syncPfUi();
+    pfMode = null;
+    clearInterests();
+    syncPfModeUi();
     renderPathFinderResults();
   }
 }
 
 function applyPathFinder(preferredLineId = null) {
   const checked = getCheckedInterestIds();
-  if (!checked.length && !selectedTier) {
-    clearPathFinderState(true);
+  if (!pfMode) {
+    clearPathFinderState(false);
     drawMap();
     renderSideLines();
     redrawPathViews();
@@ -3320,6 +3390,7 @@ if (window.matchMedia('(max-width: 900px)').matches) {
 
 renderTierRozpiska();
 renderInterestGrid();
+syncPfModeUi();
 drawMap();
 renderSideLines();
 renderLineGrid();

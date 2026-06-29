@@ -1084,14 +1084,26 @@
       justify-content: center;
       margin-top: 12px;
     }
-    .circ-node { cursor: pointer; }
+    .circ-node { cursor: pointer; transition: opacity .16s; }
     .circ-node text { pointer-events: none; }
     .circ-node .cn-label {
       font-family: Inter, sans-serif;
       font-size: 8.5px;
       fill: var(--muted2);
     }
+    .circ-node .cn-ring {
+      fill: none;
+      stroke-width: 2.4;
+      opacity: 0;
+      transition: opacity .16s;
+    }
+    .circ-node.sel .cn-ring, .circ-node.hot .cn-ring { opacity: 1; }
     .circ-node.sel .cn-label { fill: var(--white); font-weight: 600; }
+    .circ-node.dim { opacity: .2; }
+    .circ-chord { fill: none; stroke-linecap: round; transition: opacity .16s, stroke-width .16s; cursor: pointer; }
+    .circ-chord.dim { opacity: .08; }
+    .circ-chord.on { opacity: .9; stroke-width: 4 !important; }
+    #circLegend .mleg { border: 0; background: transparent; font: inherit; cursor: pointer; }
 
     .lines-list {
       padding: 0 52px 48px;
@@ -1410,7 +1422,7 @@
   <section class="format-section">
     <div class="eyebrow">Produkty wg formatu</div>
     <h2>DIAGRAM</h2>
-    <p class="format-intro">Te same produkty na okręgu — kolor węzła = format. Kliknij produkt, żeby otworzyć stację na ścieżce.</p>
+    <p class="format-intro">Te same produkty na okręgu — kolor węzła zależy od przełącznika u góry (format albo stacja). Kliknij <strong style="color:var(--white)">produkt</strong> lub <strong style="color:var(--white)">łuk</strong>, żeby podświetlić grupę i otworzyć szczegóły.</p>
     <div class="format-circle-wrap">
       <svg id="formatCircleSvg" viewBox="0 0 700 520" aria-label="Diagram produktów na okręgu"></svg>
       <div class="circ-legend" id="circLegend"></div>
@@ -1654,6 +1666,7 @@ const PRODUCTS = [
 
 let formatGroup = 'format';
 let formatSelected = null;
+let formatActiveGroup = null;
 let mainTab = 'sciezki';
 
 const CONTENT = {
@@ -1846,6 +1859,31 @@ function renderFormatBoard() {
   });
 }
 
+function productGroupId(p) {
+  return formatGroup === 'format' ? p.format : String(p.station);
+}
+
+function groupMeta(gid) {
+  if (formatGroup === 'format') {
+    const f = FORMATS[gid];
+    return { id: gid, color: f.color, label: `${f.code} · ${f.name}` };
+  }
+  const st = STATIONS.find(s => s.id === +gid);
+  return { id: gid, color: st?.color || '#8a7e6a', label: st ? `${pad(st.id)} · ${st.short}` : gid };
+}
+
+function circChordPath(pos, CCX, CCY, idA, idB) {
+  const A = pos[idA], B = pos[idB];
+  const mx = (A[0] + B[0]) / 2, my = (A[1] + B[1]) / 2;
+  const cx = CCX + (mx - CCX) * 0.3, cy = CCY + (my - CCY) * 0.3;
+  return `M${A[0].toFixed(1)},${A[1].toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${B[0].toFixed(1)},${B[1].toFixed(1)}`;
+}
+
+function selectFormatGroup(gid) {
+  formatActiveGroup = formatActiveGroup === gid ? null : gid;
+  if (mainTab === 'diagram') renderFormatCircle();
+}
+
 function renderFormatCircle() {
   const svg = document.getElementById('formatCircleSvg');
   const CCX = 350, CCY = 260, CR = 200;
@@ -1855,49 +1893,79 @@ function renderFormatCircle() {
     pos[p.id] = [CCX + CR * Math.cos(a), CCY + CR * Math.sin(a), a];
   });
 
+  const groups = formatGroup === 'format'
+    ? Object.keys(FORMATS)
+    : STATIONS.map(s => String(s.id));
+
   let html = '<g id="circLineLayer">';
-  STATIONS.forEach(st => {
-    const group = PRODUCTS.filter(p => p.station === st.id);
-    for (let i = 0; i < group.length - 1; i++) {
-      const A = pos[group[i].id], B = pos[group[i + 1].id];
-      const mx = (A[0] + B[0]) / 2, my = (A[1] + B[1]) / 2;
-      const cx = CCX + (mx - CCX) * 0.2, cy = CCY + (my - CCY) * 0.2;
-      html += `<path class="metroLine" stroke="${st.color}" stroke-width="2" opacity="0.25" fill="none" d="M${A[0].toFixed(1)},${A[1].toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${B[0].toFixed(1)},${B[1].toFixed(1)}"/>`;
+  groups.forEach(gid => {
+    const items = PRODUCTS.filter(p => productGroupId(p) === gid);
+    const meta = groupMeta(gid);
+    const dim = formatActiveGroup && formatActiveGroup !== gid;
+    const on = formatActiveGroup === gid;
+    for (let i = 0; i < items.length - 1; i++) {
+      html += `<path class="circ-chord metroLine${dim ? ' dim' : ''}${on ? ' on' : ''}" data-gid="${gid}" stroke="${meta.color}" stroke-width="${on ? 4 : 2.5}" opacity="${on ? 0.9 : 0.35}" d="${circChordPath(pos, CCX, CCY, items[i].id, items[i + 1].id)}"/>`;
     }
   });
   html += '</g><g id="circNodeLayer">';
   PRODUCTS.forEach(p => {
     const [x, y, a] = pos[p.id];
-    const f = FORMATS[p.format];
+    const gid = productGroupId(p);
+    const meta = groupMeta(gid);
+    const nodeColor = formatGroup === 'format' ? FORMATS[p.format].color : meta.color;
     const lx = CCX + (CR + 14) * Math.cos(a);
     const ly = CCY + (CR + 14) * Math.sin(a);
     const anch = Math.cos(a) > 0.3 ? 'start' : (Math.cos(a) < -0.3 ? 'end' : 'middle');
     const sel = formatSelected === p.id ? ' sel' : '';
-    html += `<g class="circ-node${sel}" data-pid="${p.id}" data-station="${p.station}">
-      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="11" fill="${f.color}" stroke="#0d0c09" stroke-width="2.5"/>
-      <text x="${x.toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="middle" font-family="Bebas Neue" font-size="9" fill="#0d0c09">${pad(p.station)}</text>
-      <text class="cn-label" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${anch}" dominant-baseline="middle">${p.name.length > 22 ? p.name.slice(0, 21) + '…' : p.name}</text>
+    const dim = formatActiveGroup && formatActiveGroup !== gid ? ' dim' : '';
+    const label = formatGroup === 'format' ? p.name : `${pad(p.station)} · ${p.name}`;
+    html += `<g class="circ-node${sel}${dim}" data-pid="${p.id}" data-station="${p.station}" data-gid="${gid}">
+      <circle class="cn-ring" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="16" stroke="${nodeColor}"/>
+      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="11" fill="${nodeColor}" stroke="#0d0c09" stroke-width="2.5"/>
+      <text x="${x.toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="middle" font-family="Bebas Neue" font-size="9" fill="#0d0c09">${formatGroup === 'format' ? FORMATS[p.format].code : pad(p.station)}</text>
+      <text class="cn-label" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${anch}" dominant-baseline="middle">${label.length > 24 ? label.slice(0, 23) + '…' : label}</text>
     </g>`;
   });
   html += '</g>';
   svg.innerHTML = html;
 
+  svg.querySelectorAll('.circ-chord').forEach(path => {
+    path.addEventListener('click', e => {
+      e.stopPropagation();
+      selectFormatGroup(path.dataset.gid);
+    });
+  });
   svg.querySelectorAll('.circ-node').forEach(node => {
     node.addEventListener('click', () => {
       formatSelected = node.dataset.pid;
-      openDrawer(+node.dataset.station);
-      renderFormatCircle();
+      formatActiveGroup = node.dataset.gid;
+      const p = PRODUCTS.find(x => x.id === node.dataset.pid);
+      const st = +node.dataset.station;
+      if (p?.href && p.href.startsWith('http')) {
+        window.open(p.href, '_blank');
+        renderFormatCircle();
+      } else {
+        openDrawer(st);
+      }
     });
   });
 
   const lg = document.getElementById('circLegend');
-  lg.innerHTML = Object.values(FORMATS).map(f =>
-    `<span class="mleg"><span class="sw" style="background:${f.color}"></span>${f.name}</span>`
-  ).join('');
+  lg.innerHTML = groups.map(gid => {
+    const meta = groupMeta(gid);
+    const count = PRODUCTS.filter(p => productGroupId(p) === gid).length;
+    return `<button type="button" class="mleg${formatActiveGroup === gid ? ' on' : ''}" data-gid="${gid}">
+      <span class="sw" style="background:${meta.color}"></span>${meta.label} <span style="color:var(--muted);font-weight:500">(${count})</span>
+    </button>`;
+  }).join('');
+  lg.querySelectorAll('[data-gid]').forEach(btn => {
+    btn.addEventListener('click', () => selectFormatGroup(btn.dataset.gid));
+  });
 }
 
 function setFormatGroup(g) {
   formatGroup = g;
+  formatActiveGroup = null;
   document.querySelectorAll('#formatGroupSeg [data-fgroup]').forEach(b =>
     b.classList.toggle('on', b.dataset.fgroup === g));
   if (mainTab === 'tablica') renderFormatBoard();
@@ -2122,6 +2190,7 @@ function openDrawer(n) {
   document.getElementById('drawer').classList.add('open');
   drawMap();
   renderSideLines();
+  if (mainTab === 'diagram') renderFormatCircle();
 }
 
 function closeDrawer() {
@@ -2130,6 +2199,7 @@ function closeDrawer() {
   document.getElementById('drawer').classList.remove('open');
   drawMap();
   renderSideLines();
+  if (mainTab === 'diagram') renderFormatCircle();
 }
 
 function drawMap() {

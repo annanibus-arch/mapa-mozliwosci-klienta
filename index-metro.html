@@ -20,13 +20,6 @@
       --border:  #1e1c17;
       --border2: #272318;
       --surface: #111009;
-      --l1: #c9a820;
-      --l2: #8a7e6a;
-      --l3: #d4b84a;
-      --l4: #a89030;
-      --l5: #e8c84a;
-      --l6: #6b8f71;
-      --l7: #9a8530;
     }
 
     html { scroll-behavior: smooth; }
@@ -66,8 +59,8 @@
     }
 
     .hero {
-      padding: 56px 52px 32px;
-      max-width: 1100px;
+      padding: 48px 52px 28px;
+      max-width: 1200px;
     }
     .eyebrow {
       display: flex;
@@ -78,16 +71,16 @@
       letter-spacing: 2.5px;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .eyebrow::before { content: '■'; font-size: 7px; }
     h1 {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(52px, 8vw, 88px);
+      font-size: clamp(48px, 7vw, 80px);
       letter-spacing: 2px;
       line-height: 0.92;
       color: var(--white);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     h1 em { font-style: normal; color: var(--gold); }
     .hero-note {
@@ -97,15 +90,141 @@
       max-width: 620px;
     }
 
-    .metro-wrap {
-      padding: 0 52px 48px;
-      max-width: 1100px;
+    /* ── LAYOUT: sidebar + mapa ── */
+    .app-layout {
+      display: grid;
+      grid-template-columns: 248px 1fr;
+      gap: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 52px 40px;
+      align-items: start;
     }
+
+    .sidebar {
+      position: sticky;
+      top: 20px;
+      border: 1px solid var(--border2);
+      background: linear-gradient(180deg, var(--surface), var(--bg));
+      border-radius: 4px;
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .side-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 4px 6px 2px;
+    }
+    .hub-box {
+      border: 1px solid var(--gold-mid);
+      background: var(--gold-lo);
+      border-radius: 4px;
+      padding: 12px 14px;
+      margin-bottom: 4px;
+    }
+    .hub-box .hub-lab {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .hub-box .hub-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .hub-box .hub-name {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .hub-box .hub-sub {
+      font-size: 11px;
+      color: var(--muted2);
+      margin-top: 4px;
+      line-height: 1.45;
+    }
+    .sl-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 10px;
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: border-color .12s, background .12s;
+      text-align: left;
+      width: 100%;
+      font-family: inherit;
+      color: inherit;
+    }
+    .sl-item:hover { border-color: var(--gold-mid); }
+    .sl-item.on {
+      border-color: var(--gold-mid);
+      background: var(--gold-lo);
+    }
+    .sl-item .sd {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex: 0 0 10px;
+      margin-top: 4px;
+    }
+    .sl-item .sn {
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--white);
+    }
+    .sl-item .sw {
+      font-size: 11px;
+      color: var(--muted2);
+      line-height: 1.4;
+      margin-top: 3px;
+    }
+    .side-foot {
+      margin-top: 8px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border2);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .tbtn {
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      color: var(--muted2);
+      border-radius: 2px;
+      padding: 7px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s;
+      width: 100%;
+      font-family: inherit;
+    }
+    .tbtn:hover, .tbtn.on {
+      border-color: var(--gold-mid);
+      background: var(--gold-lo);
+      color: var(--gold);
+    }
+
+    .map-area { min-width: 0; }
     .metro-panel {
       border: 1px solid var(--border2);
       background: linear-gradient(180deg, var(--surface), var(--bg));
       border-radius: 4px;
-      padding: 20px 20px 16px;
+      padding: 18px 18px 14px;
     }
     .metro-tools {
       display: flex;
@@ -113,7 +232,7 @@
       align-items: flex-start;
       gap: 16px;
       flex-wrap: wrap;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .metro-tools h2 {
       font-size: 15px;
@@ -128,23 +247,7 @@
       line-height: 1.55;
     }
     .tool-btns { display: flex; gap: 8px; flex-wrap: wrap; }
-    .tbtn {
-      border: 1px solid var(--border2);
-      background: var(--surface);
-      color: var(--muted2);
-      border-radius: 2px;
-      padding: 7px 12px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      transition: border-color .15s, color .15s, background .15s;
-    }
-    .tbtn:hover, .tbtn.on {
-      border-color: var(--gold-mid);
-      background: var(--gold-lo);
-      color: var(--gold);
-    }
+    .tool-btns .tbtn { width: auto; }
 
     svg.metro {
       width: 100%;
@@ -191,12 +294,13 @@
     .station.dim { opacity: .18; }
     .station.sel .ring2, .station.hot .ring2 { opacity: 1; }
     .station.sel .label { fill: var(--white); font-weight: 600; }
+    .station.hub .base { stroke: var(--gold); stroke-width: 4; }
 
     .maplegend {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 14px;
+      margin-top: 12px;
     }
     .mleg {
       display: flex;
@@ -209,6 +313,8 @@
       padding: 5px 10px;
       cursor: pointer;
       transition: border-color .12s, color .12s;
+      background: transparent;
+      font-family: inherit;
     }
     .mleg:hover, .mleg.on {
       border-color: var(--gold-mid);
@@ -216,30 +322,66 @@
     }
     .mleg .sw { width: 18px; height: 5px; border-radius: 3px; }
 
-    .detail {
-      margin-top: 20px;
-      border: 1px solid var(--border2);
-      background: var(--surface);
-      border-left: 2px solid var(--gold-mid);
-      padding: 22px 24px;
-      display: none;
+    /* ── DRAWER ── */
+    .scrim {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.62);
+      backdrop-filter: blur(3px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .22s;
+      z-index: 40;
     }
-    .detail.open { display: block; }
-    .detail-head {
+    .scrim.open { opacity: 1; pointer-events: auto; }
+
+    .sheet {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      width: min(960px, 96vw);
+      max-height: 88vh;
+      transform: translateX(-50%) translateY(102%);
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-bottom: 0;
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -24px 60px rgba(0,0,0,.55);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      transition: transform .34s cubic-bezier(.32,.72,0,1);
+    }
+    .sheet.open { transform: translateX(-50%) translateY(0); }
+
+    .sheet-handle {
+      width: 44px;
+      height: 4px;
+      border-radius: 4px;
+      background: var(--border2);
+      margin: 10px auto 4px;
+      flex: 0 0 auto;
+      cursor: pointer;
+    }
+    .sheet-head {
+      padding: 6px 22px 14px;
+      border-bottom: 1px solid var(--border2);
+      flex: 0 0 auto;
+    }
+    .sh-row {
       display: flex;
       align-items: flex-start;
       gap: 14px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
     }
-    .detail-num {
+    .sh-num {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 42px;
+      font-size: 44px;
       color: var(--gold);
       line-height: 1;
       flex-shrink: 0;
     }
-    .detail-tag {
+    .sh-title { min-width: 0; flex: 1; }
+    .sh-tag {
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 2.5px;
@@ -247,23 +389,36 @@
       color: var(--gold);
       margin-bottom: 4px;
     }
-    .detail-title {
+    .sh-name {
       font-size: 20px;
       font-weight: 700;
       letter-spacing: -0.4px;
-      line-height: 1.2;
+      line-height: 1.15;
     }
-    .detail-desc {
-      font-size: 13px;
+    .dclose {
+      width: 34px;
+      height: 34px;
+      border-radius: 4px;
+      border: 1px solid var(--border2);
+      background: var(--bg);
       color: var(--muted2);
-      margin-top: 6px;
-      max-width: 640px;
-      line-height: 1.6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      font-size: 18px;
+      line-height: 1;
+      font-family: inherit;
+      transition: border-color .12s, color .12s;
     }
-    .detail-lines {
+    .dclose:hover { color: var(--white); border-color: var(--gold-mid); }
+
+    .sh-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
+      align-items: center;
       margin-top: 10px;
     }
     .line-chip {
@@ -273,6 +428,58 @@
       border: 1px solid var(--border2);
       border-radius: 999px;
       padding: 4px 9px;
+    }
+    .meta-sep {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .njump {
+      font-size: 10px;
+      font-weight: 600;
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      color: var(--muted2);
+      border-radius: 999px;
+      padding: 4px 9px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: border-color .12s, color .12s;
+    }
+    .njump:hover { border-color: var(--gold-mid); color: var(--gold); }
+
+    .neigh-block { margin-top: 12px; }
+    .nrow {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 11px;
+      color: var(--muted2);
+      margin-bottom: 6px;
+    }
+    .nrow .nd {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      align-self: center;
+    }
+    .nrow .nl { font-weight: 600; color: var(--white); min-width: 120px; }
+    .nrow .ns { flex: 1; min-width: 0; }
+
+    .sheet-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 18px 22px 28px;
+    }
+    .detail-desc {
+      font-size: 13px;
+      color: var(--muted2);
+      line-height: 1.6;
+      max-width: 640px;
     }
     .direct-entry {
       font-size: 9px;
@@ -335,7 +542,7 @@
       margin-top: 16px;
       border: 1px solid var(--border2);
       border-left: 2px solid rgba(201,168,32,.25);
-      background: var(--surface);
+      background: var(--bg);
       padding: 16px 18px;
     }
     .events-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 10px; }
@@ -351,7 +558,8 @@
 
     .lines-list {
       padding: 0 52px 48px;
-      max-width: 1100px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
     .lines-list h2 {
       font-family: 'Bebas Neue', sans-serif;
@@ -375,6 +583,7 @@
       background: var(--surface);
       padding: 16px;
       transition: border-color .15s;
+      cursor: pointer;
     }
     .lcard:hover { border-color: var(--gold-mid); }
     .lcard .lh { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
@@ -398,7 +607,7 @@
     .lstep b { font-family: 'Bebas Neue', sans-serif; color: var(--gold); font-size: 14px; }
     .arrowmini { color: var(--muted); font-size: 12px; }
 
-    .faq-section { padding: 0 52px 80px; max-width: 1000px; }
+    .faq-section { padding: 0 52px 80px; max-width: 1000px; margin: 0 auto; }
     .faq-title {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 36px;
@@ -440,13 +649,44 @@
     footer nav a { font-size: 12px; color: var(--muted); text-decoration: none; }
     footer nav a:hover { color: var(--gold); }
 
+    .menu-toggle {
+      display: none;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      color: var(--white);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 18px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 900px) {
+      .app-layout {
+        grid-template-columns: 1fr;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      .sidebar {
+        position: static;
+        display: none;
+      }
+      .sidebar.open { display: flex; }
+      .menu-toggle { display: flex; }
+      .metro-tools { align-items: stretch; }
+    }
+
     @media (max-width: 720px) {
-      header, .hero, .metro-wrap, .lines-list, .faq-section, footer { padding-left: 20px; padding-right: 20px; }
-      h1 { font-size: 56px; }
+      header, .hero, .lines-list, .faq-section, footer { padding-left: 20px; padding-right: 20px; }
+      h1 { font-size: 52px; }
       .faq-grid { grid-template-columns: 1fr; }
       .event-row { flex-direction: column; gap: 2px; }
       svg.metro { min-height: 280px; }
       .station .label { font-size: 8.5px; }
+      .sheet { max-height: 92vh; border-radius: 14px 14px 0 0; }
+      .nrow .nl { min-width: 0; }
     }
   </style>
 </head>
@@ -463,24 +703,41 @@
   <p class="hero-note">Siedem stacji — siedem poziomów rozwoju. Możesz wsiąść na dowolnej i jechać inną linią. Wspólne stacje (biała obwódka) to przesiadki między ścieżkami.</p>
 </div>
 
-<div class="metro-wrap">
-  <div class="metro-panel">
-    <div class="metro-tools">
-      <div>
-        <h2>Mapa metra MentalWay</h2>
-        <p>Kliknij stację, żeby zobaczyć szczegóły poziomu. Kliknij linię w legendzie, żeby podświetlić jedną ścieżkę klienta.</p>
-      </div>
-      <div class="tool-btns">
-        <button class="tbtn" id="btnTransfers">Tylko przesiadki</button>
-        <button class="tbtn" id="btnReset">Reset</button>
-      </div>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="hub-box">
+      <div class="hub-lab">Główna przesiadka</div>
+      <div class="hub-num" id="hubNum">03</div>
+      <div class="hub-name" id="hubName">Społeczność MMC</div>
+      <div class="hub-sub">Karta MMC łączy większość ścieżek — od społeczności po programy grupowe.</div>
     </div>
-    <svg id="metroSvg" class="metro" viewBox="0 0 900 420" aria-label="Mapa metra ścieżki klienta MentalWay">
-      <g id="lineLayer"></g>
-      <g id="stationLayer"></g>
-    </svg>
-    <div class="maplegend" id="maplegend"></div>
-    <div class="detail" id="detail"></div>
+    <div class="side-label">Linie ścieżki <span id="linesCount" style="color:var(--muted2)">7</span></div>
+    <div id="sideLines"></div>
+    <div class="side-foot">
+      <button class="tbtn" id="btnTransfersSide">Tylko przesiadki</button>
+      <button class="tbtn" id="btnResetSide">Reset widoku</button>
+    </div>
+  </aside>
+
+  <div class="map-area">
+    <div class="metro-panel">
+      <div class="metro-tools">
+        <div>
+          <button class="menu-toggle" id="menuToggle" aria-label="Pokaż linie">☰</button>
+          <h2>Mapa metra MentalWay</h2>
+          <p>Kliknij stację, żeby otworzyć szczegóły. Wybierz linię w panelu po lewej lub w legendzie poniżej.</p>
+        </div>
+        <div class="tool-btns">
+          <button class="tbtn" id="btnTransfers">Tylko przesiadki</button>
+          <button class="tbtn" id="btnReset">Reset</button>
+        </div>
+      </div>
+      <svg id="metroSvg" class="metro" viewBox="0 0 900 420" aria-label="Mapa metra ścieżki klienta MentalWay">
+        <g id="lineLayer"></g>
+        <g id="stationLayer"></g>
+      </svg>
+      <div class="maplegend" id="maplegend"></div>
+    </div>
   </div>
 </div>
 
@@ -540,7 +797,16 @@
   </nav>
 </footer>
 
+<div class="scrim" id="scrim"></div>
+<aside class="sheet" id="drawer" aria-label="Szczegóły stacji">
+  <div class="sheet-handle" id="sheetHandle"></div>
+  <div class="sheet-head" id="sheetHead"></div>
+  <div class="sheet-body" id="sheetBody"></div>
+</aside>
+
 <script>
+const HUB_STATION = 3;
+
 const STATIONS = [
   { id: 1, name: 'Darmowa wiedza', short: 'Darmowa wiedza', tag: 'Darmowo · Samodzielnie', color: '#c9a820' },
   { id: 2, name: 'Materiały szkoleniowe', short: 'Materiały', tag: 'Płatne · Samodzielnie', color: '#8a7e6a' },
@@ -562,13 +828,13 @@ const POS = {
 };
 
 const LINES = [
-  { id: 'pelna', name: 'Pełna ścieżka', when: 'od darmowej wiedzy po mentoring grupowy i indywidualny', color: '#c9a820', seq: [1, 2, 3, 5, 7] },
-  { id: 'samodzielna', name: 'Samodzielna nauka', when: 'materiały i VOD bez mentora', color: '#8a7e6a', seq: [1, 2] },
-  { id: 'spolecznosc', name: 'Społeczność → programy', when: 'MMC otwiera PB, GLSM i Impact Call', color: '#d4b84a', seq: [1, 3, 5, 7] },
-  { id: 'wyjazdy', name: 'Eventy na żywo', when: 'warsztaty, majówki i wakacje w Mental Shelter', color: '#a89030', seq: [1, 2, 4] },
-  { id: 'mmc_wyjazdy', name: 'MMC + wyjazdy', when: 'społeczność i wspólne eventy stacjonarne', color: '#9a8530', seq: [1, 3, 4] },
-  { id: 'konsultacje', name: 'Bezpośrednio do Michała', when: 'konsultacje 1:1 i mentoring indywidualny', color: '#6b8f71', seq: [1, 6, 7] },
-  { id: 'premium', name: 'Premium od razu', when: 'wejście bezpośrednie — bez poprzednich poziomów', color: '#e8c84a', seq: [6, 7] },
+  { id: 'pelna', name: 'Pełna ścieżka', when: 'gdy chcesz przejść całą drogę od darmowej wiedzy po mentoring', color: '#c9a820', seq: [1, 2, 3, 5, 7] },
+  { id: 'samodzielna', name: 'Samodzielna nauka', when: 'gdy chcesz uczyć się we własnym tempie, bez mentora', color: '#8a7e6a', seq: [1, 2] },
+  { id: 'spolecznosc', name: 'Społeczność → programy', when: 'gdy chcesz wejść w społeczność i programy grupowe', color: '#d4b84a', seq: [1, 3, 5, 7] },
+  { id: 'wyjazdy', name: 'Eventy na żywo', when: 'gdy interesują Cię warsztaty i wyjazdy do Mental Shelter', color: '#a89030', seq: [1, 2, 4] },
+  { id: 'mmc_wyjazdy', name: 'MMC + wyjazdy', when: 'gdy łączysz społeczność ze wspólnymi eventami', color: '#9a8530', seq: [1, 3, 4] },
+  { id: 'konsultacje', name: 'Bezpośrednio do Michała', when: 'gdy chcesz rozmowę lub mentoring 1:1 z Michałem', color: '#6b8f71', seq: [1, 6, 7] },
+  { id: 'premium', name: 'Premium od razu', when: 'gdy wchodzisz na najwyższy poziom bez poprzednich etapów', color: '#e8c84a', seq: [6, 7] },
 ];
 
 const CONTENT = {
@@ -596,7 +862,7 @@ const CONTENT = {
       <a class="chip" href="https://www.sklep.mentalway.pl/" target="_blank">Audiobooki</a>
     </div>`,
   3: `
-    <p class="detail-desc">Karta MMC jest przepustką do społeczności i warunkiem wejścia do programów PB i GLSM.</p>
+    <p class="detail-desc">Karta MMC jest przepustką do społeczności i warunkiem wejścia do programów PB i GLSM. To główna przesiadka na mapie — większość ścieżek przechodzi przez tę stację.</p>
     <div class="chips"><a class="chip chip-cta" href="https://www.mwway.pl/mmc-2026" target="_blank">Kup kartę MMC →</a></div>
     <div class="mmc-block">
       <div class="mmc-row"><span class="mmc-row-label">Z kartą od razu</span>
@@ -646,9 +912,106 @@ const stationLines = {};
 STATIONS.forEach(s => stationLines[s.id] = []);
 LINES.forEach(l => l.seq.forEach(id => stationLines[id].push(l.id)));
 const transfers = Object.fromEntries(STATIONS.map(s => [s.id, stationLines[s.id].length > 1]));
-const majorTransfers = STATIONS.filter(s => stationLines[s.id].length >= 3).map(s => s.id);
 
 function S(id) { return STATIONS.find(s => s.id === id); }
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function renderSideLines() {
+  const box = document.getElementById('sideLines');
+  box.innerHTML = '';
+  LINES.forEach(line => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'sl-item' + (activeLine === line.id ? ' on' : '');
+    btn.innerHTML = `
+      <span class="sd" style="background:${line.color}"></span>
+      <span>
+        <div class="sn">${line.name}</div>
+        <div class="sw">${line.when}</div>
+      </span>`;
+    btn.addEventListener('click', () => selectLine(line.id));
+    box.appendChild(btn);
+  });
+}
+
+function neighboursHtml(n) {
+  const lines = stationLines[n].map(id => LINES.find(l => l.id === id));
+  if (!lines.length) return '';
+  return lines.map(l => {
+    const i = l.seq.indexOf(n);
+    const prev = l.seq[i - 1];
+    const next = l.seq[i + 1];
+    const prevBtn = prev ? `<button type="button" class="njump" data-jump="${prev}">${pad(prev)} ${S(prev).short}</button>` : '';
+    const nextBtn = next ? `<button type="button" class="njump" data-jump="${next}">${pad(next)} ${S(next).short}</button>` : '';
+    return `<div class="nrow">
+      <span class="nd" style="background:${l.color}"></span>
+      <span class="nl">${l.name}</span>
+      <span class="ns">${prevBtn}${prev ? ' → ' : ''}<strong style="color:${l.color}">${pad(n)}</strong>${next ? ' → ' : ''}${nextBtn}</span>
+    </div>`;
+  }).join('');
+}
+
+function buildNeighbours(n) {
+  const lines = stationLines[n].map(id => LINES.find(l => l.id === id));
+  const set = new Set();
+  lines.forEach(l => {
+    const i = l.seq.indexOf(n);
+    [l.seq[i - 1], l.seq[i + 1]].forEach(x => { if (x) set.add(x); });
+  });
+  return { lines, neigh: [...set].sort((a, b) => a - b) };
+}
+
+function renderSheetHead(n) {
+  const st = S(n);
+  const { lines, neigh } = buildNeighbours(n);
+  const lineChips = lines.map(l =>
+    `<span class="line-chip" style="border-color:${l.color};color:${l.color}">${l.name}</span>`
+  ).join('');
+  const neighChips = neigh.map(x =>
+    `<button type="button" class="njump" data-jump="${x}">${pad(x)} ${S(x).short}</button>`
+  ).join('');
+
+  document.getElementById('sheetHead').innerHTML = `
+    <div class="sh-row">
+      <div class="sh-num">${pad(n)}</div>
+      <div class="sh-title">
+        <div class="sh-tag">${st.tag}</div>
+        <div class="sh-name">${st.name}</div>
+        <div class="sh-meta">
+          ${lineChips}
+          ${transfers[n] ? '<span class="line-chip" style="border-color:rgba(240,236,228,.3);color:var(--muted2)">Przesiadka</span>' : ''}
+          ${n === HUB_STATION ? '<span class="line-chip" style="border-color:var(--gold-mid);color:var(--gold)">Główna przesiadka</span>' : ''}
+          ${neighChips ? `<span class="meta-sep">Sąsiednie:</span>${neighChips}` : ''}
+        </div>
+      </div>
+      <button type="button" class="dclose" id="dClose" aria-label="Zamknij">×</button>
+    </div>
+    ${lines.length ? `<div class="neigh-block">${neighboursHtml(n)}</div>` : ''}`;
+
+  document.getElementById('sheetBody').innerHTML = CONTENT[n];
+  document.getElementById('dClose').onclick = closeDrawer;
+  document.querySelectorAll('#sheetHead .njump').forEach(b => {
+    b.onclick = () => openDrawer(+b.dataset.jump);
+  });
+}
+
+function openDrawer(n) {
+  selected = n;
+  activeLine = null;
+  renderSheetHead(n);
+  document.getElementById('scrim').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  drawMap();
+  renderSideLines();
+}
+
+function closeDrawer() {
+  selected = null;
+  document.getElementById('scrim').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  drawMap();
+  renderSideLines();
+}
 
 function drawMap() {
   const ll = document.getElementById('lineLayer');
@@ -675,23 +1038,23 @@ function drawMap() {
     const [x, y] = POS[st.id];
     const g = document.createElementNS(NS, 'g');
     const isT = transfers[st.id];
-    const isM = majorTransfers.includes(st.id);
+    const isHub = st.id === HUB_STATION;
     const vis = !transferMode || isT;
     let dim = !vis;
     if (activeLine) dim = dim || !stationLines[st.id].includes(activeLine);
     else if (selLines && selLines.size) {
       dim = dim || (st.id !== selected && !stationLines[st.id].some(id => selLines.has(id)));
     }
-    g.setAttribute('class', 'station' + (dim ? ' dim' : '') + (st.id === selected ? ' sel' : ''));
-    const r = isM ? 17 : (isT ? 14 : 12);
+    g.setAttribute('class', 'station' + (dim ? ' dim' : '') + (st.id === selected ? ' sel' : '') + (isHub ? ' hub' : ''));
+    const r = isHub ? 20 : (isT ? 15 : 12);
     g.innerHTML = `
-      ${isT ? `<circle class="transfer" cx="${x}" cy="${y}" r="${r + 3}"></circle>` : ''}
+      ${isT ? `<circle class="transfer" cx="${x}" cy="${y}" r="${r + 4}"></circle>` : ''}
       <circle class="base" cx="${x}" cy="${y}" r="${r}" fill="${st.color}"></circle>
       <circle cx="${x + r - 1}" cy="${y - r + 1}" r="6.5" fill="#0d0c09" stroke="${st.color}" stroke-width="1.3"></circle>
-      <text class="num" x="${x + r - 1}" y="${y - r + 4}" text-anchor="middle" fill="${st.color}">${String(st.id).padStart(2, '0')}</text>
+      <text class="num" x="${x + r - 1}" y="${y - r + 4}" text-anchor="middle" fill="${st.color}">${pad(st.id)}</text>
       <circle class="ring2" cx="${x}" cy="${y}" r="${r + 6}" style="stroke:${st.id === selected ? st.color : '#f0ece4'}"></circle>
       <text class="label" x="${x}" y="${y + r + 14}" text-anchor="middle">${st.short}</text>`;
-    g.addEventListener('click', () => selectStation(st.id));
+    g.addEventListener('click', () => openDrawer(st.id));
     sl.appendChild(g);
   });
 
@@ -712,7 +1075,7 @@ function renderLineGrid() {
   grid.innerHTML = '';
   LINES.forEach(line => {
     const seq = line.seq.map((n, i) =>
-      `${i ? '<span class="arrowmini">→</span>' : ''}<span class="lstep" data-n="${n}"><b>${String(n).padStart(2, '0')}</b> ${S(n).short}</span>`
+      `${i ? '<span class="arrowmini">→</span>' : ''}<span class="lstep" data-n="${n}"><b>${pad(n)}</b> ${S(n).short}</span>`
     ).join('');
     const card = document.createElement('div');
     card.className = 'lcard';
@@ -721,11 +1084,9 @@ function renderLineGrid() {
       <div class="lw">${line.when}</div>
       <div class="lseq">${seq}</div>`;
     card.querySelectorAll('.lstep').forEach(el => {
-      el.addEventListener('click', () => selectStation(+el.dataset.n));
+      el.addEventListener('click', e => { e.stopPropagation(); openDrawer(+el.dataset.n); });
     });
-    card.addEventListener('click', e => {
-      if (!e.target.closest('.lstep')) selectLine(line.id);
-    });
+    card.addEventListener('click', () => selectLine(line.id));
     grid.appendChild(card);
   });
 }
@@ -734,51 +1095,56 @@ function selectLine(id) {
   activeLine = activeLine === id ? null : id;
   selected = null;
   transferMode = false;
-  document.getElementById('btnTransfers').classList.remove('on');
-  document.getElementById('detail').classList.remove('open');
+  syncTransferBtns(false);
+  closeDrawer();
   drawMap();
+  renderSideLines();
 }
 
-function selectStation(id) {
-  selected = id;
-  activeLine = null;
-  const st = S(id);
-  const lines = stationLines[id].map(lid => LINES.find(l => l.id === lid));
-  const detail = document.getElementById('detail');
-  detail.classList.add('open');
-  detail.innerHTML = `
-    <div class="detail-head">
-      <div class="detail-num">${String(id).padStart(2, '0')}</div>
-      <div>
-        <div class="detail-tag">${st.tag}</div>
-        <div class="detail-title">${st.name}</div>
-        <div class="detail-lines">
-          ${lines.map(l => `<span class="line-chip" style="border-color:${l.color};color:${l.color}">${l.name}</span>`).join('')}
-          ${transfers[id] ? '<span class="line-chip" style="border-color:rgba(240,236,228,.3);color:var(--muted2)">Przesiadka</span>' : ''}
-        </div>
-      </div>
-    </div>
-    ${CONTENT[id]}`;
-  drawMap();
-  detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-document.getElementById('btnReset').addEventListener('click', () => {
+function resetView() {
   activeLine = null;
   selected = null;
   transferMode = false;
-  document.getElementById('btnTransfers').classList.remove('on');
-  document.getElementById('detail').classList.remove('open');
+  syncTransferBtns(false);
+  closeDrawer();
   drawMap();
-});
+  renderSideLines();
+}
 
-document.getElementById('btnTransfers').addEventListener('click', e => {
+function toggleTransfers() {
   transferMode = !transferMode;
-  e.target.classList.toggle('on', transferMode);
+  activeLine = null;
+  selected = null;
+  syncTransferBtns(transferMode);
+  closeDrawer();
   drawMap();
+  renderSideLines();
+}
+
+function syncTransferBtns(on) {
+  ['btnTransfers', 'btnTransfersSide'].forEach(id => {
+    document.getElementById(id).classList.toggle('on', on);
+  });
+}
+
+document.getElementById('btnReset').addEventListener('click', resetView);
+document.getElementById('btnResetSide').addEventListener('click', resetView);
+document.getElementById('btnTransfers').addEventListener('click', toggleTransfers);
+document.getElementById('btnTransfersSide').addEventListener('click', toggleTransfers);
+document.getElementById('scrim').addEventListener('click', closeDrawer);
+document.getElementById('sheetHandle').addEventListener('click', closeDrawer);
+document.getElementById('menuToggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
 });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+const hub = S(HUB_STATION);
+document.getElementById('hubNum').textContent = pad(HUB_STATION);
+document.getElementById('hubName').textContent = hub.name;
+document.getElementById('linesCount').textContent = LINES.length;
 
 drawMap();
+renderSideLines();
 renderLineGrid();
 </script>
 </body>
